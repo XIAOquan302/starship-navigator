@@ -1,0 +1,2822 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="星舰领航员">
+<meta name="description" content="一场关于客观规律与主观能动性的星际航行。认识规律、运用规律，从必然走向自由。">
+<meta property="og:title" content="星舰领航员 · 客观规律与主观能动性">
+<meta property="og:description" content="一场关于客观规律与主观能动性的星际航行。一起来认识规律、运用规律。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://xiaoquan302.github.io/starship-navigator/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>星舰领航员 · 客观规律与主观能动性</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3 L26 26 L16 21 L6 26 Z' fill='%235ad1e8'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#05070f;--line:#1d3557;
+  --cyan:#5ad1e8;--cyan-dim:#2f7d92;--cyan-soft:#a7e4f0;
+  --amber:#ff9f5a;--green:#7be0a8;--red:#ff6b6b;--violet:#8ea0ff;
+  --text:#d7e3ee;--muted:#7d93a8;
+  --mono:"Cascadia Code","Consolas","SF Mono",ui-monospace,Menlo,monospace;
+  --sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);
+  overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none}
+body{font-family:var(--sans);color:var(--text);-webkit-font-smoothing:antialiased;
+  user-select:none;-webkit-user-select:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{user-select:text;-webkit-user-select:text}
+.hidden{display:none !important}
+/* 滚动条：深色主题统一，避免系统默认浅色条割裂画面 */
+*{scrollbar-width:thin;scrollbar-color:#2b4a72 rgba(255,255,255,.03)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+::-webkit-scrollbar-thumb{background:#2b4a72;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#3d6ea8}
+#app{position:fixed;inset:0;width:100%;overflow:hidden;height:100vh;height:100dvh}
+#space{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+
+.clip-panel{
+  background:linear-gradient(160deg,rgba(14,24,48,.92),rgba(8,14,28,.94));
+  border:1px solid var(--line);
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+}
+.sci-btn{
+  padding:13px 30px;font-size:15px;letter-spacing:3px;font-weight:600;color:var(--cyan);
+  background:linear-gradient(160deg,rgba(90,209,232,.14),rgba(90,209,232,.04));
+  border:1px solid var(--cyan-dim);
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  transition:color .18s,background .18s,border-color .18s;
+}
+.sci-btn:hover{color:#04121a;background:var(--cyan);border-color:var(--cyan)}
+.sci-btn:active{transform:translateY(1px)}
+.sci-btn.amber{color:var(--amber);border-color:#a86a3c;background:linear-gradient(160deg,rgba(255,159,90,.14),rgba(255,159,90,.04))}
+.sci-btn.amber:hover{color:#1a0d04;background:var(--amber);border-color:var(--amber)}
+.sci-btn.ghost{color:var(--muted);border-color:var(--line);background:rgba(255,255,255,.02)}
+.sci-btn.ghost:hover{color:var(--text);border-color:var(--muted);background:rgba(255,255,255,.06)}
+.sci-btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+
+.screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:30;padding:24px}
+.screen .inner{width:min(760px,94vw);max-height:92vh;overflow-y:auto;padding:42px 46px}
+
+#screen-title{flex-direction:column;text-align:center}
+.title-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:17px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:5px;color:var(--cyan-dim);text-transform:uppercase}
+#screen-title h1{
+  font-size:clamp(40px,8vw,78px);font-weight:800;letter-spacing:10px;
+  background:linear-gradient(180deg,#ffffff 15%,var(--cyan) 70%,var(--cyan-dim));
+  -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 42px rgba(90,209,232,.25);
+}
+.title-sub{font-family:var(--mono);font-size:13.5px;color:var(--muted);letter-spacing:2px}
+.title-desc{max-width:560px;font-size:14.5px;line-height:2;color:var(--muted)}
+.sound-tip{font-family:var(--mono);font-size:11.5px;letter-spacing:1px;color:var(--cyan);margin-top:12px}
+.title-actions{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.key-hint{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.key-hint span b{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:4px;color:var(--cyan-soft);margin-right:5px;font-weight:600}
+.title-credit{margin-top:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:2px;color:var(--muted)}
+.title-best{margin-top:7px;font-family:var(--mono);font-size:12.5px;letter-spacing:1.5px;color:var(--amber);min-height:17px}
+
+.brief-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px;gap:10px;flex-wrap:wrap}
+.brief-head .lv-no{font-family:var(--mono);font-size:13px;color:var(--cyan);letter-spacing:2px}
+.brief-head h2{font-size:24px;letter-spacing:2px;font-weight:700}
+.brief-meta{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:2}
+.brief-goal{border-left:2px solid var(--amber);padding:6px 0 6px 16px;margin:18px 0;font-size:14.5px;line-height:1.9;color:var(--cyan-soft)}
+.brief-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 16px}
+.bs{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.bs-no{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--cyan-dim)}
+.bs b{font-size:13.5px;color:var(--cyan-soft);letter-spacing:1.5px}
+.bs i{font-style:normal;font-size:12px;line-height:1.7;color:var(--muted)}
+@media (max-width:760px){.brief-steps{grid-template-columns:1fr}}
+.brief-archive{margin:4px 0 18px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 16px}
+.brief-archive .ba-title{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
+.ba-item{display:flex;gap:10px;align-items:baseline;font-size:13px;line-height:1.7;margin-bottom:8px}
+.ba-item:last-child{margin-bottom:0}
+.ba-dot{flex:0 0 9px;width:9px;height:9px;border-radius:50%;margin-top:5px}
+.ba-name{flex:0 0 auto;font-weight:700;color:var(--cyan-soft);letter-spacing:1px}
+.ba-note{color:var(--muted);font-size:12.5px}
+.choice-intro{font-size:14px;line-height:1.8;color:var(--text-dim);margin:14px 0 16px}
+/* T4 主要矛盾常驻提示：左侧强调条 + 暖色边框 */
+.key-contradiction{border:1px solid rgba(255,159,90,.55);border-left:3px solid var(--amber);
+  background:rgba(255,159,90,.08);padding:10px 14px;font-size:13px;line-height:1.7;color:var(--cyan-soft);margin-bottom:18px}
+.alloc{display:flex;flex-direction:column;gap:18px}
+.alloc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.alloc-head label{font-weight:600;color:var(--cyan)}
+.alloc-val{font-family:var(--mono);font-size:18px;color:var(--green)}
+.alloc input[type=range]{width:100%;accent-color:var(--cyan);-webkit-appearance:none;appearance:none;background:transparent;height:26px;margin:0;font-size:16px}
+.alloc input[type=range]::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,#2f7d92,#1d3557);border:1px solid var(--line)}
+.alloc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:22px;margin-top:-10px;border-radius:2px;
+  background:linear-gradient(180deg,#a7e4f0,#2f7d92);border:1px solid var(--cyan);box-shadow:0 0 10px rgba(90,209,232,.45)}
+.alloc input[type=range]::-moz-range-track{height:4px;background:#1d3557;border:1px solid var(--line)}
+.alloc input[type=range]::-moz-range-thumb{width:14px;height:20px;border-radius:2px;background:linear-gradient(180deg,#a7e4f0,#2f7d92);border:1px solid var(--cyan)}
+.alloc input[type=range]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.alloc-note{font-size:12px;color:var(--text-dim);margin-top:4px}
+.alloc-note.ok{color:var(--green)}
+.alloc-sum{margin-top:22px;font-family:var(--mono);font-size:15px;text-align:center}
+.brief-actions{display:flex;gap:14px;justify-content:flex-end;margin-top:26px;flex-wrap:wrap}
+
+.dialog-list{display:flex;flex-direction:column;gap:14px;margin:8px 0 22px}
+.msg{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.85}
+.msg .avatar{flex:0 0 38px;height:38px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.msg .avatar svg{width:22px;height:22px}
+.msg .bubble{flex:1;background:rgba(29,53,87,.22);border:1px solid var(--line);padding:10px 14px;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);min-width:0}
+.msg .who{font-family:var(--mono);font-size:12px;letter-spacing:1px;display:block;margin-bottom:3px}
+.msg.ai .who{color:var(--cyan)}.msg.eng .who{color:var(--amber)}.msg.crew .who{color:var(--green)}
+.msg .txt{color:var(--text)}
+
+#hud{position:absolute;inset:0;z-index:20;pointer-events:none;font-family:var(--mono)}
+.hud-block{position:absolute;background:linear-gradient(160deg,rgba(11,18,32,.85),rgba(7,12,24,.82));border:1px solid var(--line);padding:12px 14px;pointer-events:auto;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);/* W9 让文字更清楚 */
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+#hud-tl{top:calc(16px + env(safe-area-inset-top));left:calc(16px + env(safe-area-inset-left));min-width:196px}
+#hud-tr{top:calc(64px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));min-width:208px;text-align:right}
+#hud-bl{bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));min-width:228px}
+/* W14 过载标识：顶部居中红字，闪烁；默认隐藏 */
+#overburn-tag{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:22;display:none;
+  color:#ff7a7a;border:1px solid rgba(255,107,107,.8);background:rgba(40,10,14,.85);
+  padding:6px 16px;font-size:12px;letter-spacing:2px;animation:overburnBlink .5s infinite alternate}
+@keyframes overburnBlink{from{box-shadow:0 0 4px rgba(255,80,80,.4)}to{box-shadow:0 0 16px rgba(255,80,80,.9)}}
+#hud.over #overburn-tag{display:block}
+#hud.over .gauge{animation:fuelFlash .4s infinite alternate}
+@keyframes fuelFlash{from{opacity:1}to{opacity:.45}}
+/* 轻刹标识：顶部居中青色，默认隐藏 */
+#brake-tag{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:22;display:none;
+  color:var(--cyan);border:1px solid var(--cyan-dim);background:rgba(10,26,34,.85);
+  padding:5px 14px;font-size:11px;letter-spacing:2px}
+#hud.light #brake-tag{display:block}
+/* 正式领航按钮：HUD 底部中央通栏，探测/领航同位置，避免窄屏与右上信息重叠 */
+#hud-br{left:50%;bottom:112px;right:auto;transform:translateX(-50%);z-index:21}
+#hud-br #btn-launch{min-width:220px;padding:11px 26px}
+.probe-legend{display:none;margin-top:9px;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);white-space:nowrap;align-items:center;gap:7px}
+.probe-legend.show{display:flex}
+.probe-legend .pl-dash{width:22px;height:0;border-top:2px dashed rgba(142,160,255,.6)}
+.hud-label{font-size:10.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}
+.hud-value{font-size:15px;color:var(--cyan-soft);letter-spacing:1px;font-variant-numeric:tabular-nums}
+.hud-row{margin-bottom:9px}.hud-row:last-child{margin-bottom:0}
+.bar{height:7px;background:rgba(255,255,255,.07);border:1px solid var(--line);margin-top:5px;position:relative;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;display:block;transition:width .12s linear}
+.bar.fuel i{background:linear-gradient(90deg,var(--cyan-dim),var(--cyan))}
+.bar.morale i{background:linear-gradient(90deg,#3c8f63,var(--green))}
+.bar.know i{background:linear-gradient(90deg,#6a5fb0,var(--violet))}
+.hud-inline{color:var(--cyan);font-style:normal}
+.state-warn{color:#ff6b6b!important;font-weight:600}
+.hud-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* 燃料环形甜甜圈量表 */
+.bl-top{display:flex;gap:14px;align-items:center;margin-bottom:13px}
+.gauge-wrap{position:relative;width:62px;height:62px;flex:0 0 62px}
+.gauge{width:62px;height:62px}
+.gauge-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:6}
+.gauge-fg{fill:none;stroke:var(--cyan);stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:150.8;stroke-dashoffset:0;transition:stroke-dashoffset .2s linear,stroke .2s}
+.gauge-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:var(--cyan-soft)}
+.gauge-txt i{font-size:9px;font-style:normal;margin-left:1px}
+.gauge-wrap.low .gauge-fg{stroke:var(--red);animation:warn .8s infinite}
+.gauge-wrap.low .gauge-txt{color:var(--red)}
+.bl-info .hud-label{margin-bottom:3px}
+#fuel-state{color:var(--cyan);font-size:12px}
+.gauge-wrap.low~.bl-info #fuel-state{color:var(--red)}
+
+/* 相对速度 6 格梯形色块 */
+.speed-word{color:var(--green);font-style:normal}
+.speed-word.mid{color:var(--amber)}.speed-word.high{color:var(--red)}
+.speed-band{display:flex;gap:3px;margin-top:5px;align-items:flex-end;height:16px;position:relative}
+.speed-limit{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--red);box-shadow:0 0 5px var(--red);z-index:2}
+.speed-band i{flex:1;background:rgba(255,255,255,.1);transition:background .15s}
+.speed-band i:nth-child(1){height:50%}.speed-band i:nth-child(2){height:62%}
+.speed-band i:nth-child(3){height:74%}.speed-band i:nth-child(4){height:86%}
+.speed-band i:nth-child(5){height:94%}.speed-band i:nth-child(6){height:100%}
+.speed-band i.on{background:var(--green)}
+.speed-band i.on.mid{background:var(--amber)}
+.speed-band i.on.high{background:var(--red);animation:warn .55s infinite}
+
+/* 规律掌握度 5 格 */
+.cell-band{display:flex;gap:4px;margin-top:6px}
+.cell-band i{flex:1;height:11px;background:rgba(255,255,255,.08);border:1px solid var(--line);transition:background .15s}
+.cell-band i.on{background:linear-gradient(180deg,var(--violet),#6a5fb0);border-color:var(--violet)}
+/* W7：0 状态灰色斜纹底，明确“尚未验证”，避免看起来像 UI 坏了 */
+.cell-band.empty i{background:repeating-linear-gradient(45deg,rgba(150,165,190,.18) 0 4px,rgba(150,165,190,.06) 4px 8px);border-color:var(--line)}
+
+/* 船员信心波形 */
+.morale-wave{width:100%;height:24px;margin-top:5px;display:block}
+.mw-bg{fill:none;stroke:var(--green);stroke-width:1.6;stroke-linejoin:round}
+.morale-wave.low .mw-bg{stroke:var(--amber)}
+.mode-tag{display:inline-block;font-size:11px;padding:3px 10px;letter-spacing:2px;border:1px solid currentColor;margin-bottom:8px}
+.mode-probe{color:var(--violet)}.mode-pilot{color:var(--amber)}
+#hud-goal{font-size:11.5px;color:var(--cyan-soft);line-height:1.7;max-width:230px}
+
+#comms{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,60vw);pointer-events:auto;
+  background:linear-gradient(160deg,rgba(11,18,32,.88),rgba(7,12,24,.85));border:1px solid var(--line);padding:12px 18px}
+#comms .cwho{font-family:var(--mono);font-size:11.5px;letter-spacing:2px;margin-bottom:4px}
+#comms .ctxt{font-size:13.5px;line-height:1.7;color:var(--text)}
+#comms.fade{opacity:.55}
+
+#pause-panel{position:absolute;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;
+  pointer-events:auto;background:radial-gradient(ellipse at center,rgba(20,60,90,.25),rgba(3,6,13,.78));}
+.pause-card{width:min(420px,92vw);padding:28px 30px;background:rgba(11,18,32,.96);
+  border:1px solid rgba(90,209,232,.6);
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
+#accident{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  pointer-events:auto;padding:24px;
+  background:radial-gradient(ellipse at center,rgba(120,20,20,.20),rgba(3,6,13,.74));}
+#accident.shake{animation:acc-shake .42s .1s ease;}
+@keyframes acc-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+.accident-card{position:relative;width:min(500px,94vw);padding:26px 28px;
+  background:rgba(11,18,32,.96);border:1px solid rgba(224,82,82,.75);
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  box-shadow:0 0 42px rgba(224,82,82,.26);
+  transform:scale(.92);opacity:0;
+  animation:acc-in .28s cubic-bezier(.22,1,.36,1) forwards;overflow:hidden;}
+@keyframes acc-in{to{transform:scale(1);opacity:1}}
+.acc-scan{position:absolute;left:0;right:0;top:0;height:3px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(224,82,82,.85),transparent);
+  animation:acc-scan 2.2s linear infinite;}
+@keyframes acc-scan{0%{top:0;opacity:1}100%{top:100%;opacity:.2}}
+.acc-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;
+  border-bottom:1px solid rgba(224,82,82,.4);padding-bottom:12px;margin-bottom:16px;}
+.acc-no{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;color:var(--cyan-soft)}
+.acc-tag{font-family:var(--mono);font-size:12px;letter-spacing:2px;padding:3px 10px;border:1px solid rgba(224,82,82,.8);color:#ff8a8a}
+.acc-tag.drift{border-color:rgba(255,159,90,.85);color:var(--amber)}
+.acc-tag.unrec{border-color:rgba(142,160,255,.85);color:var(--violet)}
+.acc-sec{margin-bottom:13px}
+.acc-k{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.acc-v{font-size:13.5px;line-height:1.85;color:var(--text)}
+.acc-v b{color:#ff8a8a}
+.acc-quote{font-size:13px;line-height:1.8;color:var(--cyan-soft);border-left:2px solid var(--cyan);
+  padding-left:13px;margin:16px 0;font-style:italic}
+.acc-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap}
+
+#touch-pad{position:absolute;inset:0;pointer-events:none;display:none}
+.tbtn{position:absolute;pointer-events:auto;width:clamp(56px,15vw,76px);height:clamp(56px,15vw,76px);
+  border:1px solid var(--cyan-dim);background:rgba(90,209,232,.1);
+  display:flex;align-items:center;justify-content:center;color:var(--cyan);user-select:none;-webkit-user-select:none;touch-action:none}
+.tbtn:active{background:rgba(90,209,232,.3)}
+#t-left{left:calc(18px + env(safe-area-inset-left));bottom:calc(120px + env(safe-area-inset-bottom))}
+#t-right{left:calc(92px + env(safe-area-inset-left));bottom:calc(120px + env(safe-area-inset-bottom))}
+#t-sidel{left:calc(18px + env(safe-area-inset-left));bottom:calc(192px + env(safe-area-inset-bottom))}
+#t-sider{left:calc(92px + env(safe-area-inset-left));bottom:calc(192px + env(safe-area-inset-bottom))}
+#t-thrust{right:calc(24px + env(safe-area-inset-right));bottom:calc(192px + env(safe-area-inset-bottom));width:clamp(72px,19vw,92px);height:clamp(72px,19vw,92px)}
+#t-brake{right:calc(24px + env(safe-area-inset-right));bottom:calc(104px + env(safe-area-inset-bottom));width:clamp(66px,17vw,82px);height:clamp(66px,17vw,82px)}
+.tbtn svg{width:26px;height:26px}
+
+.result-grade{font-size:64px;font-weight:800;text-align:center;font-family:var(--mono);margin:6px 0 4px}
+.result-grade.stamp{animation:stamp .42s cubic-bezier(.2,1.4,.4,1) both;transform-origin:center}
+@keyframes stamp{0%{transform:scale(2.4) rotate(-14deg);opacity:0}
+  60%{transform:scale(.92) rotate(3deg);opacity:1}
+  100%{transform:scale(1) rotate(0);opacity:1}}
+.grade-S{color:var(--cyan);text-shadow:0 0 30px rgba(90,209,232,.5)}.grade-A{color:var(--green)}.grade-B{color:#8fc0a8}.grade-C{color:var(--violet)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
+.stat-cell{border:1px solid var(--line);padding:12px 14px;background:rgba(255,255,255,.02)}
+.stat-cell .k{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:5px}
+.stat-cell .v{font-family:var(--mono);font-size:18px;color:var(--cyan-soft);font-variant-numeric:tabular-nums}
+#screen-result .inner,#screen-ending .inner{padding:38px 44px}
+/* 结算页双栏单屏：左＝评级与数据，右＝理论卡与船员手记，PC 端一屏放下不滚动 */
+.result-layout{width:min(1080px,95vw);display:grid;grid-template-columns:minmax(300px,352px) 1fr;gap:24px;align-items:start;padding:28px 32px}
+.result-layout .result-grade{font-size:52px;margin:2px 0 10px}
+.result-layout .stat-grid{gap:8px;margin:0 0 13px}
+.result-layout .stat-cell{padding:8px 10px}
+.result-layout .stat-cell .k{font-size:10.5px;margin-bottom:3px}
+.result-layout .stat-cell .v{font-size:16px}
+.result-layout .ending-log{font-size:12.8px;line-height:1.8;margin:0 0 14px}
+.result-layout .theory-card{margin:0 0 12px;padding:12px 14px}
+.result-layout .theory-card .tc-body{font-size:13px;line-height:1.75}
+.result-layout .crew-log{margin:0;padding:11px 14px}
+.result-layout .crew-log p{font-size:12.8px;line-height:1.8}
+.result-layout .brief-actions{justify-content:center;margin-top:2px}
+@media (max-width:900px){
+  .result-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:26px 20px;gap:14px}
+}
+/* W4：结算/结局/抉择三屏加半透明遮罩，避免对接圈与天体从卡片后透出 */
+#screen-result,#screen-ending,#screen-choice{background:rgba(3,6,13,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+/* T5 三段式：编号圆 + 标题 + 正文，纵向递进 */
+.three-stage{margin:22px 0;display:flex;flex-direction:column;gap:14px}
+.stage{display:flex;gap:14px;align-items:flex-start}
+.stage-no{flex:0 0 34px;height:34px;border-radius:50%;border:1px solid var(--cyan);color:var(--cyan);
+  display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(90,209,232,.08)}
+.stage-body h4{margin:2px 0 4px;font-size:14.5px;color:var(--cyan-soft);letter-spacing:1px}
+.stage-body p{margin:0;font-size:13px;line-height:1.85;color:var(--text-dim)}
+.ending-quote{font-size:15px;line-height:2.1;color:var(--cyan-soft);border-left:2px var(--cyan) solid;padding-left:18px;margin:20px 0}
+.share-hint{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);text-align:right;margin-top:12px}
+.ending-log{font-size:13.5px;line-height:2;color:var(--muted)}
+.theory-card{border:1px solid var(--violet);border-left:3px solid var(--violet);
+  background:linear-gradient(160deg,rgba(110,95,176,.16),rgba(20,24,48,.4));padding:14px 16px;margin:16px 0 4px}
+.theory-card .tc-head{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;color:var(--violet);margin-bottom:6px}
+.theory-card .tc-body{font-size:13.5px;line-height:1.8;color:var(--text)}
+.theory-card .tc-body b{color:var(--cyan)}
+/* N1 船员手记：手账感，区别于理论卡 */
+.crew-log{border:1px dashed var(--line);background:rgba(14,20,34,.55);padding:13px 16px;margin:14px 0 4px;border-radius:4px}
+.crew-log-head{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--amber);margin-bottom:7px}
+.crew-log p{font-size:13.5px;line-height:1.85;color:var(--text)}
+.crew-log .earth-mail{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--cyan-soft);font-style:italic}
+/* N2 航行日志卡生成器 */
+.log-card-maker{border:1px solid var(--line);background:rgba(14,20,34,.55);padding:15px 16px;margin:16px 0 4px;border-radius:4px}
+.lcm-label{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:10px}
+.lcm-inputs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:11px}
+.lcm-inputs input{flex:1;min-width:140px;background:rgba(8,14,26,.9);border:1px solid var(--line);color:var(--text);
+  padding:9px 11px;font-size:16px;border-radius:3px;font-family:var(--mono)}
+.lcm-inputs input:focus{outline:none;border-color:var(--cyan-dim)}
+.log-card{margin-top:14px;border:1.5px solid var(--cyan);border-radius:6px;padding:18px 20px;
+  background:linear-gradient(165deg,rgba(16,32,46,.96),rgba(8,12,24,.96));text-align:left}
+.log-card.hidden{display:none}
+.lc-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;color:var(--cyan-soft);margin-bottom:14px}
+.lc-grade{font-size:14px;color:var(--text);margin-bottom:12px}
+.lc-grade b{font-size:22px;color:var(--amber);margin-left:6px}
+.lc-msg{font-size:15px;line-height:1.7;color:var(--text);min-height:26px;margin-bottom:14px}
+.lc-sign{font-size:12.5px;color:var(--cyan-soft);text-align:right;margin-bottom:10px}
+.lc-hint{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center}
+
+.overlay{position:absolute;inset:0;z-index:60;background:rgba(3,6,13,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px}
+.confirm-box{width:min(440px,94vw);padding:30px 32px}
+.confirm-title{font-size:19px;letter-spacing:2px;margin-bottom:12px;color:var(--amber)}
+.confirm-text{font-size:13.5px;line-height:1.9;color:var(--muted);margin-bottom:22px}
+.confirm-actions{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+#legend{position:absolute;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;
+  background:rgba(3,6,13,.6);padding:24px;pointer-events:auto}
+.legend-box{width:min(470px,94vw);padding:24px 26px}
+.legend-title{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:16px}
+.legend-item{display:flex;gap:12px;align-items:center;font-size:13px;line-height:1.6;margin-bottom:13px}
+.legend-item b{color:var(--cyan-soft)}
+.lg-line{flex:0 0 40px;width:40px;height:12px}
+.legend-actions{display:flex;justify-content:flex-end;margin-top:6px}
+.manual-box{width:min(820px,95vw);max-height:90vh;overflow-y:auto;padding:32px 36px}
+.manual-box h3{font-size:20px;letter-spacing:2px;margin-bottom:6px}
+.manual-box .m-sub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-bottom:22px}
+.m-card{border:1px solid var(--line);padding:16px 18px;margin-bottom:14px;background:rgba(255,255,255,.02)}
+.m-card h4{font-size:15px;color:var(--cyan);margin-bottom:8px;letter-spacing:1px}
+.m-card p{font-size:13.5px;line-height:1.95;color:var(--text)}
+.m-card p b{color:var(--amber);font-weight:600}
+.m-card.highlight{border-color:var(--red);background:rgba(224,82,82,.12);
+  box-shadow:0 0 24px rgba(224,82,82,.25);animation:warn 1.4s 2;}
+.manual-close{float:right;margin-bottom:10px}
+
+#topbar{position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));z-index:40;display:flex;gap:10px}
+.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:rgba(11,18,32,.8);display:flex;align-items:center;justify-content:center;color:var(--cyan-soft)}
+.icon-btn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn.off{color:var(--muted);opacity:.55}
+#topbar .label-btn{width:auto;padding:0 14px;font-family:var(--mono);font-size:12px;letter-spacing:1px}
+
+@keyframes warn{0%,100%{opacity:1}50%{opacity:.35}}
+.warn-flash{animation:warn .8s infinite}
+
+@media (max-width:760px){
+  .screen .inner{padding:28px 22px}
+  #hud-tl{min-width:140px;padding:9px 10px}#hud-tr{min-width:140px;padding:9px 10px}
+  #hud-bl{min-width:150px;padding:9px 10px}
+  #hud-br{bottom:calc(104px + env(safe-area-inset-bottom));padding:0}
+  #hud-br #btn-launch{min-width:200px;padding:10px 18px;font-size:12px}
+  .hud-value{font-size:12.5px}.hud-label{font-size:9.5px}
+  #comms{width:min(560px,72vw);bottom:calc(200px + env(safe-area-inset-bottom))}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .stat-grid .stat-wide{grid-column:span 2}
+  #screen-title h1{letter-spacing:6px}
+}
+/* R6：极窄窗口（<400px）顶栏缩小、允许换行，避免与 HUD 右上块打架 */
+@media (max-width:400px){
+  #topbar{gap:6px;top:10px;right:10px;flex-wrap:wrap;justify-content:flex-end;max-width:62vw}
+  #topbar .icon-btn{width:36px;height:36px}
+  #topbar .icon-btn svg{width:17px;height:17px}
+  #topbar .label-btn{padding:0 10px;font-size:11px}
+}
+/* 触摸键只在真正的触屏设备显示，避免窄窗口误触 */
+@media (pointer:coarse){#touch-pad{display:block}}
+/* M6 竖屏引导遮罩：仅触屏且竖屏时显示 */
+#rotate-hint{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;background:rgba(3,6,13,.96);text-align:center;padding:24px}
+#rotate-hint svg{width:64px;height:64px;animation:rot 2.4s ease-in-out infinite}
+@keyframes rot{0%,45%{transform:rotate(0)}55%,100%{transform:rotate(-90deg)}}
+#rotate-hint h3{font-size:20px;letter-spacing:2px;color:var(--cyan)}
+#rotate-hint p{font-size:13.5px;color:var(--muted)}
+@media (orientation:portrait) and (pointer:coarse){#rotate-hint{display:flex}}
+/* M8 移动端关闭实时模糊，防中低端安卓掉帧 */
+@media (pointer:coarse){
+  .hud-block,.overlay,#screen-result,#screen-ending,#screen-choice,#legend{
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+}
+/* D9 键盘焦点可见 */
+button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* D10 降低动效：前庭敏感用户关闭闪烁/抖动/盖章等动画 */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  #rotate-hint svg{animation:none}
+}
+</style>
+</head>
+<body>
+<!-- M6 竖屏引导：横屏时自动隐藏 -->
+<div id="rotate-hint">
+  <svg viewBox="0 0 48 48" fill="none" stroke="#5ad1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="14" y="6" width="20" height="36" rx="3"/><line x1="20" y1="37" x2="28" y2="37"/>
+  </svg>
+  <h3>请横屏游玩</h3>
+  <p>星舰领航员需要更宽的视野才能看清航道</p>
+</div>
+<div id="app">
+  <canvas id="space"></canvas>
+
+  <div id="topbar" class="hidden">
+    <button class="icon-btn label-btn" id="manualBtn">航行手册</button>
+    <button class="icon-btn" id="sfxBtn" aria-label="音效开关" title="音效开关">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
+    </button>
+    <button class="icon-btn" id="musicBtn" aria-label="音乐开关" title="音乐开关">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </button>
+  </div>
+
+  <!-- 标题屏 -->
+  <section id="screen-title" class="screen">
+    <div class="title-wrap">
+      <p class="eyebrow">星际纪元 2147 · 方舟号远航舰队</p>
+      <h1>星舰领航员</h1>
+      <p class="title-sub">STARSHIP NAVIGATOR // 客观规律与主观能动性</p>
+      <p class="title-desc">太阳系资源渐枯，方舟号载着最后的希望驶向类地行星「新曦」。你是舰队领航员——无法命令宇宙，却可以认识它、驾驭它。先在探测中认识规律，再在领航中运用规律：从被规律支配的<b>必然王国</b>，驶向认识规律、驾驭规律的<b>自由王国</b>。</p>
+      <div class="title-actions">
+        <button class="sci-btn amber hidden" id="continueBtn">继续航程</button>
+        <button class="sci-btn" id="startBtn">启动舰队</button>
+      </div>
+      <p class="sound-tip">点击「启动舰队」后开启声音 · 手机建议横屏、佩戴耳机效果更佳</p>
+      <p class="title-credit">《马克思主义基本原理》课程作业 · 互动式小游戏（E 类）</p>
+      <p class="title-best" id="title-best"></p>
+      <div class="key-hint">
+        <span><b>W/↑</b>主推进</span><span><b>Shift</b>微调推进</span><span><b>A D</b>转向</span><span><b>Q E</b>侧向推进</span><span><b>S</b>重刹</span><span><b>Shift+S</b>轻刹</span><span><b>R</b>探测模式重置</span><span><b>P/Esc</b>暂停</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 任务简报 -->
+  <section id="screen-briefing" class="screen hidden">
+    <div class="inner clip-panel">
+      <div class="brief-head">
+        <div><p class="lv-no" id="brief-no">SECTOR 01</p><h2 id="brief-title"></h2></div>
+        <p class="brief-meta" id="brief-meta"></p>
+      </div>
+      <div class="brief-goal" id="brief-goal"></div>
+      <div class="brief-steps">
+        <div class="bs"><span class="bs-no">STEP 1</span><b>探测</b><i>燃料无限，随便试错——看清自然轨迹，摸清引力的脾气</i></div>
+        <div class="bs"><span class="bs-no">STEP 2</span><b>领航</b><i>燃料不可重置，用你在探测里认出的规律去飞</i></div>
+        <div class="bs"><span class="bs-no">STEP 3</span><b>对接</b><i>进入对接圈，并把相对速度压到上限以内</i></div>
+      </div>
+      <div class="brief-archive" id="brief-archive"></div>
+      <div class="dialog-list" id="brief-dialog"></div>
+      <div class="brief-actions">
+        <button class="sci-btn ghost" id="brief-manual">查看航行手册</button>
+        <button class="sci-btn" id="brief-enter">进入探测模式</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 游戏 HUD -->
+  <div id="hud" class="hidden">
+    <div id="overburn-tag">过载 OVERBURN · 推力+45% · 燃料加倍</div>
+    <div id="brake-tag">轻刹 LIGHT BRAKE · 精细减速</div>
+    <div class="hud-block" id="hud-tl">
+      <div class="hud-row"><div class="hud-label">当前星区</div><div class="hud-value" id="hud-level">—</div></div>
+      <div class="hud-row"><div class="hud-label">任务目标</div><div id="hud-goal">—</div></div>
+    </div>
+    <div class="hud-block" id="hud-tr">
+      <span class="mode-tag mode-probe" id="hud-mode">探测模式 PROBE</span>
+      <div class="hud-row">
+        <div class="hud-label">规律掌握度 <span id="know-x" class="hud-inline">0/5</span></div>
+        <div class="cell-band" id="know-band"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="hud-row">
+        <div class="hud-label">船员信心</div>
+        <svg class="morale-wave" id="morale-wave" viewBox="0 0 100 26" preserveAspectRatio="none">
+          <path class="mw-bg" id="mw-path" d="M0 13 H100"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hud-block" id="hud-bl">
+      <div class="bl-top">
+        <div class="gauge-wrap">
+          <svg class="gauge" viewBox="0 0 60 60">
+            <circle class="gauge-bg" cx="30" cy="30" r="24"/>
+            <circle class="gauge-fg" id="gauge-fuel" cx="30" cy="30" r="24" transform="rotate(-90 30 30)"/>
+          </svg>
+          <div class="gauge-txt"><span id="fuel-pct">100</span><i>%</i></div>
+        </div>
+        <div class="bl-info">
+          <div class="hud-label">燃料储备</div>
+          <div class="hud-sub" id="fuel-state">充足</div>
+        </div>
+      </div>
+      <div class="hud-row">
+        <div class="hud-label">相对速度 <span id="speed-word" class="speed-word">低</span></div>
+        <div class="speed-band" id="speed-band"><i></i><i></i><i></i><i></i><i></i><i></i><div class="speed-limit" id="speed-limit"></div></div>
+        <div class="hud-sub" id="speed-knot">0 km/s</div>
+      </div>
+      <div class="hud-row">
+        <div class="hud-label">距目标 <span id="dist-state" class="hud-inline">—</span></div>
+        <div class="hud-value" id="hud-dist-km">0 公里</div>
+      </div>
+      <div class="hud-row" id="hud-err-row">
+        <div class="hud-label" id="hud-err-label">预测误差</div>
+        <div class="hud-value" id="hud-err">— km</div>
+      </div>
+    </div>
+    <div class="hud-block" id="hud-br">
+      <button class="sci-btn" id="btn-launch" style="padding:10px 20px;font-size:13px">正式领航</button>
+      <div class="probe-legend" id="probe-legend"><span class="pl-dash"></span>淡色虚线 = 你之前的预测（越早越淡）</div>
+    </div>
+
+    <div id="accident" class="hidden">
+      <div class="accident-card" id="accident-card">
+        <div class="acc-scan"></div>
+        <div class="acc-head">
+          <span class="acc-no" id="acc-no">航行事故报告 #001</span>
+          <span class="acc-tag" id="acc-tag">唯意志论</span>
+        </div>
+        <div class="acc-sec"><div class="acc-k">发生了什么</div><div class="acc-v" id="acc-what"></div></div>
+        <div class="acc-sec"><div class="acc-k">违反了什么</div><div class="acc-v" id="acc-law"></div></div>
+        <div class="acc-sec"><div class="acc-k">正确做法</div><div class="acc-v" id="acc-do"></div></div>
+        <div class="acc-quote" id="acc-quote"></div>
+        <div class="acc-actions">
+          <button class="sci-btn ghost" id="btn-review" style="padding:11px 20px;font-size:13px">复盘原理</button>
+          <button class="sci-btn" id="btn-brief" style="padding:11px 20px;font-size:13px">返回简报</button>
+          <button class="sci-btn amber" id="btn-retry" style="padding:11px 20px;font-size:13px">重新规划探测</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="comms">
+      <div class="cwho" id="cwho">阿基米德</div>
+      <div class="ctxt" id="ctxt">系统就绪。</div>
+    </div>
+
+    <div id="touch-pad">
+      <div class="tbtn" id="t-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+      <div class="tbtn" id="t-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="tbtn" id="t-sidel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 12H6M12 5l-7 7 7 7"/></svg></div>
+      <div class="tbtn" id="t-sider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12h12M12 19l7-7-7-7"/></svg></div>
+      <div class="tbtn" id="t-thrust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>
+      <div class="tbtn" id="t-brake"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+    </div>
+  </div>
+
+  <!-- 暂停面板 -->
+  <div id="pause-panel" class="hidden">
+    <div class="pause-card clip-panel">
+      <p class="eyebrow" style="text-align:center">PAUSED</p>
+      <h2 class="screen-h" style="text-align:center">航行已暂停</h2>
+      <div class="brief-actions" style="justify-content:center">
+        <button class="sci-btn" id="btn-resume">继续航行</button>
+        <button class="sci-btn ghost" id="btn-pause-manual">查看手册</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关卡结算 -->
+  <section id="screen-result" class="screen hidden">
+    <div class="inner clip-panel result-layout">
+      <div class="rl-left">
+      <p class="eyebrow" style="text-align:center">SECTOR CLEARED</p>
+      <div class="result-grade" id="result-grade">A</div>
+      <div class="stat-grid">
+        <div class="stat-cell"><div class="k">剩余燃料</div><div class="v" id="r-fuel">—</div></div>
+        <div class="stat-cell"><div class="k" id="r-slingshot-k">引力借力次数</div><div class="v" id="r-slingshot">—</div></div>
+        <div class="stat-cell"><div class="k">探测试错次数</div><div class="v" id="r-probe">—</div></div>
+        <div class="stat-cell"><div class="k">规律掌握度</div><div class="v" id="r-know">—</div></div>
+        <div class="stat-cell stat-wide"><div class="k">有效探测时长（不含挂机）</div><div class="v" id="r-probe-time">—</div></div>
+        <div class="stat-cell"><div class="k">领航用时</div><div class="v" id="r-pilot-time">—</div></div>
+        <div class="stat-cell stat-wide"><div class="k">预测误差（实测落点偏差）</div><div class="v" id="r-err">—</div></div>
+      </div>
+      <p class="ending-log" id="result-comment"></p>
+      <div class="brief-actions"><button class="sci-btn" id="btn-next">前往下一星区</button></div>
+      </div>
+      <div class="rl-right">
+      <div class="theory-card">
+        <div class="tc-head" id="tc-head"></div>
+        <div class="tc-body" id="tc-body"></div>
+      </div>
+      <!-- N1 船员手记：用生活语言把本关原理讲一遍 -->
+      <div class="crew-log">
+        <div class="crew-log-head">船员手记 · 大副的私人日志</div>
+        <p id="crew-log-body"></p>
+        <p class="earth-mail" id="earth-mail"></p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第5关：物资分配抉择关 -->
+  <section id="screen-choice" class="screen hidden">
+    <div class="inner clip-panel">
+      <p class="eyebrow" style="text-align:center">SECTOR 05 // 社会基本矛盾</p>
+      <h2 class="screen-h" style="text-align:center">方舟号 · 物资分配</h2>
+      <p class="choice-intro">方舟号的物资总量是既定的<b>生产力</b>水平；如何在各部门间分配，是<b>生产关系</b>。分配方式（经济基础）决定了管理制度（上层建筑）能否运转。请把 <b><span id="ch-quota">100</span> 个单位</b>全部分配到三个部门。</p>
+      <div class="key-contradiction">本关主要矛盾：生产力的有限性 ⟷ 生产关系的不适应——资源就这么多，如何分配决定新曦的未来。</div>
+      <div class="alloc" id="alloc-list">
+        <div class="alloc-row">
+          <div class="alloc-head"><label for="al-prop">推进系统</label><span class="alloc-val" id="av-prop">0</span></div>
+          <input type="range" id="al-prop" min="0" max="100" value="0">
+          <p class="alloc-note" id="nt-prop">最低需求 40，否则无法抵达新曦</p>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-head"><label for="al-life">生命维持</label><span class="alloc-val" id="av-life">0</span></div>
+          <input type="range" id="al-life" min="0" max="100" value="0">
+          <p class="alloc-note" id="nt-life">最低需求 35，否则船员无法存活</p>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-head"><label for="al-res">科研储备</label><span class="alloc-val" id="av-res">0</span></div>
+          <input type="range" id="al-res" min="0" max="100" value="0">
+          <p class="alloc-note" id="nt-res">投入越多，新曦定居点的起步越稳</p>
+        </div>
+      </div>
+      <div class="alloc-sum">已分配 <b id="ch-sum">0</b> / 100　<span id="ch-flag" class="state-warn"></span></div>
+      <div class="brief-actions"><button class="sci-btn" id="btn-alloc" disabled>确认分配方案</button></div>
+    </div>
+  </section>
+
+  <!-- 结局 -->
+  <section id="screen-ending" class="screen hidden">
+    <div class="inner clip-panel">
+      <p class="eyebrow" style="text-align:center">MISSION COMPLETE</p>
+      <h2 style="text-align:center;font-size:30px;letter-spacing:4px;margin:10px 0">抵达新曦</h2>
+      <div class="ending-quote" id="ending-quote"></div>
+      <div class="three-stage">
+        <div class="stage"><div class="stage-no">壹</div><div class="stage-body"><h4>认识必然</h4><p id="stage-1"></p></div></div>
+        <div class="stage"><div class="stage-no">贰</div><div class="stage-body"><h4>运用必然</h4><p id="stage-2"></p></div></div>
+        <div class="stage"><div class="stage-no">叁</div><div class="stage-body"><h4>改造必然</h4><p id="stage-3"></p></div></div>
+      </div>
+      <p class="ending-log" id="ending-alt"></p>
+      <div class="stat-grid">
+        <div class="stat-cell"><div class="k">舰队综合评级</div><div class="v" id="ending-grade">—</div></div>
+        <div class="stat-cell"><div class="k">总引力借力</div><div class="v" id="ending-slingshot">—</div></div>
+      </div>
+      <!-- N2 给地球留一句话，生成可截图的航行日志卡 -->
+      <div class="log-card-maker">
+        <div class="lcm-label">给地球留一句话 · 生成你的航行日志卡</div>
+        <div class="lcm-inputs">
+          <input type="text" id="lcm-name" maxlength="12" placeholder="领航员名字">
+          <input type="text" id="lcm-msg" maxlength="40" placeholder="想对地球说的话（40字内）">
+        </div>
+        <button class="sci-btn" id="btn-make-card">生成航行日志卡</button>
+        <div id="log-card" class="log-card hidden">
+          <div class="lc-top"><span>星舰领航员 · 航行日志</span><span id="lc-date"></span></div>
+          <div class="lc-grade">综合评级 <b id="lc-grade"></b></div>
+          <div class="lc-msg" id="lc-msg"></div>
+          <div class="lc-sign">—— 领航员 <span id="lc-name"></span></div>
+          <div class="lc-hint">截图即可保存分享</div>
+        </div>
+      </div>
+      <div class="brief-actions">
+        <button class="sci-btn ghost" id="btn-share">复制链接给同学</button>
+        <button class="sci-btn" id="btn-restart">再次启航</button>
+      </div>
+      <p class="share-hint">把链接发给同学：他们不用安装任何东西，打开就能玩。</p>
+    </div>
+  </section>
+
+  <!-- 圈线图例卡（首次进入游戏显示） -->
+  <div id="legend" class="hidden">
+    <div class="legend-box clip-panel">
+      <div class="legend-title">图例 // 识别你看到的圈线</div>
+      <div class="legend-item">
+        <svg class="lg-line" viewBox="0 0 40 12"><circle cx="20" cy="6" r="5" fill="none" stroke="#5ad1e8" stroke-width="1.4"/></svg>
+        <span><b>引力环（青）</b>：引力作用范围，越靠近天体引力越强。</span>
+      </div>
+      <div class="legend-item">
+        <svg class="lg-line" viewBox="0 0 40 12"><circle cx="20" cy="6" r="5" fill="none" stroke="#8ea0ff" stroke-width="1.4" stroke-dasharray="3 3"/></svg>
+        <span><b>星风区（紫·虚线）</b>：周期气流，方向随时间规律变化。</span>
+      </div>
+      <div class="legend-item">
+        <svg class="lg-line" viewBox="0 0 40 12"><circle cx="20" cy="6" r="5" fill="none" stroke="#7be0a8" stroke-width="1.4" stroke-dasharray="6 4"/></svg>
+        <span><b>对接圈（绿·点线）</b>：进入其中且相对速度达标，即完成交付。</span>
+      </div>
+      <div class="legend-actions"><button class="sci-btn" id="legend-close" style="padding:10px 24px;font-size:13px">明白了</button></div>
+    </div>
+  </div>
+
+  <!-- 覆盖存档确认 -->
+  <div class="overlay hidden" id="confirm-overlay">
+    <div class="confirm-box clip-panel">
+      <h3 class="confirm-title" id="confirm-title">覆盖当前航程？</h3>
+      <p class="confirm-text" id="confirm-text">检测到一段未完成的航程。启动新舰队将覆盖当前存档，原进度无法恢复。</p>
+      <div class="confirm-actions">
+        <button class="sci-btn ghost" id="confirm-cancel" style="padding:11px 22px;font-size:13px">取消</button>
+        <button class="sci-btn amber" id="confirm-ok" style="padding:11px 22px;font-size:13px">覆盖并启航</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 航行手册 -->
+  <div class="overlay hidden" id="manual">
+    <div class="manual-box clip-panel">
+      <button class="sci-btn ghost manual-close" id="manual-close">关闭</button>
+      <h3>航行手册</h3>
+      <p class="m-sub">FIELD MANUAL // 客观规律性与主观能动性</p>
+      <div class="m-card"><h4>一、规律具有客观性</h4>
+        <p>规律是事物运动过程中固有的、本质的、必然的、稳定的联系。它的存在和发生作用不以人的意志为转移，既不能被创造，也不能被消灭。游戏中的引力参数、星风周期在探测与领航模式下完全一致——宇宙不会因为你着急就改变规则。</p></div>
+      <div class="m-card"><h4>二、人具有主观能动性</h4>
+        <p>人能够在实践的基础上能动地认识世界（透过现象把握规律），又能够指导实践能动地改造世界。探测模式中的观察、预测与试错，就是在发挥能动性把「自在的规律」变成「为我的认识」。</p></div>
+      <div class="m-card"><h4>三、二者的辩证统一</h4>
+        <p>尊重客观规律是正确发挥主观能动性的<b>前提</b>；发挥主观能动性是认识和利用客观规律的<b>必要条件</b>。引力弹弓没有改变引力，而是改变航线、改变规律起作用的具体方式，让客观规律为我所用。</p></div>
+      <div class="m-card"><h4>四、警惕两种错误倾向</h4>
+        <p><b>唯意志论</b>：夸大能动性、无视规律蛮干，结果是撞毁或耗尽燃料；<b>宿命论</b>：只讲规律、否定能动性、无所作为，结果是随波漂流失联。二者都走不通。</p></div>
+      <div class="m-card"><h4>五、从必然走向自由</h4>
+        <p>自由不是摆脱规律的任性妄为，而是对必然（规律）的认识和依据这种认识对客观世界的改造。越深刻认识规律，越能从容驾驭航程——这正是从必然王国走向自由王国。</p></div>
+      <div class="m-card"><h4>六、实践是认识的基础</h4>
+        <p>实践是认识的来源、动力和目的。引力参数不会写在任何一本书里，它只能被一次次观测出来——探测模式里那条预测轨道，就是用你自己的试错数据拟合出来的。<b>离开实践，就没有关于规律的认识。</b></p></div>
+      <div class="m-card"><h4>七、认识的反复性、无限性和上升性</h4>
+        <p>认识不是一次完成的。每一次试错都让预测更准一点，但规律的认识没有终点——每换一个星区参数就变一次，旧经验会失效。<b>真理是具体的、有条件的</b>，脱离具体条件谈「永远正确」，就是把真理变成了教条。</p></div>
+      <div class="m-card"><h4>八、必然王国与自由王国（历史唯物主义）</h4>
+        <p>生产力与生产关系、经济基础与上层建筑这一社会基本矛盾的运动，推动着社会形态的更替。认识必然、改造必然，就是不断从必然王国走向自由王国的历程。<b>我们没有创造一条引力定律，只是让引力为我们所用。</b></p></div>
+      <div class="m-card"><h4>九、同一套函数算两遍（机制即原理）</h4>
+        <p>探测模式画出的预测线，与领航模式飞船实际飞过的轨迹，由<b>同一批函数</b>计算：引力用 <b>gravityAt</b>、星风用 <b>windForce</b>、推进用 <b>subStep</b>、预测用 <b>predictPath</b>。它们不是两套近似的方程，而是同一套物理真源。所以"宇宙不会因为你着急就改变规则"不是一句文案，而是代码事实——你在探测时认识到的规律，领航时必然应验；主观能动性改变的是航向，不是规律本身。</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   星舰领航员 —— 游戏逻辑（修订版）
+   ============================================================ */
+const TAU=Math.PI*2;
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const rand=(a,b)=>a+Math.random()*(b-a);
+const dist=(x1,y1,x2,y2)=>Math.hypot(x2-x1,y2-y1);
+const angDiff=(a,b)=>{let d=(b-a)%TAU;if(d>Math.PI)d-=TAU;if(d<-Math.PI)d+=TAU;return d;};
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+
+const canvas=document.getElementById('space');
+const ctx=canvas.getContext('2d');
+let VW=0,VH=0,DPR=1;
+function resize(){
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  VW=window.innerWidth;VH=window.innerHeight;
+  canvas.width=Math.floor(VW*DPR);canvas.height=Math.floor(VH*DPR);
+  canvas.style.width=VW+'px';canvas.style.height=VH+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize',resize);resize();
+
+const G={
+  state:'title',levelIndex:0,level:null,ship:null,startSnapshot:null,
+  particles:[],stars:[],nebulae:[],
+  camera:{x:0,y:0,zoom:1,shake:0},
+  input:{left:false,right:false,thrust:false,lowThrust:false,brake:false,lightBrake:false,sideL:false,sideR:false},
+  fuel:0,maxFuel:0,knowledge:0,morale:80,
+  slingshot:0,probeResets:0,levelTime:0,probeTime:0,
+  totalSlingshot:0,grades:[],
+  bestApproach:Infinity,driftTimer:0,knowEval:0,
+  commTimer:0,warp:0,time:0,lastSave:0,
+  levelTime0:0,activeProbeMs:0,windWindowMs:0,windTotalMs:0,
+  bank:0,thrustHold:0,overburn:false,
+  slowmo:0,impactFx:null,lockOn:false,legendShown:false,
+  actLog:{lastThrustAt:-99,flewMs:0,everThrust:false,lastBurn:0},
+  pred:{errKm:null},paused:false
+};
+
+/* 输入 */
+const keyMap={
+  ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',
+  ArrowUp:'thrust',KeyW:'thrust',ArrowDown:'brake',KeyS:'brake',
+  ShiftLeft:'lowThrust',ShiftRight:'lowThrust',
+  KeyQ:'sideL',KeyE:'sideR'
+};
+window.addEventListener('keydown',e=>{
+  const k=keyMap[e.code];
+  if(k){G.input[k]=true;e.preventDefault();}
+  // W12 两档刹车：Shift+S 走轻刹（60 加速度 / 2 燃料），S 走重刹
+  if(e.code==='KeyS'){G.input.lightBrake=e.shiftKey;if(e.shiftKey)G.input.brake=false;}
+  if(e.code==='KeyR'&&G.state==='probe')resetProbe();
+  if((e.code==='Escape'||e.code==='KeyP')&&(G.state==='probe'||G.state==='pilot'))togglePause();
+});
+window.addEventListener('keyup',e=>{const k=keyMap[e.code];if(k){G.input[k]=false;e.preventDefault();}
+  if(e.code==='KeyS')G.input.lightBrake=false;});
+window.addEventListener('blur',()=>{for(const k in G.input)G.input[k]=false;});
+function bindHold(el,p){
+  el.addEventListener('pointerdown',e=>{G.input[p]=true;e.preventDefault();});
+  const off=e=>{G.input[p]=false;e.preventDefault();};
+  el.addEventListener('pointerup',off);el.addEventListener('pointerleave',off);el.addEventListener('pointercancel',off);
+}
+bindHold(document.getElementById('t-left'),'left');
+bindHold(document.getElementById('t-right'),'right');
+bindHold(document.getElementById('t-thrust'),'thrust');
+bindHold(document.getElementById('t-brake'),'brake');
+bindHold(document.getElementById('t-sidel'),'sideL');
+bindHold(document.getElementById('t-sider'),'sideR');
+
+/* 音频：模块级配置（只建一次，不每帧 new）。S3/S4 + A1/A2 已并入 */
+const ENGINE_CFG={
+  off :{g:0.00,lowF:200,jetF:420, jetG:0.00,hiss:0.00,base:48,over:0},
+  low :{g:0.16,lowF:260,jetF:1400,jetG:0.12,hiss:0.22,base:54,over:0},
+  main:{g:0.42,lowF:340,jetF:520, jetG:0.55,hiss:0.05,base:66,over:0},
+  over:{g:0.62,lowF:520,jetF:900, jetG:0.95,hiss:0.12,base:78,over:0.11}
+};
+const BRAKE_CFG={
+  off:{g:0.00,f:700},
+  light:{g:0.07,f:1800},
+  heavy:{g:0.14,f:560}
+};
+const AudioSys={
+  ac:null,sfxOn:true,musicOn:true,master:null,sfx:null,music:null,eng:null,
+  init(){
+    if(this.ac)return;
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    this.ac=new AC();
+    // 主总线 0.5，下挂音效总线 0.85、音乐总线 0.35
+    const m=this.ac.createGain();m.gain.value=0.5;m.connect(this.ac.destination);this.master=m;
+    const s=this.ac.createGain();s.gain.value=this.sfxOn?0.85:0;s.connect(m);this.sfx=s;
+    const u=this.ac.createGain();u.gain.value=this.musicOn?0.35:0;u.connect(m);this.music=u;
+    this.initEngine();this.initBrake();
+  },
+  resume(){if(this.ac&&this.ac.state==='suspended')this.ac.resume();},
+  /* ===== 分层引擎：低频机体 + 失谐副振 + 喷流噪声 + 高频嘶声 ===== */
+  initEngine(){
+    if(this.eng)return;const ac=this.ac;
+    const bus=ac.createGain();bus.gain.value=0;bus.connect(this.sfx);
+    // ① 低频机体声
+    const low=ac.createOscillator();low.type='sawtooth';low.frequency.value=48;
+    const lowF=ac.createBiquadFilter();lowF.type='lowpass';lowF.frequency.value=220;lowF.Q.value=0.7;
+    const lowG=ac.createGain();lowG.gain.value=0.9;
+    low.connect(lowF);lowF.connect(lowG);lowG.connect(bus);low.start();
+    // ② 失谐副振（拍频厚度）
+    const low2=ac.createOscillator();low2.type='sawtooth';low2.frequency.value=48*1.006;
+    const low2G=ac.createGain();low2G.gain.value=0.5;
+    low2.connect(low2G);low2G.connect(lowF);low2.start();
+    // 过载谐波（默认静音，进入过载时淡入）
+    const overOsc=ac.createOscillator();overOsc.type='square';overOsc.frequency.value=72;
+    const overG=ac.createGain();overG.gain.value=0;
+    overOsc.connect(overG);overG.connect(bus);overOsc.start();
+    // ③ 喷流噪声层（白噪 → 带通）
+    const len=ac.sampleRate*2,buf=ac.createBuffer(1,len,ac.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    const jet=ac.createBufferSource();jet.buffer=buf;jet.loop=true;
+    const jetF=ac.createBiquadFilter();jetF.type='bandpass';jetF.frequency.value=520;jetF.Q.value=0.8;
+    const jetG=ac.createGain();jetG.gain.value=0.55;
+    jet.connect(jetF);jetF.connect(jetG);jetG.connect(bus);jet.start();
+    // ④ 高频嘶声层（微调时明显）
+    const hissF=ac.createBiquadFilter();hissF.type='highpass';hissF.frequency.value=2600;
+    const hissG=ac.createGain();hissG.gain.value=0;
+    jet.connect(hissF);hissF.connect(hissG);hissG.connect(bus);
+    this.eng={bus,low,low2,lowF,lowG,jet,jetF,jetG,hissF,hissG,overOsc,overG};
+  },
+  // mode: 'off'|'low'|'main'|'over'
+  setEngine(mode,spd){
+    if(!this.eng)return;const t=this.ac.currentTime,e=this.eng;
+    const cfg=ENGINE_CFG[mode]||ENGINE_CFG.off;
+    if(e.mode!==mode){ // 仅档位变化时排一次 ramp，避免每帧重排
+      e.mode=mode;
+      e.bus.gain.cancelScheduledValues(t);
+      e.bus.gain.linearRampToValueAtTime(this.sfxOn?cfg.g:0,t+(mode==='off'?0.38:0.25));
+    }
+    const k=1+Math.min(spd||0,600)/600*0.18; // 随速度上移基频（连续量，setTarget 不排队）
+    e.low.frequency.setTargetAtTime(cfg.base*k,t,0.12);
+    e.low2.frequency.setTargetAtTime(cfg.base*1.006*k,t,0.12);
+    e.overOsc.frequency.setTargetAtTime(cfg.base*1.5*k,t,0.12);
+    e.lowF.frequency.setTargetAtTime(cfg.lowF,t,0.1); // S4：低通分档，过载炸开感
+    e.jetF.frequency.setTargetAtTime(cfg.jetF,t,0.1);
+    e.jetG.gain.setTargetAtTime(cfg.jetG,t,0.1);
+    e.hissG.gain.setTargetAtTime(cfg.hiss,t,0.1);
+    e.overG.gain.setTargetAtTime(cfg.over,t,0.1);
+  },
+  /* ===== 刹车：轻刹高频嘶鸣 / 重刹低频拽住 ===== */
+  initBrake(){
+    if(this.brakeSrc)return;const ac=this.ac;
+    const src=ac.createBufferSource(),buf=ac.createBuffer(1,ac.sampleRate*0.5,ac.sampleRate);
+    const dd=buf.getChannelData(0);for(let i=0;i<dd.length;i++)dd[i]=Math.random()*2-1;
+    src.buffer=buf;src.loop=true;
+    const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.4;
+    const g=ac.createGain();g.gain.value=0;
+    src.connect(f);f.connect(g);g.connect(this.sfx);src.start();
+    this.brakeSrc=src;this.brakeGain=g;this.brakeFilter=f;
+  },
+  // mode: 'off'|'light'|'heavy'
+  setBrake(mode){
+    if(!this.brakeSrc)return;const t=this.ac.currentTime;
+    const cfg=BRAKE_CFG[mode]||BRAKE_CFG.off;
+    if(this.brakeMode!==mode){ // 仅档位变化时排一次 ramp
+      this.brakeMode=mode;
+      this.brakeGain.gain.cancelScheduledValues(t);
+      this.brakeGain.gain.linearRampToValueAtTime(this.sfxOn?cfg.g:0,t+(mode==='off'?0.16:0.07));
+    }
+    this.brakeFilter.frequency.setTargetAtTime(cfg.f,t,0.08);
+  },
+  tone(f,d,type='sine',v=0.16,slide=null){
+    if(!this.ac||!this.sfxOn)return;const t=this.ac.currentTime;
+    const o=this.ac.createOscillator(),g=this.ac.createGain();
+    o.type=type;o.frequency.setValueAtTime(f,t);
+    if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g);g.connect(this.sfx);o.start(t);o.stop(t+d+0.03);
+  },
+  noise(d=0.5,v=0.3){
+    if(!this.ac||!this.sfxOn)return;const t=this.ac.currentTime,n=Math.floor(this.ac.sampleRate*d);
+    const buf=this.ac.createBuffer(1,n,this.ac.sampleRate),dd=buf.getChannelData(0);
+    for(let i=0;i<n;i++)dd[i]=(Math.random()*2-1)*(1-i/n);
+    const s=this.ac.createBufferSource(),g=this.ac.createGain(),f=this.ac.createBiquadFilter();
+    f.type='lowpass';f.frequency.setValueAtTime(1400,t);f.frequency.exponentialRampToValueAtTime(120,t+d);
+    g.gain.value=v;s.buffer=buf;s.connect(f);f.connect(g);g.connect(this.sfx);s.start(t);
+  },
+  ui(){this.tone(520,0.07,'square',0.06);},
+  explode(){this.noise(0.6,0.32);this.tone(160,0.5,'sawtooth',0.16,40);},
+  success(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>this.tone(f,0.22,'triangle',0.13),i*110));},
+  warp(){this.tone(220,0.9,'sawtooth',0.13,1400);this.noise(0.7,0.1);},
+  toggleSfx(){
+    this.sfxOn=!this.sfxOn;
+    try{localStorage.setItem('nav-sfx',this.sfxOn?'1':'0');}catch(e){}
+    if(this.ac)this.sfx.gain.setTargetAtTime(this.sfxOn?0.85:0,this.ac.currentTime,0.05);
+    if(!this.sfxOn){this.setEngine('off',0);this.setBrake('off');}
+    updateAudioIcons();
+  },
+  toggleMusic(){
+    this.musicOn=!this.musicOn;
+    try{localStorage.setItem('nav-music',this.musicOn?'1':'0');}catch(e){}
+    if(this.ac)this.music.gain.setTargetAtTime(this.musicOn?0.35:0,this.ac.currentTime,0.05);
+    if(Music.bus)Music.applyOnOff();
+    updateAudioIcons();
+  }
+};
+try{
+  if(localStorage.getItem('nav-sfx')==='0')AudioSys.sfxOn=false;
+  if(localStorage.getItem('nav-music')==='0')AudioSys.musicOn=false;
+  if(localStorage.getItem('nav-mute')==='1'){AudioSys.sfxOn=false;AudioSys.musicOn=false;} // 兼容旧版全局静音
+}catch(e){}
+
+/* ===== 程序化背景音乐（零外部依赖，随游戏状态分层） ===== */
+const STEP_MS={title:420,probe:380,pilot:200,near:160,crash:700,result:300,choice:520,ending:340,paused:600};
+const Music={
+  bus:null,layers:null,timer:null,step:0,chord:0,arpOn:false,pulseOn:false,curScene:'title',
+  // Dm7 -> Bb7 -> Fmaj7 -> Cmaj7（小调色彩，贴合太空哲思）
+  chords:[[146.83,174.61,220.00,293.66],[116.54,146.83,174.61,233.08],
+          [87.31,130.81,174.61,220.00],[130.81,164.81,196.00,246.94]],
+  init(){
+    if(this.bus)return;const ac=AudioSys.ac;if(!ac)return;
+    const bus=ac.createGain();bus.gain.value=0;bus.connect(AudioSys.music);this.bus=bus;
+    // L1 底噪垫：3 个失谐三角波 → 低通 → 极慢 LFO 呼吸
+    const padG=ac.createGain();padG.gain.value=0.10;
+    const padF=ac.createBiquadFilter();padF.type='lowpass';padF.frequency.value=700;padF.Q.value=0.6;
+    const lfo=ac.createOscillator();lfo.frequency.value=0.045;
+    const lfoG=ac.createGain();lfoG.gain.value=260;
+    lfo.connect(lfoG);lfoG.connect(padF.frequency);lfo.start();
+    [146.83,146.83*1.004,220].forEach((f,i)=>{
+      const o=ac.createOscillator();o.type='triangle';o.frequency.value=f;
+      const g=ac.createGain();g.gain.value=i===2?0.35:0.5;
+      o.connect(g);g.connect(padF);o.start();
+    });
+    padF.connect(padG);padG.connect(bus);
+    // L4 紧张层：噪声 → 带通共振峰（平时静音）
+    const len=ac.sampleRate*2,buf=ac.createBuffer(1,len,ac.sampleRate),nd=buf.getChannelData(0);
+    for(let i=0;i<len;i++)nd[i]=Math.random()*2-1;
+    const tns=ac.createBufferSource();tns.buffer=buf;tns.loop=true;
+    const tnsF=ac.createBiquadFilter();tnsF.type='bandpass';tnsF.frequency.value=420;tnsF.Q.value=3.2;
+    const tnsG=ac.createGain();tnsG.gain.value=0;
+    tns.connect(tnsF);tnsF.connect(tnsG);tnsG.connect(bus);tns.start();
+    this.layers={padG,tnsG,tnsF};
+    this.start(260);this.scene(this.curScene);
+  },
+  // S5：步长按场景可变（探测稀疏、领航密集、事故迟缓）
+  start(ms){
+    if(this.timer)clearInterval(this.timer);
+    this.timer=setInterval(()=>this.tick(),ms||260);
+    this.applyOnOff(2.5);
+  },
+  applyOnOff(fade=0.4){
+    if(!this.bus)return;const t=AudioSys.ac.currentTime;
+    this.bus.gain.cancelScheduledValues(t);
+    this.bus.gain.linearRampToValueAtTime(AudioSys.musicOn?0.5:0,t+fade);
+  },
+  tick(){
+    if(!AudioSys.ac)return;
+    const ac=AudioSys.ac,t=ac.currentTime;
+    const ch=this.chords[this.chord%this.chords.length];
+    if(this.arpOn){
+      const f=ch[this.step%ch.length]*(this.step%8===0?2:1);
+      this.pluck(f,t);
+    }
+    if(this.step%8===0){
+      this.chord++;
+      if(this.pulseOn)this.pulse(t);
+    }
+    this.step++;
+  },
+  pluck(f,t){
+    const ac=AudioSys.ac;
+    const o=ac.createOscillator();o.type='triangle';o.frequency.value=f;
+    const g=ac.createGain();
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.055,t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.9);
+    const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=220;
+    o.connect(hp);hp.connect(g);g.connect(this.bus);
+    o.start(t);o.stop(t+1.0);
+  },
+  pulse(t){
+    const ac=AudioSys.ac;
+    const o=ac.createOscillator();o.type='sine';
+    o.frequency.setValueAtTime(92,t);
+    o.frequency.exponentialRampToValueAtTime(44,t+0.42);
+    const g=ac.createGain();
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.16,t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
+    o.connect(g);g.connect(this.bus);
+    o.start(t);o.stop(t+0.6);
+  },
+  scene(mode){
+    this.curScene=mode;
+    if(!this.layers||!AudioSys.ac)return;
+    const t=AudioSys.ac.currentTime;
+    const P={
+      title:{pad:0.10,arp:false,pulse:false,tension:0},
+      probe:{pad:0.10,arp:true, pulse:false,tension:0},
+      pilot:{pad:0.09,arp:true, pulse:true, tension:0},
+      near :{pad:0.08,arp:true, pulse:true, tension:0.10},
+      crash:{pad:0.05,arp:false,pulse:false,tension:0.22},
+      result:{pad:0.07,arp:true, pulse:false,tension:0},
+      choice:{pad:0.13,arp:true, pulse:false,tension:0},
+      ending:{pad:0.12,arp:true, pulse:false,tension:0},
+      paused:{pad:0.03,arp:false,pulse:false,tension:0}
+    }[mode]||{pad:0.1,arp:true,pulse:false,tension:0};
+    this.layers.padG.gain.setTargetAtTime(P.pad,t,0.6);
+    this.layers.tnsG.gain.setTargetAtTime(P.tension,t,0.5);
+    this.arpOn=P.arp;this.pulseOn=P.pulse;
+    this.start(STEP_MS[mode]||260); // S5：按场景重建定时器
+  }
+};
+
+/* 粒子 */
+function spawnParticle(p){p.life=p.maxLife=p.life||rand(0.4,0.9);G.particles.push(p);}
+function emitThrust(s){
+  const back=s.angle+Math.PI+G.bank*0.5,bx=s.x+Math.cos(back)*20,by=s.y+Math.sin(back)*20;
+  const palette=G.overburn?['#dff6ff','#9fd0ff']
+    :G.input.lowThrust?['#7fd4ff','#5aa0ff']
+    :['#ff9f5a','#ffd166'];
+  for(let i=0;i<3;i++){const a=back+rand(-0.35,0.35),sp=rand(70,160);
+    spawnParticle({x:bx,y:by,vx:Math.cos(a)*sp+s.vx*0.35,vy:Math.sin(a)*sp+s.vy*0.35,
+      size:rand(2.5,4.5),color:Math.random()<0.5?palette[0]:palette[1],drag:2.4,shrink:3});}
+}
+function emitBrake(s){
+  const sp=Math.hypot(s.vx,s.vy);if(sp<20)return;
+  const a=Math.atan2(s.vy,s.vx)+Math.PI; // 沿速度反方向喷出气流
+  for(let i=0;i<2;i++){
+    const aa=a+rand(-0.22,0.22),v=rand(90,190);
+    spawnParticle({x:s.x+Math.cos(aa)*26,y:s.y+Math.sin(aa)*26,
+      vx:Math.cos(aa)*v+s.vx*0.25,vy:Math.sin(aa)*v+s.vy*0.25,
+      size:rand(1.2,2.4),color:'#a7e4f0',drag:3.2,shrink:0});
+  }
+}
+function emitExplosion(x,y,scale=1){
+  for(let i=0;i<44*scale;i++){const a=rand(0,TAU),sp=rand(40,290)*scale;
+    spawnParticle({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:rand(2,6)*scale,
+      color:pick(['#ff6b6b','#ff9f5a','#ffd166','#e8eef5']),drag:1.4,shrink:1.6});}
+}
+function updateParticles(dt){
+  const ps=G.particles;
+  for(let i=ps.length-1;i>=0;i--){const p=ps[i];p.life-=dt;
+    if(p.life<=0){ps.splice(i,1);continue;}
+    if(p.drag){const f=Math.max(0,1-p.drag*dt);p.vx*=f;p.vy*=f;}
+    p.x+=p.vx*dt;p.y+=p.vy*dt;
+    if(p.shrink)p.size=Math.max(0,p.size-p.shrink*dt);}
+  if(ps.length>600)ps.splice(0,ps.length-600);
+}
+
+/* 星空 */
+function initStarfield(){
+  G.stars=[];
+  for(let l=0;l<3;l++){const n=[90,60,34][l];
+    for(let i=0;i<n;i++)G.stars.push({x:Math.random(),y:Math.random(),
+      r:[0.5,0.9,1.5][l]+Math.random()*0.5,par:[0.03,0.08,0.16][l],
+      tw:rand(0,TAU),twS:rand(0.6,2.2),
+      c:Math.random()<0.18?'#a7e4f0':(Math.random()<0.12?'#ffd9b0':'#dfe9f5')});}
+  G.nebulae=[];
+  const nc=[['#1b3a6b','#2a1b5e'],['#5e2a4d','#1b2f6b'],['#14404a','#23205a']];
+  for(let i=0;i<3;i++)G.nebulae.push({x:rand(0.1,0.9),y:rand(0.1,0.85),r:rand(280,480),
+    c1:nc[i][0],c2:nc[i][1],ph:rand(0,TAU)});
+}
+function drawStarfield(){
+  for(const n of G.nebulae){
+    const nx=n.x*VW+Math.sin(G.time*0.05+n.ph)*VW*0.02,ny=n.y*VH+Math.cos(G.time*0.04+n.ph)*VH*0.02;
+    const g=ctx.createRadialGradient(nx,ny,0,nx,ny,n.r);
+    g.addColorStop(0,n.c1+'55');g.addColorStop(0.55,n.c2+'22');g.addColorStop(1,'#05070f00');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(nx,ny,n.r,0,TAU);ctx.fill();}
+  for(const s of G.stars){
+    const px=((s.x*VW-G.camera.x*s.par)%VW+VW)%VW,py=((s.y*VH-G.camera.y*s.par)%VH+VH)%VH;
+    ctx.globalAlpha=0.55+0.45*Math.sin(G.time*s.twS+s.tw);ctx.fillStyle=s.c;
+    ctx.beginPath();ctx.arc(px,py,s.r,0,TAU);ctx.fill();}
+  ctx.globalAlpha=1;
+}
+initStarfield();
+
+/* 通讯 */
+const commsEl=document.getElementById('comms');
+function say(who,text,hold=3.6){
+  // W19 低士气（<40）：通信受干扰，随机插入静电字符，体现“状态影响能动性发挥”
+  if(G.morale<40){
+    const garble=['▓','…',' ‖ ',' × '];
+    text=text.split('').map((c,i)=>(i>0&&i%6===0)?garble[Math.floor(rand(0,garble.length))]:c).join('');
+    if(G.morale<22)text='【信号干扰】'+text;
+  }
+  document.getElementById('cwho').textContent=who;
+  document.getElementById('ctxt').textContent=text;
+  commsEl.classList.remove('fade');G.commTimer=hold;
+  AudioSys.tone(880,0.04,'sine',0.04); // A3：阿基米德说话的听觉标识
+}
+function updateComms(dt){if(G.commTimer>0){G.commTimer-=dt;if(G.commTimer<=0)commsEl.classList.add('fade');}}
+
+/* ============================================================
+   物理系统（多体引力 + 星风 + 推进，固定子步）
+   ============================================================ */
+const GRAV=1000;
+const THRUST_ACC=95;     // 主推进（手感已验证，不动）
+const LOW_THRUST=48;     // 微调推进
+const BRAKE_ACC=130;     // 重刹：沿当前速度矢量反向，比主推进大以快速压下相对速度
+const LIGHT_BRAKE_ACC=60; // W12 轻刹（Shift+S）：对接前精细减速，省燃料
+const BURN_LIGHT_BRAKE=2; // 轻刹燃料消耗
+const TURN_ACC=7.2;      // 角加速度 rad/s^2
+const TURN_DAMP=3.8;     // 转向阻尼，松手自然收敛（v2 调柔）
+const TURN_MAX=2.9;      // 最大角速度 rad/s（v2 调柔，起手更柔）
+const SIDE_ACC=42;       // Q/E 侧向微调加速度
+const BURN_MAIN=7,BURN_LOW=4,BURN_BRAKE=5,BURN_SIDE=1.5;
+const PHYS_DT=1/120;
+const SOFT=24; // 引力软化长度，避免近距离 1/d² 奇点导致数值爆炸
+let physAcc=0;
+
+/* 显示层单位换算（内部仍用 u/s、u 计算；统一为自洽的 km、km/s） */
+const KM_PER_U=1;       // 1 u = 1 km
+const toKm=v=>v*KM_PER_U;
+const toKms=v=>v;       // 1 u/s = 1 km/s，距离÷速度在数值上自洽
+const toKnot=v=>v;      // 兼容旧引用，实际已弃用“节”，统一显示 km/s
+
+/* 线段与圆是否相交（用于子步内碰撞，防止高速隧穿） */
+function segCircle(x1,y1,x2,y2,cx,cy,r){
+  const dx=x2-x1,dy=y2-y1,l2=dx*dx+dy*dy;
+  let t=0;
+  if(l2>0){t=((cx-x1)*dx+(cy-y1)*dy)/l2;t=clamp(t,0,1);}
+  const px=x1+t*dx,py=y1+t*dy;
+  return dist(px,py,cx,cy)<=r;
+}
+const LETHAL=new Set(['star','planet','gas','blackhole']);
+
+function makeShip(c){return {x:c.x,y:c.y,vx:c.vx||0,vy:c.vy||0,angle:c.angle||0,angVel:0,r:22,alive:true};}
+function shipSnap(){const s=G.ship;return {x:s.x,y:s.y,vx:s.vx,vy:s.vy,angle:s.angle,angVel:s.angVel||0,alive:s.alive};}
+function restoreShip(sn){const s=G.ship;s.x=sn.x;s.y=sn.y;s.vx=sn.vx;s.vy=sn.vy;s.angle=sn.angle;s.angVel=sn.angVel||0;s.alive=sn.alive;}
+
+function gravityAt(x,y,out){
+  let ax=0,ay=0;
+  for(const b of G.level.bodies){
+    if(!b.mass)continue;
+    const dx=b.x-x,dy=b.y-y,d2=dx*dx+dy*dy;
+    const d=Math.sqrt(d2),a=GRAV*b.mass/(d2+SOFT*SOFT);
+    ax+=a*dx/d;ay+=a*dy/d;}
+  out.ax=ax;out.ay=ay;
+}
+const _g={ax:0,ay:0},_w={ax:0,ay:0};
+
+/* 唯一的风力计算（边界 k*k 平滑归零，探测与领航共用同一真源） */
+function windForce(x,y,t,out){
+  out.ax=0;out.ay=0;
+  for(const w of G.level.winds){
+    const d=dist(x,y,w.x,w.y);
+    if(d>=w.r)continue;
+    const k=1-d/w.r,st=w.strength*k*k;
+    const ang=w.base+Math.sin(t/w.period*TAU+w.phase)*w.sweep;
+    out.ax+=Math.cos(ang)*st;out.ay+=Math.sin(ang)*st;}
+}
+
+function subStep(dt,useInput){
+  const s=G.ship;if(!s.alive)return;
+  gravityAt(s.x,s.y,_g);
+  let ax=_g.ax,ay=_g.ay;
+  windForce(s.x,s.y,G.time,_w);
+  ax+=_w.ax;ay+=_w.ay;
+  let burnRate=0;
+  if(useInput){
+    // 转向（姿态控制不依赖主燃料）：角加速度 + 阻尼 + 速度相关舵效，低速灵活高速沉稳
+    const spd0=Math.hypot(s.vx,s.vy);
+    const steer=(G.input.right?1:0)-(G.input.left?1:0);
+    const eff=clamp(0.45+spd0/420,0.45,1.15);
+    s.angVel+=steer*TURN_ACC*eff*dt;
+    s.angVel*=Math.exp(-TURN_DAMP*dt);
+    s.angVel=clamp(s.angVel,-TURN_MAX,TURN_MAX);
+    s.angle+=s.angVel*dt;
+    if(G.fuel>0){
+      // W/S 互斥：制动与推进不叠加，避免互相抵消又双倍烧油
+      const braking=G.input.brake&&!G.input.thrust&&!G.input.lowThrust;
+      const lightBraking=G.input.lightBrake&&!G.input.thrust&&!G.input.lowThrust;
+      // Shift 优先：lowThrust 判定提到 thrust 之前，Shift+W 也走微调蓝焰
+      if(G.input.lowThrust){ax+=Math.cos(s.angle)*LOW_THRUST;ay+=Math.sin(s.angle)*LOW_THRUST;burnRate=BURN_LOW;}
+      else if(G.input.thrust){
+        const ta=G.overburn?THRUST_ACC*1.45:THRUST_ACC; // 过载：推力 +45%，高风险高收益
+        ax+=Math.cos(s.angle)*ta;ay+=Math.sin(s.angle)*ta;
+        burnRate=G.overburn?BURN_MAIN*2:BURN_MAIN;
+      }
+      if(braking||lightBraking){
+        const bAcc=lightBraking?LIGHT_BRAKE_ACC:BRAKE_ACC; // 两档：轻刹 60 / 重刹 130
+        const sp=Math.hypot(s.vx,s.vy);
+        if(sp>0.5){ax-=s.vx/sp*bAcc;ay-=s.vy/sp*bAcc;} // 沿当前速度矢量反向＝真减速器
+        else{ax-=Math.cos(s.angle)*bAcc;ay-=Math.sin(s.angle)*bAcc;} // 近乎静止退回机头反推
+        burnRate+=lightBraking?BURN_LIGHT_BRAKE:BURN_BRAKE;
+      }
+      if(G.input.sideL){ax+=Math.cos(s.angle-Math.PI/2)*SIDE_ACC;ay+=Math.sin(s.angle-Math.PI/2)*SIDE_ACC;burnRate+=BURN_SIDE;}
+      if(G.input.sideR){ax+=Math.cos(s.angle+Math.PI/2)*SIDE_ACC;ay+=Math.sin(s.angle+Math.PI/2)*SIDE_ACC;burnRate+=BURN_SIDE;}
+    }
+  }
+  if(burnRate){
+    if(G.state!=='probe')G.fuel=Math.max(0,G.fuel-burnRate*dt); // 探测模式燃料无限，不扣减
+    if(G.fuel===0)G.input.thrust=G.input.lowThrust=G.input.brake=G.input.lightBrake=false;
+  }
+  s.vx+=ax*dt;s.vy+=ay*dt;
+  const ox=s.x,oy=s.y;
+  s.x+=s.vx*dt;s.y+=s.vy*dt;
+  if(!s._collided){
+    for(const b of G.level.bodies){
+      if(LETHAL.has(b.type)&&!b.soft&&segCircle(ox,oy,s.x,s.y,b.x,b.y,b.r+s.r*0.5)){
+        s._collided=b;break;}
+    }
+    if(!s._collided)for(const d of G.level.debris){ // 陨石：可预测的轨道障碍
+      if(segCircle(ox,oy,s.x,s.y,d.x,d.y,d.r+6)){s._collided=d;break;} // W16 判定 d.r+6，贴合视觉
+    }
+    if(!s._collided)for(const d of G.level.drones){ // 巡逻无人机：可预测的往返障碍
+      if(segCircle(ox,oy,s.x,s.y,d.x,d.y,d.r+6)){s._collided=d;break;}
+    }
+  }
+  // 非固定天体运动
+  for(const b of G.level.bodies){
+    if(b.fixed||!b.mass)continue;
+    let bax=0,bay=0;
+    for(const o of G.level.bodies){
+      if(o===b||!o.mass)continue;
+      const dx=o.x-b.x,dy=o.y-b.y,d2=dx*dx+dy*dy;if(d2<1)continue;
+      const d=Math.sqrt(d2),a=GRAV*o.mass/d2;bax+=a*dx/d;bay+=a*dy/d;}
+    b.vx+=bax*dt;b.vy+=bay*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;}
+}
+
+/* 预测自然轨迹：与真实物理共用 windForce，并检测碰撞（P1-7） */
+function predictPath(steps,dt){
+  const s=G.ship;
+  let x=s.x,y=s.y,vx=s.vx,vy=s.vy;
+  const pts=[];let danger=null,dock=null;
+  for(let i=0;i<steps;i++){
+    const t=G.levelTime0+i*dt; // 与实际更新同一关卡时钟，保证探测=领航
+    let ax=0,ay=0;
+    for(const b of G.level.bodies){
+      if(!b.mass)continue;
+      const dx=b.x-x,dy=b.y-y,d2=dx*dx+dy*dy;
+      const d=Math.sqrt(d2),a=GRAV*b.mass/(d2+SOFT*SOFT);ax+=a*dx/d;ay+=a*dy/d;}
+    windForce(x,y,t,_w);ax+=_w.ax;ay+=_w.ay;
+    vx+=ax*dt;vy+=ay*dt;
+    const px=x,py=y;
+    x+=vx*dt;y+=vy*dt;
+    // 危险天体：排除软目标（与真实碰撞 subStep 同一口径）
+    for(const b of G.level.bodies){
+      if(LETHAL.has(b.type)&&!b.soft&&segCircle(px,py,x,y,b.x,b.y,b.r)){
+        danger={x,y};break;}
+    }
+    // 动态障碍：用同一解析式在对应时刻的位置检测
+    if(!danger){
+      for(const d of G.level.debris){
+        if(d.omega===undefined){if(segCircle(px,py,x,y,d.x,d.y,d.r)){danger={x,y};break;}}
+        else{const p=debrisPos(d,t);if(segCircle(px,py,x,y,p.x,p.y,d.r)){danger={x,y};break;}}
+      }
+    }
+    if(!danger){
+      for(const d of G.level.drones){
+        const p=dronePos(d,t);if(segCircle(px,py,x,y,p.x,p.y,d.r)){danger={x,y};break;}
+      }
+    }
+    // 软目标：进入其半径给出绿色“可对接”标记（仅首次）
+    if(!danger&&!dock){
+      for(const b of G.level.bodies){
+        if(b.soft&&segCircle(px,py,x,y,b.x,b.y,b.r)){dock={x,y};break;}
+      }
+    }
+    if(danger)break;
+    if(i%3===0)pts.push({x,y});}
+  return {pts,danger,dock};
+}
+
+function targetPos(t){
+  if(t.body){const b=G.level.bodies.find(x=>x.id===t.body);return {x:b.x,y:b.y,vx:b.vx||0,vy:b.vy||0};}
+  return {x:t.x,y:t.y,vx:0,vy:0};
+}
+
+function checkHazards(){
+  const s=G.ship;if(!s.alive)return;
+  if(s._collided){const b=s._collided;s._collided=null;
+    if(G.state==='probe'){probeCollision(b);return;}killShip(b);return;}
+  for(const b of G.level.bodies){
+    if(!b.soft&&dist(s.x,s.y,b.x,b.y)<b.r+s.r*0.5){
+      if(b.type==='blackhole'||b.type==='star'||b.type==='planet'||b.type==='gas'){
+        if(G.state==='probe'){probeCollision(b);return;}killShip(b);return;}
+    }
+    // 引力借力：仅 pilot 计数，判定区收紧到 r*1.6，每颗天体每关只计一次（防刷）
+    if(G.state==='pilot'&&(b.type==='planet'||b.type==='gas')&&b.mass){
+      const d=dist(s.x,s.y,b.x,b.y),zone=b.r*1.6;
+      if(!b._counted&&d<zone){b._counted=true;G.slingshot++;G.totalSlingshot++;
+        G.knowledge=clamp(G.knowledge+8,0,100);G.morale=clamp(G.morale+6,0,100);
+        AudioSys.tone(300,0.18,'sine',0.1,520);}
+    }
+  }
+  // 能量晶体：靠近时磁吸（晶体向飞船漂移），拾取补充燃料但设上限
+  for(const p of G.level.pickups){
+    if(p.taken)continue;
+    const pd=dist(s.x,s.y,p.x,p.y);
+    if(pd<70&&pd>0.1){ // 磁吸范围：晶体被拉向飞船
+      const pull=(1-pd/70)*60*PHYS_DT;
+      p.x+=(s.x-p.x)/pd*pull;p.y+=(s.y-p.y)/pd*pull;
+    }
+    if(pd<p.r+s.r*0.5){
+      p.taken=true;G.fuel=Math.min(G.maxFuel,G.fuel+12);
+      AudioSys.tone(740,0.12,'triangle',0.1,980);
+      say('阿基米德','拾取能量晶体，燃料 +12（已设上限）。认识规律是为了更好地实践。',3);
+    }
+  }
+  const t=G.level.target,tp=targetPos(t);
+  if(dist(s.x,s.y,tp.x,tp.y)<t.r){
+    if(G.state==='probe'){probeTarget();return;} // 探测中进入目标圈：提示并拉回，不结算
+    const rel=Math.hypot(s.vx-tp.vx,s.vy-tp.vy);
+    if(rel<=t.maxSpeed){
+      G._lockFx={x:tp.x,y:tp.y,r:t.r,t:0}; // 对接锁定动画：青色收缩闪光环
+      AudioSys.tone(1180,0.16,'sine',0.14,1760); // 清脆锁定音
+      completeLevel();
+    }
+    // 进圈但超速：不结算，由 updateHUD/W15 给红色对接圈与播报，玩家自行减速
+  }
+}
+
+function killShip(b){
+  G.ship.alive=false;G.camera.shake=16;G.slowmo=0.35; // 0.3 秒慢动作
+  emitExplosion(G.ship.x,G.ship.y,1.1);
+  AudioSys.setEngine('off',0);AudioSys.setBrake('off');AudioSys.explode();
+  G.morale=clamp(G.morale-18,0,100);
+  handleFail(b);
+}
+/* 探测模式撞星：不失败、不弹面板，轻提示并重置，符合"可无限试错" */
+function probeCollision(b){
+  AudioSys.ui();G.probeResets++; // 自动复位也计入试错次数（修复统计口径漏记）
+  say('阿基米德','试飞轨迹撞上了天体（第 '+G.probeResets+' 次试错）。换个角度，或者早点减速——再推演一条。',3);
+  restoreShip(G.startSnapshot);G.fuel=G.maxFuel;G.particles.length=0;
+}
+/* 探测中进入目标圈：不计成绩，提示并拉回（P0-2） */
+function probeTarget(){
+  AudioSys.ui();G.probeResets++;
+  say('阿基米德','探测到目标区不算交付，正式领航才算。已把船拉回，继续推演。',3);
+  restoreShip(G.startSnapshot);G.fuel=G.maxFuel;
+}
+
+/* ============================================================
+   关卡数据（新曦真公转，每关含 driftLimit）
+   ============================================================ */
+const LEVELS=[
+{
+  no:'SECTOR 01',name:'启航 · 近地轨道',meta:'单恒星系统 // 燃料配额 100',driftLimit:950,
+  goal:'与空间站「灯塔号」对接：进入对接圈，且相对速度足够低。',fuel:100,
+  bodies:[
+    {id:'sun',type:'star',name:'必然',x:0,y:0,r:48,mass:900,fixed:true,color:'#ffd166',color2:'#ff7a3c',spin:0,
+      arch:'质量最大，决定全图一切轨道。规律是客观的，不以人的意志为转移。'},
+    {id:'station',type:'station',name:'灯塔号',x:340,y:-90,r:18,mass:0,fixed:true,color:'#a7e4f0',
+      arch:'导航信标，悬停在轨道上的导航信标——它是认识规律后的航标。'}],
+  debris:[
+    {x:-60,y:95,r:11,name:'航标残骸'},
+    {x:130,y:45,r:13,name:'航标残骸'}],
+  pickups:[
+    {x:72,y:-58,r:9,name:'能量晶体'}],
+  winds:[],
+  ship:{x:-300,y:140,vx:18,vy:46,angle:0},
+  target:{body:'station',r:44,maxSpeed:120}
+},
+{
+  no:'SECTOR 02',name:'引力弹弓',meta:'气态巨行星 // 燃料配额 60',driftLimit:1350,
+  goal:'燃料不足以直抵跃迁门。借气态巨行星「自由」的引力甩向右侧目标，同时避开沿轨道公转的陨石带。',fuel:60,
+  bodies:[
+    {id:'sun',type:'star',name:'必然',x:-620,y:-340,r:40,mass:700,fixed:true,color:'#ffd166',color2:'#ff7a3c',
+      arch:'质量最大，决定全图一切轨道。规律是客观的，不以人的意志为转移。'},
+    {id:'titan',type:'gas',name:'自由',x:0,y:0,r:56,mass:430,fixed:true,color:'#d9b8ff',color2:'#7a5cc0',ring:true,spin:0,
+      arch:'引力强、质量大，硬闯是唯意志论；靠近并借力绕过去，才是认识并利用规律。'},
+    {id:'gate',type:'station',name:'跃迁门',x:560,y:-120,r:20,mass:0,fixed:true,color:'#7be0a8',
+      arch:'航道终点，进入即完成本星区领航。'}],
+  debris:[
+    {anchor:'titan',orbitR:124,phase:0,omega:0.45,r:9,name:'陨石'},
+    {anchor:'titan',orbitR:124,phase:1.047,omega:0.45,r:9,name:'陨石'},
+    {anchor:'titan',orbitR:124,phase:2.094,omega:0.45,r:9,name:'陨石'},
+    {anchor:'titan',orbitR:124,phase:3.142,omega:0.45,r:9,name:'陨石'},
+    {anchor:'titan',orbitR:124,phase:4.189,omega:0.45,r:9,name:'陨石'},
+    {anchor:'titan',orbitR:124,phase:5.236,omega:0.45,r:9,name:'陨石'}],
+  winds:[],
+  ship:{x:-520,y:80,vx:40,vy:6,angle:0},
+  target:{body:'gate',r:46,maxSpeed:140}
+},
+{
+  no:'SECTOR 03',name:'星风走廊',meta:'周期星风场 // 燃料配额 68',driftLimit:1200,
+  goal:'穿越周期性星风。顺风窗口滑行，避免在阵风时硬顶消耗燃料。',fuel:68,
+  bodies:[
+    {id:'sun',type:'star',name:'必然',x:0,y:-420,r:44,mass:850,fixed:true,color:'#ffd166',color2:'#ff7a3c',
+      arch:'质量最大，决定全图一切轨道。规律是客观的，不以人的意志为转移。'},
+    {id:'p1',type:'planet',name:'实证',x:-120,y:40,r:26,mass:150,fixed:true,color:'#9fb4c8',color2:'#4a5d70',
+      arch:'岩质、无大气，对应实践与客观事实——一切认识都要回到这里检验。'},
+    {id:'p2',type:'planet',name:'反思',x:240,y:120,r:22,mass:120,fixed:true,color:'#7fd6c8',color2:'#3a8a80',
+      arch:'如封存过往的琥珀，对应认识的反复性——认识在反复中深化。'}],
+  winds:[
+    {x:-180,y:0,r:170,base:0,period:12,sweep:1.15,strength:95,phase:0},
+    {x:180,y:60,r:170,base:0,period:12,sweep:1.15,strength:95,phase:Math.PI}],
+  drones:[
+    {ax:-180,ay:-105,bx:-180,by:105,period:8,phase:0,r:11,name:'巡逻无人机'},
+    {ax:180,ay:-45,bx:180,by:165,period:8,phase:Math.PI,r:11,name:'巡逻无人机'}],
+  ship:{x:-470,y:-60,vx:34,vy:10,angle:0},
+  target:{x:480,y:140,r:46,maxSpeed:140}
+},
+{
+  no:'SECTOR 04',name:'新家园',meta:'多体系统 // 燃料配额 85',driftLimit:1250,
+  goal:'抵达公转中的类地行星「新曦」，把相对速度降到上限以内进入其轨道。',fuel:85,
+  bodies:[
+    {id:'sun',type:'star',name:'必然',x:0,y:0,r:50,mass:1000,fixed:true,color:'#ffd166',color2:'#ff7a3c',
+      arch:'质量最大，决定全图一切轨道。规律是客观的，不以人的意志为转移。'},
+    {id:'xinxi',type:'planet',name:'新曦',x:400,y:0,r:30,mass:170,fixed:false,vx:0,vy:-50,soft:true,color:'#8fd0a8',color2:'#3c7a58',
+      arch:'远航终点，正在公转——真理是具体的、有条件的，要随它的运动重新校准。软目标，可安全对接而非撞毁。'},
+    {id:'gp',type:'gas',name:'自由',x:-160,y:220,r:34,mass:240,fixed:true,color:'#c9b8ff',color2:'#6a54b0',ring:true,
+      arch:'引力强、质量大，硬闯是唯意志论；靠近并借力绕过去，才是认识并利用规律。'}],
+  debris:[
+    {anchor:'xinxi',orbitR:50,phase:0,omega:0.9,r:7,name:'碎片'},
+    {anchor:'xinxi',orbitR:50,phase:1.047,omega:0.9,r:7,name:'碎片'},
+    {anchor:'xinxi',orbitR:50,phase:2.094,omega:0.9,r:7,name:'碎片'},
+    {anchor:'xinxi',orbitR:50,phase:3.142,omega:0.9,r:7,name:'碎片'},
+    {anchor:'xinxi',orbitR:50,phase:4.189,omega:0.9,r:7,name:'碎片'},
+    {anchor:'xinxi',orbitR:50,phase:5.236,omega:0.9,r:7,name:'碎片'}],
+  winds:[{x:120,y:-120,r:150,base:0.35,period:10,sweep:1.0,strength:70,phase:0.6}],
+  ship:{x:-440,y:150,vx:30,vy:40,angle:0},
+  target:{body:'xinxi',r:90,maxSpeed:115}
+},
+{
+  no:'SECTOR 05',name:'方舟号 · 物资分配',kind:'choice',driftLimit:0,
+  goal:'抵达新曦前的最后抉择：把有限物资在「推进」「生命维持」「科研储备」三个部门间分配。',
+  quota:100,minPropulsion:40,minLife:35,
+  bodies:[],winds:[],ship:{x:0,y:0},target:{x:0,y:0,r:0,maxSpeed:0}
+}];
+
+/* ============================================================
+   渲染系统
+   ============================================================ */
+function updateCamera(dt){
+  if(!G.ship)return;
+  const s=G.ship,k=1-Math.exp(-dt*7);
+  const tx=s.x+s.vx*0.35,ty=s.y+s.vy*0.35; // 速度预瞄，高速时目标不甩出视野
+  G.camera.x=lerp(G.camera.x,tx,k);G.camera.y=lerp(G.camera.y,ty,k);
+  if(G.camera.shake>0)G.camera.shake=Math.max(0,G.camera.shake-dt*38);
+}
+
+function drawBody(b,time,dt){
+  ctx.save();ctx.translate(b.x,b.y);
+  if(b.type==='station'){drawStation(b);ctx.restore();return;}
+  if(b.type==='blackhole'){drawBlackhole(b,time);ctx.restore();return;}
+  const glowR=b.r*1.92,gl=ctx.createRadialGradient(0,0,b.r*0.6,0,0,glowR); // W9 辉光半径降 20%
+  gl.addColorStop(0,b.color+'44');gl.addColorStop(1,b.color+'00');
+  ctx.fillStyle=gl;ctx.beginPath();ctx.arc(0,0,glowR,0,TAU);ctx.fill();
+  if(b.ring)drawRing(b,b.r*1.35,0.5);
+  const sg=ctx.createRadialGradient(-b.r*0.4,-b.r*0.45,b.r*0.15,0,0,b.r);
+  sg.addColorStop(0,b.color);sg.addColorStop(0.65,b.color2);sg.addColorStop(1,'#05060a');
+  ctx.fillStyle=sg;ctx.beginPath();ctx.arc(0,0,b.r,0,TAU);ctx.fill();
+  // 帧率无关自转
+  b.spin=(b.spin||0)+0.15*dt*60;
+  ctx.save();ctx.beginPath();ctx.arc(0,0,b.r,0,TAU);ctx.clip();
+  ctx.globalAlpha=0.22;ctx.strokeStyle='#fff';ctx.lineWidth=1.4;
+  for(let i=0;i<3;i++){
+    const off=((b.spin*0.5+i*2.1)%(b.r*2))-b.r;
+    ctx.beginPath();ctx.ellipse(off,(-b.r*0.35+i*b.r*0.35),b.r*0.7,5,0,0,TAU);ctx.stroke();}
+  ctx.globalAlpha=0.18;ctx.fillStyle='#000';
+  for(let i=0;i<3;i++){
+    const sx=Math.sin(b.spin*0.4+i*2.4)*b.r*0.5,sy=Math.cos(i*1.7)*b.r*0.45;
+    ctx.beginPath();ctx.arc(sx,sy,b.r*0.16,0,TAU);ctx.fill();}
+  ctx.restore();
+  const eg=ctx.createRadialGradient(0,0,b.r*0.7,0,0,b.r);
+  eg.addColorStop(0,'#00000000');eg.addColorStop(1,'#00000088');
+  ctx.fillStyle=eg;ctx.beginPath();ctx.arc(0,0,b.r,0,TAU);ctx.fill();
+  if(b.ring)drawRing(b,b.r*1.35,1);
+  ctx.restore();
+}
+/* 陨石/残骸：不规则碎石，带外发光与棱角 */
+function drawDebris(d){
+  ctx.save();ctx.translate(d.x,d.y);ctx.rotate(d.rot||0);
+  // 双色径向渐变：迎光面偏亮、背光面偏暗，层次更分明
+  const g=ctx.createRadialGradient(-d.r*0.4,-d.r*0.4,1,0,0,d.r*1.15);
+  g.addColorStop(0,'#5d6e86');g.addColorStop(0.6,'#3a4658');g.addColorStop(1,'#232c3a');
+  ctx.fillStyle=g;ctx.strokeStyle='#93a7c2';ctx.lineWidth=1.2;
+  ctx.beginPath();
+  const verts=d.verts;const n=verts.length;
+  for(let i=0;i<n;i++){const a=i/n*TAU,rr=d.r*verts[i];
+    const px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}
+  ctx.closePath();ctx.fill();ctx.stroke();
+  // 表面高光裂纹
+  ctx.strokeStyle='rgba(160,180,205,.35)';ctx.lineWidth=0.8;
+  ctx.beginPath();ctx.moveTo(-d.r*0.3,-d.r*0.2);ctx.lineTo(d.r*0.2,d.r*0.35);ctx.stroke();
+  ctx.restore();
+}
+/* 巡逻无人机：菱形机身 + 红色扫描灯 + 航线端点（探测模式画预测航线） */
+function drawDrone(d){
+  // 朝向：沿当前运动方向（当前位置 - 上一帧位置）
+  let heading=0;
+  if(d.prevX!==undefined){const dx=d.x-d.prevX,dy=d.y-d.prevY;if(dx*dx+dy*dy>0.0001)heading=Math.atan2(dy,dx);}
+  ctx.save();ctx.translate(d.x,d.y);
+  // 运动残影：在身后叠两圈渐隐轮廓
+  ctx.globalAlpha=0.18;ctx.fillStyle='#ff5a5a';
+  for(let k=1;k<=2;k++){ctx.save();ctx.rotate(heading);ctx.beginPath();
+    ctx.moveTo(-d.r*1.1-k*3,-d.r*0.6);ctx.lineTo(-d.r*1.1-k*3,d.r*0.6);ctx.lineTo(-d.r*0.4-k*3,0);ctx.closePath();ctx.fill();ctx.restore();}
+  ctx.globalAlpha=1;ctx.rotate(heading);
+  ctx.strokeStyle='#ff8a8a';ctx.fillStyle='#2a2030';ctx.lineWidth=1.4;
+  // 尖头朝运动方向的菱形
+  ctx.beginPath();ctx.moveTo(d.r,0);ctx.lineTo(0,-d.r*0.85);ctx.lineTo(-d.r,0);ctx.lineTo(0,d.r*0.85);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='rgba(255,80,80,'+(0.5+Math.sin(G.time*8)*0.4)+')';
+  ctx.beginPath();ctx.arc(0,0,3,0,TAU);ctx.fill();
+  if(G.state==='probe'){ // 探测模式画出往返航线，帮助认识其规律
+    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(255,138,138,.5)';
+    ctx.beginPath();ctx.moveTo(d.ax-d.x,d.ay-d.y);ctx.lineTo(d.bx-d.x,d.by-d.y);ctx.stroke();ctx.setLineDash([]);
+  }else if(G.state==='pilot'){ // R4 领航模式画更淡的航线（透明度 0.2），避免"本可预测却被坑"
+    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(255,138,138,.2)';
+    ctx.beginPath();ctx.moveTo(d.ax-d.x,d.ay-d.y);ctx.lineTo(d.bx-d.x,d.by-d.y);ctx.stroke();ctx.setLineDash([]);
+  }
+  ctx.restore();
+}
+/* 能量晶体：旋转菱形，未拾取时发光脉动 */
+function drawPickup(p){
+  if(p.taken)return;
+  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(G.time*1.5);
+  const glow=ctx.createRadialGradient(0,0,2,0,0,p.r*2.2);
+  glow.addColorStop(0,'rgba(123,224,168,.6)');glow.addColorStop(1,'rgba(123,224,168,0)');
+  ctx.fillStyle=glow;ctx.beginPath();ctx.arc(0,0,p.r*2.2,0,TAU);ctx.fill();
+  ctx.fillStyle='#7be0a8';ctx.strokeStyle='#dffbeb';
+  ctx.beginPath();ctx.moveTo(p.r,0);ctx.lineTo(0,-p.r);ctx.lineTo(-p.r,0);ctx.lineTo(0,p.r);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.restore();
+  // D3：数量提示做成晶体上方的胶囊标签，与图标拉开距离
+  const all=G.level.pickups,left=all.filter(x=>!x.taken).length;
+  const label='剩余 '+left+'/'+all.length;
+  ctx.save();ctx.translate(p.x,p.y);
+  ctx.font='10px '+getComputedStyle(document.body).getPropertyValue('--mono');
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const tw=ctx.measureText(label).width,cy=-p.r-16,padX=7,padY=4;
+  ctx.fillStyle='rgba(8,18,26,.82)';ctx.strokeStyle='rgba(123,224,168,.55)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.rect(-tw/2-padX,cy-padY,tw+padX*2,padY*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='rgba(200,240,220,.95)';
+  ctx.fillText(label,0,cy);
+  ctx.restore();
+}
+function drawRing(b,rr,a){
+  ctx.save();ctx.rotate(-0.4);ctx.globalAlpha=a;
+  ctx.strokeStyle=b.color;ctx.lineWidth=5;
+  ctx.beginPath();ctx.ellipse(0,0,rr,rr*0.32,0,0,TAU);ctx.stroke();
+  ctx.strokeStyle=b.color2;ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.ellipse(0,0,rr*1.22,rr*0.39,0,0,TAU);ctx.stroke();
+  ctx.restore();ctx.globalAlpha=1;
+}
+function drawStation(b){
+  ctx.rotate(Math.sin(G.time*0.4)*0.08);
+  ctx.strokeStyle=b.color;ctx.fillStyle='#0e1830';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.roundRect(-7,-7,14,14,3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#1d3557';
+  ctx.beginPath();ctx.rect(-24,-5,14,10);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.rect(10,-5,14,10);ctx.fill();ctx.stroke();
+  ctx.fillStyle=Math.sin(G.time*3)>0?'#7be0a8':'#2f5a44';
+  ctx.beginPath();ctx.arc(0,0,2.4,0,TAU);ctx.fill();
+}
+function drawBlackhole(b,time){
+  const rr=b.r,g=ctx.createRadialGradient(0,0,rr,0,0,rr*2.6);
+  g.addColorStop(0,'#8ea0ff66');g.addColorStop(1,'#05070f00');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,rr*2.6,0,TAU);ctx.fill();
+  ctx.strokeStyle='#b9a0ff';ctx.lineWidth=3;
+  for(let i=0;i<2;i++){ctx.beginPath();ctx.ellipse(0,0,rr*(1.5+i*0.4),rr*(0.5+i*0.16),time*0.6,0,TAU);ctx.stroke();}
+  ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,rr,0,TAU);ctx.fill();
+}
+/* 速度矢量指示线：在机身画青色短线指向当前速度方向，与机头朝向对比即可看出“指着东却往北飞” */
+function drawVelocityVector(s){
+  const sp=Math.hypot(s.vx,s.vy);if(sp<1)return;
+  const a=Math.atan2(s.vy,s.vx);
+  ctx.save();ctx.translate(s.x,s.y);ctx.rotate(a);
+  ctx.strokeStyle='rgba(123,224,168,.9)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(24,0);ctx.lineTo(58,0);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(58,0);ctx.lineTo(50,-4);ctx.moveTo(58,0);ctx.lineTo(50,4);ctx.stroke();
+  ctx.restore();
+}
+function drawShip(s,time){
+  ctx.save();ctx.translate(s.x,s.y);
+  // 外发光（半径收至 24，更克制，不再掩盖机身）
+  const halo=ctx.createRadialGradient(0,0,3,0,0,18); // W10 光环 21→18
+  halo.addColorStop(0,'rgba(90,209,232,.28)');halo.addColorStop(1,'rgba(90,209,232,0)'); // 透明度降到 .28
+  ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,18,0,TAU);ctx.fill();
+  // 细高光环（主角轮廓，正圆不随滚转压缩）
+  ctx.strokeStyle='rgba(167,228,240,.45)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(0,0,21,0,TAU);ctx.stroke();
+  ctx.rotate(s.angle);
+  // 转向滚转倾斜：纵向压缩 + 轻微附加偏转 + 重心偏移，把"直升机"变"战斗机"
+  const bk=clamp(G.bank,-0.9,0.9);
+  // 制动时轻微低头 + 1~2px 高频抖动，像被气流拽住
+  const brakeAmt=(G.input.brake||G.input.lightBrake)&&G.fuel>0?clamp(Math.hypot(s.vx,s.vy)/300,0,1)*(G.input.lightBrake?0.55:1):0;
+  ctx.translate(0,bk*4+brakeAmt*2.5+Math.sin(time*50)*brakeAmt*1.2);
+  ctx.rotate(bk*0.35);
+  ctx.scale(1,1-Math.abs(bk)*0.32);
+  drawExhaust(s,time);
+  drawFighter();
+  ctx.restore();
+}
+
+/* 三档尾焰 + 矢量喷口 + 刹车减速焰（在已 rotate(s.angle) 的机身坐标系内） */
+function drawExhaust(s,time){
+  const braking=(G.input.brake||G.input.lightBrake)&&!G.input.thrust&&!G.input.lowThrust&&G.fuel>0;
+  if(braking)drawBrakeFlame(s,time,G.input.lightBrake);
+  let mode=null;
+  if(G.fuel>0){
+    if(G.overburn)mode='over';
+    else if(G.input.thrust)mode='main';
+    else if(G.input.lowThrust)mode='low';
+  }
+  if(!mode)return;
+  ctx.save();
+  ctx.translate(-20,0);   // 移到双尾喷口
+  ctx.rotate(G.bank*0.5); // 矢量喷口随滚转偏转
+  let len;
+  if(mode==='main')len=26+Math.sin(time*30)*5+rand(0,6);
+  else if(mode==='low')len=12+Math.sin(time*34)*3+rand(0,3);
+  else len=38+Math.sin(time*40)*6+rand(0,7);
+  for(const yy of [-4,4]){
+    const fg=ctx.createLinearGradient(0,yy,-len,yy);
+    let w;
+    if(mode==='main'){fg.addColorStop(0,'#fff2c0');fg.addColorStop(0.3,'#ffd166');fg.addColorStop(0.7,'#ff9f5a');fg.addColorStop(1,'#ff6b6b00');w=3;}
+    else if(mode==='low'){fg.addColorStop(0,'#dff6ff');fg.addColorStop(0.5,'#7fd4ff');fg.addColorStop(1,'#5aa0ff00');w=2;}
+    else{fg.addColorStop(0,'#ffffff');fg.addColorStop(0.35,'#e8f4ff');fg.addColorStop(0.7,'#9fd0ff');fg.addColorStop(1,'#7fb0ff00');w=3.5;}
+    ctx.fillStyle=fg;
+    ctx.beginPath();ctx.moveTo(-2,yy-w);ctx.lineTo(-len,yy);ctx.lineTo(-2,yy+w);ctx.closePath();ctx.fill();
+  }
+  ctx.restore();
+  // W13：Q/E 侧推——机腹两侧小喷口，青蓝色短焰（喷口在机身中部 ±10 处）
+  if(G.fuel>0&&(G.input.sideL||G.input.sideR)){
+    ctx.save();
+    const sides=[];
+    if(G.input.sideL)sides.push({y:10,sign:1});   // 向左推，焰朝 +y
+    if(G.input.sideR)sides.push({y:-10,sign:-1});  // 向右推，焰朝 -y
+    for(const sd of sides){
+      const fl=9+Math.sin(time*40+sd.y)*2;
+      const sg=ctx.createLinearGradient(2,sd.y,2,sd.y+fl*sd.sign);
+      sg.addColorStop(0,'#dff6ff');sg.addColorStop(0.5,'#7fd4ff');sg.addColorStop(1,'#5aa0ff00');
+      ctx.fillStyle=sg;
+      ctx.beginPath();ctx.moveTo(5,sd.y-1.5);ctx.lineTo(2,sd.y+fl*sd.sign);ctx.lineTo(-5,sd.y-1.5);ctx.closePath();ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+/* 刹车减速焰：机头朝前喷青白短锥焰，焰朝速度反方向，速度越快焰越长 */
+function drawBrakeFlame(s,time,light){
+  const sp=Math.hypot(s.vx,s.vy);
+  const power=clamp(sp/260,0.15,1)*(light?0.6:1); // 轻刹焰更短更柔
+  ctx.save();
+  ctx.rotate(Math.atan2(s.vy,s.vx)-s.angle); // 反推焰朝速度反方向
+  for(const yy of [-8,-3,3,8]){
+    const len=(16+Math.sin(time*44+yy)*4)*power;
+    const fg=ctx.createLinearGradient(18,yy,18+len,yy);
+    fg.addColorStop(0,'#e8fbff');fg.addColorStop(0.45,'#7fd4ff');fg.addColorStop(1,'#5aa0ff00');
+    ctx.fillStyle=fg;
+    ctx.beginPath();ctx.moveTo(18,yy-1.6);ctx.lineTo(18+len,yy);ctx.lineTo(18,yy+1.6);ctx.closePath();ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* 战斗机外形：机头朝 +x，机身长 40、翼展 30（意见书提供，略作适配） */
+function drawFighter(){
+  // 鸭翼
+  ctx.fillStyle='#32455e';
+  ctx.beginPath();
+  ctx.moveTo(6,-3);ctx.lineTo(12,-9);ctx.lineTo(10,-3);ctx.closePath();
+  ctx.moveTo(6,3);ctx.lineTo(12,9);ctx.lineTo(10,3);ctx.closePath();
+  ctx.fill();
+  // 主机身 + 后掠主翼 + 平尾（一个闭合镜像路径）
+  ctx.fillStyle='#546a86';ctx.strokeStyle='#9fb6d4';ctx.lineWidth=1.2;
+  ctx.beginPath();
+  ctx.moveTo(20,0);
+  ctx.lineTo(10,-5);
+  ctx.lineTo(-2,-6);
+  ctx.lineTo(-14,-15);
+  ctx.lineTo(-18,-14);
+  ctx.lineTo(-10,-5);
+  ctx.lineTo(-20,-4);
+  ctx.lineTo(-20,4);
+  ctx.lineTo(-10,5);
+  ctx.lineTo(-18,14);
+  ctx.lineTo(-14,15);
+  ctx.lineTo(-2,6);
+  ctx.lineTo(10,5);
+  ctx.closePath();
+  ctx.fill();ctx.stroke();
+  // 翼尖红色识别条
+  ctx.fillStyle='#e05252';
+  ctx.beginPath();
+  ctx.moveTo(-14,-15);ctx.lineTo(-18,-14);ctx.lineTo(-16,-11);ctx.lineTo(-12,-12);ctx.closePath();
+  ctx.moveTo(-14,15);ctx.lineTo(-18,14);ctx.lineTo(-16,11);ctx.lineTo(-12,12);ctx.closePath();
+  ctx.fill();
+  // 双进气道
+  ctx.fillStyle='#1d2c40';
+  ctx.beginPath();ctx.roundRect(2,-7,8,3,1);ctx.roundRect(2,4,8,3,1);ctx.fill();
+  // 水滴形座舱盖
+  ctx.fillStyle='#2a3d55';ctx.strokeStyle='#7fd4ff';ctx.lineWidth=1;
+  ctx.beginPath();ctx.ellipse(8,0,6,3.2,0,0,TAU);ctx.fill();ctx.stroke();
+  ctx.fillStyle='rgba(160,220,255,.45)';
+  ctx.beginPath();ctx.ellipse(9,-0.6,3.4,1.4,0,0,TAU);ctx.fill();
+  // 双尾喷口
+  ctx.fillStyle='#141f30';
+  ctx.fillRect(-22,-6,3,4);ctx.fillRect(-22,2,3,4);
+  // 机头四个减速喷口（制动时朝前喷青白焰）
+  ctx.fillStyle='#0e1830';
+  ctx.fillRect(15,-8,3,4);ctx.fillRect(15,4,3,4);
+  ctx.fillRect(15,-3,3,3);ctx.fillRect(15,1,3,3);
+}
+function drawTarget(t,time){
+  const tp=targetPos(t),s=G.ship;
+  const d=dist(s.x,s.y,tp.x,tp.y),near=d<200,inRing=d<t.r;
+  const rel=Math.hypot(s.vx-tp.vx,s.vy-tp.vy),overSpeed=inRing&&rel>t.maxSpeed; // W15 进圈超速
+  ctx.save();ctx.translate(tp.x,tp.y);
+  if(overSpeed)ctx.translate(Math.sin(time*55)*2.5,Math.cos(time*47)*2.5); // 超速时对接圈高频抖动
+  if(near)ctx.scale(1.2,1.2); // 进入 200u 放大并锁定
+  // 接近度环：随距离收缩（远→大，进入对接圈→收至对接圈并闭合）
+  const prox=clamp((d-t.r)/350,0,1);
+  const proxR=t.r+prox*t.r*1.2;
+  ctx.globalAlpha=inRing?0.95:0.55;ctx.strokeStyle='#7be0a8';
+  ctx.lineWidth=inRing?2.6:1.6;
+  ctx.beginPath();ctx.arc(0,0,proxR,0,TAU);ctx.stroke();
+  if(inRing){ctx.globalAlpha=.18;ctx.fillStyle='#7be0a8';
+    ctx.beginPath();ctx.arc(0,0,t.r,0,TAU);ctx.fill();}
+  // 外层扩散脉冲环
+  const phase=(time*0.6)%1;
+  ctx.globalAlpha=0.5*(1-phase);ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(0,0,t.r*(1+phase*0.5),0,TAU);ctx.stroke();
+  // 对接圈
+  const pulse=1+0.12*Math.sin(time*3);ctx.globalAlpha=1;
+  ctx.lineWidth=2;ctx.setLineDash([7,6]);
+  ctx.strokeStyle=overSpeed?'#ff6b6b':'#7be0a8'; // W15 超速对接圈变红
+  ctx.beginPath();ctx.arc(0,0,t.r*pulse,0,TAU);ctx.stroke();
+  ctx.setLineDash([]);ctx.globalAlpha=0.5;
+  ctx.strokeStyle=overSpeed?'#ff6b6b':'#7be0a8';
+  ctx.beginPath();ctx.arc(0,0,t.r*0.55,0,TAU);ctx.stroke();
+  // 标签：超速时红色警示，否则只留"对接圈"
+  ctx.globalAlpha=1;ctx.fillStyle=overSpeed?'#ff8a8a':'#7be0a8';ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';
+  ctx.fillText(overSpeed?'速度过快，减速！':(inRing?'已进入对接圈':'对接圈'),0,-t.r-10);
+  if(near)drawLockMark(t);
+  ctx.restore();ctx.globalAlpha=1;
+}
+/* 目标锁定角标：四角括号 + LOCK */
+function drawLockMark(t){
+  const rr=t.r+12,cl=8;
+  ctx.strokeStyle='#ffd166';ctx.lineWidth=1.8;ctx.globalAlpha=.9;
+  for(const [sx,sy] of [[-1,-1],[1,-1],[-1,1],[1,1]]){
+    ctx.beginPath();
+    ctx.moveTo(sx*rr,sy*rr-sy*cl);ctx.lineTo(sx*rr,sy*rr);ctx.lineTo(sx*rr-sx*cl,sy*rr);
+    ctx.stroke();}
+  ctx.globalAlpha=1;ctx.fillStyle='#ffd166';ctx.font='bold 10px Cascadia Code,Consolas,monospace';
+  ctx.textAlign='center';ctx.fillText('LOCK',0,rr+11);
+}
+function drawGravityRings(b){
+  if(!b.mass)return;
+  // 统一青色语义实线（青=引力；紫=风区虚线；绿=对接圈点线）
+  ctx.save();ctx.translate(b.x,b.y);ctx.strokeStyle='rgba(90,209,232,.5)';ctx.globalAlpha=0.34;ctx.lineWidth=1;
+  for(let i=1;i<=3;i++){ctx.beginPath();ctx.arc(0,0,b.r+i*b.r*0.9,0,TAU);ctx.stroke();}
+  ctx.restore();ctx.globalAlpha=1;
+}
+function drawWinds(time){
+  for(const w of G.level.winds){
+    ctx.save();const probe=G.state==='probe';
+    ctx.globalAlpha=probe?0.5:0.22;
+    ctx.strokeStyle='#8ea0ff';ctx.setLineDash([5,7]);ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(w.x,w.y,w.r,0,TAU);ctx.stroke();ctx.setLineDash([]);
+    const ang=w.base+Math.sin(time/w.period*TAU+w.phase)*w.sweep;
+    for(let i=0;i<5;i++){
+      const d=w.r*(0.25+i*0.15);
+      const ax=w.x+Math.cos(ang+Math.PI/2)*d*0.4,ay=w.y+Math.sin(ang+Math.PI/2)*d*0.4;
+      ctx.save();ctx.translate(ax,ay);ctx.rotate(ang);ctx.strokeStyle='#a7e4f0';ctx.lineWidth=1.6;
+      const flow=((time*40+i*12)%d)-d/2;
+      ctx.beginPath();ctx.moveTo(flow-5,0);ctx.lineTo(flow+5,0);
+      ctx.moveTo(flow+5,0);ctx.lineTo(flow,-3);ctx.moveTo(flow+5,0);ctx.lineTo(flow,3);ctx.stroke();
+      ctx.restore();}
+    ctx.restore();ctx.globalAlpha=1;}
+}
+function drawTrajectory(res){
+  const pts=res.pts;
+  ctx.save();
+  ctx.strokeStyle='#5ad1e8';ctx.globalAlpha=0.55;ctx.lineWidth=1.3;ctx.setLineDash([3,6]);
+  ctx.beginPath();
+  for(let i=0;i<pts.length;i++){i===0?ctx.moveTo(pts[i].x,pts[i].y):ctx.lineTo(pts[i].x,pts[i].y);}
+  ctx.stroke();ctx.setLineDash([]);
+  // 碰撞危险段：黄（警告）→红（撞毁），并加浮动提示
+  if(res.danger){
+    if(pts.length){const last=pts[pts.length-1],mx=(last.x+res.danger.x)/2,my=(last.y+res.danger.y)/2;
+      ctx.globalAlpha=0.8;ctx.strokeStyle='#ffd166';ctx.lineWidth=1.8;ctx.setLineDash([4,5]);
+      ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(mx,my);ctx.stroke();ctx.setLineDash([]);
+      ctx.globalAlpha=0.95;ctx.strokeStyle='#ff6b6b';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(res.danger.x,res.danger.y);ctx.stroke();
+      ctx.fillStyle='#ff6b6b';ctx.beginPath();ctx.arc(res.danger.x,res.danger.y,5,0,TAU);ctx.fill();
+      ctx.globalAlpha=1;ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#ff8a8a';
+      ctx.fillText('轨迹在此撞毁',res.danger.x,res.danger.y-10);}
+  }
+  // 软目标可对接标记：绿色圆环 + 提示，让“可安全接近”在预测层可见
+  if(res.dock){
+    ctx.globalAlpha=0.95;ctx.strokeStyle='#5be0a0';ctx.lineWidth=1.8;ctx.setLineDash([2,4]);
+    ctx.beginPath();ctx.arc(res.dock.x,res.dock.y,9,0,TAU);ctx.stroke();ctx.setLineDash([]);
+    ctx.globalAlpha=1;ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#7df0b8';
+    ctx.fillText('可安全对接',res.dock.x,res.dock.y-15);
+  }
+  ctx.restore();ctx.globalAlpha=1;
+}
+function drawParticles(){
+  for(const p of G.particles){ctx.globalAlpha=clamp(p.life/p.maxLife,0,1);ctx.fillStyle=p.color;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,TAU);ctx.fill();}
+  ctx.globalAlpha=1;
+}
+/* 撞击冲击波环：双圈扩散并淡出 */
+function drawImpactFx(dt){
+  if(!G.impactFx)return;
+  const fx=G.impactFx;fx.t+=dt;
+  if(fx.t>0.9){G.impactFx=null;return;}
+  const fade=1-fx.t;
+  ctx.lineWidth=3*fade+1;
+  ctx.strokeStyle='rgba(255,150,120,'+(0.85*fade)+')';
+  ctx.beginPath();ctx.arc(fx.x,fx.y,fx.t*430,0,TAU);ctx.stroke();
+  ctx.lineWidth=2*fade+0.6;
+  ctx.strokeStyle='rgba(255,222,185,'+(0.55*fade)+')';
+  ctx.beginPath();ctx.arc(fx.x,fx.y,fx.t*265,0,TAU);ctx.stroke();
+}
+/* 对接锁定动画：青色收缩闪光环 + 中心闪光，0.5 秒 */
+function drawLockFx(dt){
+  if(!G._lockFx)return;
+  const fx=G._lockFx;fx.t+=dt;
+  if(fx.t>0.5){G._lockFx=null;return;}
+  const k=fx.t/0.5, fade=1-k;
+  const rr=fx.r*(1.6-0.6*k); // 从 1.6r 收缩到 r
+  ctx.lineWidth=3*fade+1;ctx.strokeStyle='rgba(90,209,232,'+(0.9*fade)+')';
+  ctx.beginPath();ctx.arc(fx.x,fx.y,rr,0,TAU);ctx.stroke();
+  ctx.globalAlpha=0.5*fade;ctx.fillStyle='rgba(167,228,240,1)';
+  ctx.beginPath();ctx.arc(fx.x,fx.y,fx.r,0,TAU);ctx.fill();ctx.globalAlpha=1;
+}
+
+/* 模式视觉区分（C）：探测=工程推演网格/坐标轴/数据框；领航=暖色淡网格 */
+function drawEngineering(){
+  const probe=G.state==='probe',grid=160; // 密度减半（原 80）
+  const mrg=1.15;
+  const left=G.camera.x-VW/2*mrg,right=G.camera.x+VW/2*mrg,top=G.camera.y-VH/2*mrg,bottom=G.camera.y+VH/2*mrg;
+  ctx.save();
+  if(probe){
+    ctx.strokeStyle='rgba(142,160,255,.05)';ctx.lineWidth=1;ctx.beginPath(); // D5 实线低透明，区别于 LOCK 括号
+    for(let x=Math.floor(left/grid)*grid;x<=right;x+=grid){ctx.moveTo(x,top);ctx.lineTo(x,bottom);}
+    for(let y=Math.floor(top/grid)*grid;y<=bottom;y+=grid){ctx.moveTo(left,y);ctx.lineTo(right,y);}
+    ctx.stroke();
+    // W8：靠近目标 200km 内自动加密到 80，保留“工程测绘”语义（局部裁剪）
+    const tp0=targetPos(G.level.target);
+    const R=200,cl=tp0.x-R,cr=tp0.x+R,ct=tp0.y-R,cb=tp0.y+R,fine=80;
+    ctx.strokeStyle='rgba(142,160,255,.14)';ctx.lineWidth=0.8;ctx.beginPath();
+    for(let x=Math.floor(cl/fine)*fine;x<=cr;x+=fine){ctx.moveTo(Math.max(x,cl),ct);ctx.lineTo(Math.max(x,cl),cb);}
+    for(let y=Math.floor(ct/fine)*fine;y<=cb;y+=fine){ctx.moveTo(cl,Math.max(y,ct));ctx.lineTo(cr,Math.max(y,ct));}
+    ctx.stroke();
+    ctx.strokeStyle='rgba(123,224,168,.35)';ctx.setLineDash([3,5]);ctx.strokeRect(cl,ct,R*2,R*2);ctx.setLineDash([]);
+    // 坐标轴：只画穿过相机的一小段，两端淡出，不再贯穿全屏/穿恒星
+    const ccx=G.camera.x,ccy=G.camera.y,axLen=VW*0.4,ayLen=VH*0.4;
+    const gx=ctx.createLinearGradient(ccx-axLen,ccy,ccx+axLen,ccy);
+    gx.addColorStop(0,'rgba(167,228,240,0)');gx.addColorStop(.5,'rgba(167,228,240,.5)');gx.addColorStop(1,'rgba(167,228,240,0)');
+    ctx.strokeStyle=gx;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(ccx-axLen,ccy);ctx.lineTo(ccx+axLen,ccy);ctx.stroke();
+    const gy=ctx.createLinearGradient(ccx,ccy-ayLen,ccx,ccy+ayLen);
+    gy.addColorStop(0,'rgba(167,228,240,0)');gy.addColorStop(.5,'rgba(167,228,240,.5)');gy.addColorStop(1,'rgba(167,228,240,0)');
+    ctx.strokeStyle=gy;ctx.beginPath();ctx.moveTo(ccx,ccy-ayLen);ctx.lineTo(ccx,ccy+ayLen);ctx.stroke();
+    // D5 目标数据框：四角括号样式（区别于网格），不再用虚线整框
+    const t=G.level.target,tp=targetPos(t),pad=t.r+14,cor=12;
+    ctx.strokeStyle='rgba(123,224,168,.8)';ctx.lineWidth=1.4;ctx.beginPath();
+    const bx=tp.x-pad,by=tp.y-pad,bx2=tp.x+pad,by2=tp.y+pad;
+    // 四个角的 L 形括号
+    ctx.moveTo(bx,by+cor);ctx.lineTo(bx,by);ctx.lineTo(bx+cor,by);
+    ctx.moveTo(bx2-cor,by);ctx.lineTo(bx2,by);ctx.lineTo(bx2,by+cor);
+    ctx.moveTo(bx,by2-cor);ctx.lineTo(bx,by2);ctx.lineTo(bx+cor,by2);
+    ctx.moveTo(bx2-cor,by2);ctx.lineTo(bx2,by2);ctx.lineTo(bx2,by2-cor);
+    ctx.stroke();
+    // D1 标签移到框下沿 +8px，避免与上方“对接圈”标签重叠
+    ctx.fillStyle='#7be0a8';ctx.font='10px Cascadia Code,Consolas,monospace';ctx.textAlign='left';
+    ctx.fillText('TARGET LOCK',tp.x-pad,tp.y+pad+12);
+  }else{
+    ctx.strokeStyle='rgba(255,159,90,.06)';ctx.lineWidth=1;ctx.beginPath();
+    for(let x=Math.floor(left/grid)*grid;x<=right;x+=grid){ctx.moveTo(x,top);ctx.lineTo(x,bottom);}
+    for(let y=Math.floor(top/grid)*grid;y<=bottom;y+=grid){ctx.moveTo(left,y);ctx.lineTo(right,y);}
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+let trajCache={pts:[],danger:null},trajTimer=0;
+/* 目标离屏指示：屏幕边缘绿色三角 + 距离，解决“不知道往哪飞” */
+function drawOffscreenTarget(){
+  if(!G.level||(G.state!=='pilot'&&G.state!=='probe'))return;
+  const tp=targetPos(G.level.target),s=G.ship;
+  const sx=tp.x-G.camera.x,sy=tp.y-G.camera.y,m=84; // W5 贴边 70→84
+  if(Math.abs(sx*G.camera.zoom)<VW/2-m&&Math.abs(sy*G.camera.zoom)<VH/2-m)return; // 屏内不画
+  const a=Math.atan2(sy,sx);
+  const rx=(VW/2-m)/Math.max(1e-6,Math.abs(Math.cos(a))),ry=(VH/2-m)/Math.max(1e-6,Math.abs(Math.sin(a)));
+  const r=Math.min(rx,ry);
+  let px=VW/2+Math.cos(a)*r,py=VH/2+Math.sin(a)*r;
+  py=Math.min(py,VH-150); // 底部 150px 内不放箭头，避开通信条
+  ctx.save();ctx.translate(px,py);
+  // 半透明圆形底板，避免压在行星/文字上
+  ctx.fillStyle='rgba(8,16,28,.72)';ctx.beginPath();ctx.arc(0,0,17,0,TAU);ctx.fill();
+  ctx.strokeStyle='rgba(123,224,168,.5)';ctx.lineWidth=1;ctx.stroke();
+  ctx.rotate(a);
+  ctx.fillStyle='#7be0a8';
+  ctx.beginPath();ctx.moveTo(13,0);ctx.lineTo(-7,-7);ctx.lineTo(-7,7);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // 距离数字移到箭头外侧（沿方向再外推），不再压在箭头上
+  ctx.fillStyle='#9fe8c4';ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';
+  const nx=px+Math.cos(a)*26,ny=py+Math.sin(a)*26+4;
+  ctx.fillText(Math.round(toKm(dist(s.x,s.y,tp.x,tp.y)))+' km',nx,ny);
+}
+/* 迷你罗盘：固定屏幕坐标，画目标方位（绿）与速度方向（青），手机玩家不迷路 */
+function drawCompass(){
+  if(!G.level||(G.state!=='pilot'&&G.state!=='probe'))return;
+  const tp=targetPos(G.level.target),s=G.ship,R=30;
+  const cx=VW-72,cy=VH-232; // 抬高，避开右下角触摸键
+  const goalA=Math.atan2(tp.y-s.y,tp.x-s.x);      // 目标相对飞船的方位角
+  const velA=Math.atan2(s.vy,s.vx);               // 当前速度方向
+  ctx.save();ctx.translate(cx,cy);
+  ctx.fillStyle='rgba(8,16,28,.78)';ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.fill();
+  ctx.strokeStyle='rgba(90,209,232,.45)';ctx.lineWidth=1;ctx.stroke();
+  // 十字刻度
+  ctx.strokeStyle='rgba(125,147,168,.4)';ctx.beginPath();
+  ctx.moveTo(-R+6,0);ctx.lineTo(R-6,0);ctx.moveTo(0,-R+6);ctx.lineTo(0,R-6);ctx.stroke();
+  // 速度方向：青色指针
+  ctx.strokeStyle='#5ad1e8';ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(-Math.cos(velA)*8,-Math.sin(velA)*8);ctx.lineTo(Math.cos(velA)*(R-8),Math.sin(velA)*(R-8));ctx.stroke();
+  // 目标方位：绿色三角指针
+  ctx.fillStyle='#7be0a8';ctx.save();ctx.rotate(goalA);
+  ctx.beginPath();ctx.moveTo(R-6,0);ctx.lineTo(R-13,-5);ctx.lineTo(R-13,5);ctx.closePath();ctx.fill();ctx.restore();
+  ctx.fillStyle='rgba(167,228,240,.9)';ctx.font='9px Cascadia Code,Consolas,monospace';ctx.textAlign='center';
+  ctx.fillText('罗盘',0,R+12);
+  ctx.restore();
+}
+
+/* T2 领航回放：实际轨迹（实线）叠加探测预测线（虚线），误差一眼可见＝实践检验认识 */
+function drawReplay(){
+  const pp=G.pilotPath;
+  if(pp&&pp.length>1){
+    ctx.strokeStyle='#ffd166';ctx.globalAlpha=.9;ctx.lineWidth=2;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(pp[0].x,pp[0].y);
+    for(let i=1;i<pp.length;i++)ctx.lineTo(pp[i].x,pp[i].y);
+    ctx.stroke();
+  }
+  // 探测阶段最后一条预测线（trajCache）用青色虚线叠加
+  if(trajCache&&trajCache.pts&&trajCache.pts.length){
+    ctx.strokeStyle='#5ad1e8';ctx.globalAlpha=.5;ctx.lineWidth=1.3;ctx.setLineDash([3,6]);
+    ctx.beginPath();const q=trajCache.pts;ctx.moveTo(q[0].x,q[0].y);
+    for(let i=1;i<q.length;i++)ctx.lineTo(q[i].x,q[i].y);
+    ctx.stroke();ctx.setLineDash([]);
+  }
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#ffd166';ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='left';
+  const s0=G.startSnapshot;
+  if(s0)ctx.fillText('实线＝实际领航轨迹　虚线＝探测预测线（实践检验认识）',s0.x,s0.y-40);
+}
+/* T3 历史预测曲线：探测中按试错次序叠加，越早越淡，直观呈现认识的反复性 */
+function drawProbeHistory(){
+  const h=G.probeHistory;if(!h||!h.length)return;
+  for(let i=0;i<h.length;i++){
+    const rec=h[i],alpha=0.12+0.08*i; // 越早越淡
+    ctx.strokeStyle='rgba(142,160,255,'+alpha+')';ctx.lineWidth=1;ctx.setLineDash([2,6]);
+    ctx.beginPath();const q=rec.pts;if(!q.length)continue;
+    ctx.moveTo(q[0].x,q[0].y);for(let j=1;j<q.length;j++)ctx.lineTo(q[j].x,q[j].y);ctx.stroke();
+  }
+  ctx.setLineDash([]);
+}
+function render(dt){
+  ctx.fillStyle='#05070f';ctx.fillRect(0,0,VW,VH);
+  drawStarfield();
+  if(!G.level)return;
+  if(G.state==='choice')return; // 抉择关：只保留背景星空，世界对象由分配界面覆盖
+  const shx=G.camera.shake?rand(-G.camera.shake,G.camera.shake):0,shy=G.camera.shake?rand(-G.camera.shake,G.camera.shake):0;
+  // 领航镜头轻微推近（C）；overburn 过载再推近；制动额外推近 0.04，探测保持标准
+  let tz=G.state==='pilot'?1.08:1;
+  if(G.overburn)tz=1.2;
+  if(G.input.brake&&G.fuel>0)tz+=0.04;
+  G.camera.zoom=lerp(G.camera.zoom,tz,1-Math.exp(-dt*3));
+  ctx.save();ctx.translate(VW/2,VH/2);ctx.scale(G.camera.zoom,G.camera.zoom);ctx.translate(-G.camera.x+shx,-G.camera.y+shy);
+  drawEngineering();
+  drawWinds(G.time);
+  if(G.state==='probe')for(const b of G.level.bodies)drawGravityRings(b);
+  drawTarget(G.level.target,G.time);
+  for(const b of G.level.bodies)drawBody(b,G.time,dt);
+  for(const d of G.level.debris)drawDebris(d);
+  for(const d of G.level.drones)drawDrone(d);
+  for(const p of G.level.pickups)drawPickup(p);
+  trajTimer-=dt;
+  if(trajTimer<=0){trajCache=predictPath(240,0.08);trajTimer=G.state==='probe'?0.12:0.2;} // 预测节流 P1-6
+  if(G.state==='probe')drawProbeHistory(); // T3 历史预测曲线
+  drawTrajectory(trajCache);
+  drawParticles();
+  drawImpactFx(dt);
+  drawLockFx(dt);
+  if(G.ship&&G.ship.alive){drawVelocityVector(G.ship);drawShip(G.ship,G.time);}
+  if(G.state==='result')drawReplay(); // T2 结算回放：预测 vs 实际
+  ctx.restore();
+  drawOffscreenTarget();
+  drawCompass();
+  if(G.warp>0){
+    G.warp=Math.max(0,G.warp-dt*1.4);ctx.strokeStyle='#a7e4f0';ctx.globalAlpha=G.warp;
+    for(let i=0;i<24;i++){const a=i/24*TAU;ctx.beginPath();ctx.moveTo(VW/2,VH/2);
+      ctx.lineTo(VW/2+Math.cos(a)*VW,VH/2+Math.sin(a)*VH);ctx.stroke();}
+    ctx.globalAlpha=1;}
+}
+
+/* ============================================================
+   流程控制 / 存档 / 评级 / 主循环
+   ============================================================ */
+const $=id=>document.getElementById(id);
+function show(id){$(id).classList.remove('hidden');}
+function hide(id){$(id).classList.add('hidden');}
+function hideAllScreens(){['screen-title','screen-briefing','screen-result','screen-ending','screen-choice'].forEach(hide);}
+
+const AVATARS={
+  ai:'<svg viewBox="0 0 24 24" fill="none" stroke="#5ad1e8" stroke-width="1.8"><rect x="5" y="7" width="14" height="11" rx="2"/><circle cx="9" cy="12" r="1.4" fill="#5ad1e8"/><circle cx="15" cy="12" r="1.4" fill="#5ad1e8"/><path d="M12 7V4M9 4h6"/></svg>',
+  eng:'<svg viewBox="0 0 24 24" fill="none" stroke="#ff9f5a" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>',
+  crew:'<svg viewBox="0 0 24 24" fill="none" stroke="#7be0a8" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>'
+};
+
+const BRIEF_DIALOGS=[
+[['ai','阿基米德','领航员，欢迎登舰。这是近地轨道基础训练，先认识单恒星引力。'],
+ ['eng','总工程师','引力是客观的，不会因为你着急就改变。先在探测里看清自然轨迹，再决定何时点火。'],
+ ['crew','大副','灯塔号在轨道上等着。对接时速度一定要降下来，否则会被弹开。']],
+[['ai','阿基米德','本关燃料配额只有 52，直抵跃迁门是不可能的——这是物理规律给出的硬约束。'],
+ ['eng','总工程师','但规律不是死路。「自由」的引力可以成为你的引擎：靠近它，让引力把你甩向目标。'],
+ ['crew','大副','这就是引力弹弓。我们没有改变引力，只是改变了航线，让规律为我所用。']],
+[['ai','阿基米德','前方是周期性星风走廊。风的方向随时间规律变化，参数已在探测模式开放。'],
+ ['eng','总工程师','等顺风窗口再行动，能省大量燃料；逆风硬顶是唯意志论，只会烧光燃料。'],
+ ['crew','大副','认识风的周期，就是把自在的规律变成我们手里的主动权。']],
+[['ai','阿基米德','最终星区：新曦是一颗正在公转的行星，它在运动，我们要追上它、与它同速。'],
+ ['eng','总工程师','注意相对速度。「自由」可以借力，星风可以滑行，但对接必须把相对速度降到上限内。'],
+ ['crew','大副','这是最后一程。尊重规律，又主动驾驭——我们一起把方舟号带回家。']]
+];
+
+/* 每关理论归位卡（F + 知识点） */
+const THEORY_CARDS=[
+ {head:'理论卡 · 实践是认识的基础',body:'你不亲自试，就不知道哪条轨道能到灯塔号。<b>实践是认识的来源、动力和目的</b>，探测里那条预测轨道，是用你自己的试错数据换来的认识成果。'},
+ {head:'理论卡 · 主观能动性与客观规律的统一',body:'你没有改变引力，只改变了航线——<b>尊重规律是前提，发挥能动性是认识和利用规律的必要条件</b>，让「自由」的引力成为你的引擎。'},
+ {head:'理论卡 · 规律的客观性与认识的反复性',body:'等了几个风周期才摸到星风的节奏。<b>规律不以人的意志为转移，但可以被认识</b>；认识在反复试错中不断深化。'},
+ {head:'理论卡 · 真理的具体性与条件性',body:'同一套弹弓打法在公转的新曦这里不成立。<b>真理是具体的、有条件的</b>，脱离具体条件照搬旧经验，就会把真理变成教条。'},
+ {head:'理论卡 · 社会基本矛盾',body:'物资总量是既定的<b>生产力</b>，分配方式是<b>生产关系</b>。<b>生产力决定生产关系，经济基础决定上层建筑</b>；合理的分配不是平均，而是抓住主要矛盾、协调各部门，让生产关系适应生产力。'}
+];
+function buildLevel(i){
+  const src=LEVELS[i];
+  G.levelIndex=i;
+  const bodies=src.bodies.map(b=>({...b,spin:0,_counted:false}));
+  const winds=src.winds.map(w=>({...w}));
+  const debris=(src.debris||[]).map((d,idx)=>{
+    // 固定形状：确定性伪随机顶点（同一块每帧不变，避免闪烁）；各自不同自转速度
+    const seed=(d.phase||0)*100+idx*17+(d.orbitR||d.r||10);
+    const verts=[];const N=8;
+    for(let i=0;i<N;i++){
+      const pseudo=Math.abs(Math.sin(seed+i*12.9898)*43758.5453)%1;
+      verts.push(0.72+pseudo*0.4);
+    }
+    const spin=(Math.abs(Math.sin(seed*3.1))%1)*0.5+0.3; // 0.3~0.8 rad/s
+    return {...d,verts,spin,rot:0};
+  });
+  const drones=(src.drones||[]).map(d=>({...d}));
+  const pickups=(src.pickups||[]).map(d=>({...d,taken:false}));
+  G.level={name:src.name,goal:src.goal,bodies,winds,debris,drones,pickups,target:{...src.target}};
+  G.ship=makeShip(src.ship);
+  G.maxFuel=src.fuel;G.fuel=src.fuel;
+  G.slingshot=0;G.probeResets=0;G.levelTime=0;G.probeTime=0;
+  G.knowledge=0;G.morale=80;G.knowEval=0;
+  G.bestApproach=Infinity;G.driftTimer=0;G.lastSave=0;
+  G.levelTime0=0;G.activeProbeMs=0;G.windWindowMs=0;G.windTotalMs=0;
+  G.pilotPath=[];G.probeHistory=[];G._pathTick=0;
+  G.particles=[];G.trajCache={pts:[],danger:null};
+  G.pred.errKm=null;G._near=false;
+  G.startSnapshot=shipSnap();
+  G.camera.x=G.ship.x;G.camera.y=G.ship.y;G.camera.shake=0;
+  updateDynamicObjects();
+}
+/* 动态对象位置（解析式，不参与多体引力，保证完全可预测——可认识的客观规律） */
+function debrisPos(d,t){
+  if(d.omega===undefined)return {x:d.x,y:d.y}; // 静态残骸：直接坐标
+  const ang=d.phase+d.omega*t;
+  if(d.anchor){const a=G.level.bodies.find(x=>x.id===d.anchor);
+    return {x:a.x+Math.cos(ang)*d.orbitR,y:a.y+Math.sin(ang)*d.orbitR};}
+  return {x:d.cx+Math.cos(ang)*d.orbitR,y:d.cy+Math.sin(ang)*d.orbitR};
+}
+function dronePos(d,t){
+  const u=(Math.sin(d.phase+t*TAU/d.period)+1)/2; // 周期往返，0..1 平滑
+  return {x:lerp(d.ax,d.bx,u),y:lerp(d.ay,d.by,u)};
+}
+function updateDynamicObjects(){
+  const t=G.levelTime0;
+  for(const d of G.level.debris){const p=debrisPos(d,t);d.x=p.x;d.y=p.y;if(d.spin)d.rot=(d.rot||0)+d.spin*G._lastDt;}
+  for(const d of G.level.drones){d.prevX=d.x;d.prevY=d.y;const p=dronePos(d,t);d.x=p.x;d.y=p.y;}
+}
+
+function loadLevel(i){
+  buildLevel(i);
+  const src=LEVELS[i];
+  if(src.kind==='choice'){enterChoice(src);return;} // 抉择关：进入分配界面而非飞行简报
+  $('brief-no').textContent=src.no;$('brief-title').textContent=src.name;
+  $('brief-meta').textContent=src.meta;$('brief-goal').textContent=src.goal;
+  buildArchive(i);
+  buildBriefDialog(i);
+  hideAllScreens();show('screen-briefing');
+  $('topbar').classList.remove('hidden');
+  G.state='briefing';
+}
+/* 第5关抉择：物资分配 */
+function enterChoice(src){
+  $('ch-quota').textContent=src.quota;
+  ['al-prop','al-life','al-res'].forEach(id=>{const el=$(id);el.value=0;});
+  G.choiceData=null;
+  updateAlloc();
+  hideAllScreens();show('screen-choice');
+  G.state='choice';Music.scene('choice');
+}
+function updateAlloc(){
+  const prop=+$('al-prop').value,life=+$('al-life').value,res=+$('al-res').value;
+  $('av-prop').textContent=prop;$('av-life').textContent=life;$('av-res').textContent=res;
+  const sum=prop+life+res,src=LEVELS[G.levelIndex];
+  $('ch-sum').textContent=sum;
+  const propOk=prop>=src.minPropulsion,lifeOk=life>=src.minLife;
+  $('nt-prop').className='alloc-note'+(propOk?' ok':'');
+  $('nt-prop').textContent=propOk?'已达标（可推进至新曦）':'最低需求 '+src.minPropulsion+'，否则无法抵达';
+  $('nt-life').className='alloc-note'+(lifeOk?' ok':'');
+  $('nt-life').textContent=lifeOk?'已达标（船员可存活）':'最低需求 '+src.minLife+'，否则无法存活';
+  const flag=$('ch-flag');
+  let ok=false;
+  if(sum!==src.quota){flag.textContent='需正好分配 '+src.quota+' 个单位';}
+  else if(!propOk||!lifeOk){flag.textContent='推进或生命维持未达最低需求';}
+  else{flag.textContent='';ok=true;}
+  $('btn-alloc').disabled=!ok;
+}
+function submitAlloc(){
+  const prop=+$('al-prop').value,life=+$('al-life').value,res=+$('al-res').value;
+  G.choiceData={prop,life,res};
+  // 评级：满足最低需求后，科研储备越均衡越高
+  let grade='C';
+  if(res>=20&&prop>=40&&life>=35)grade='S';
+  else if(res>=15)grade='A';
+  else if(res>=8)grade='B';
+  G.grades.push(grade);
+  AudioSys.success();
+  showChoiceResult(grade,{prop,life,res});
+}
+function showChoiceResult(grade,d){
+  const rg=$('result-grade');rg.textContent=grade;rg.className='result-grade grade-'+grade+' stamp';
+  $('r-fuel').textContent=d.prop+'（推进）';
+  $('r-slingshot').textContent='—';
+  $('r-probe').textContent='—';
+  $('r-know').textContent=d.life+' 生命 / '+d.res+' 科研';
+  $('r-probe-time').textContent='—';$('r-pilot-time').textContent='—';
+  const map={
+    S:'各部门协调发展，生产关系适应了生产力——方舟号整体处于最佳状态。',
+    A:'分配合理，在保证抵达与存活的同时为定居点留足了科研力量。',
+    B:'基本满足航行需要，但科研储备偏薄，新曦起步会更艰难。',
+    C:'勉强抵达，部门间失衡，生产关系制约了生产力的发挥。'
+  };
+  // T4：科研储备直接改写评语，把“分配”与“后果”绑死
+  let ctext=map[grade];
+  if(d.res===0)ctext+='你把全部资源押在抵达上，新曦将没有一颗种子、一台仪器能落地——定居点没有未来。';
+  else if(d.res<8)ctext+='科研储备仅 '+d.res+'，新曦只能勉强落脚，下一轮发展会被资源卡住。';
+  else if(d.res>=20)ctext+='充足的科研储备（'+d.res+'）让新曦定居点一开始就站得稳、走得远。';
+  $('result-comment').textContent=ctext;
+  const tc=THEORY_CARDS[G.levelIndex]||{head:'理论卡 · 社会基本矛盾',body:'<b>生产力决定生产关系，经济基础决定上层建筑</b>；物资分配方式是否适应生产力，决定了方舟号能否完成航程。合理的分配不是平均，而是抓住主要矛盾、协调各部门。'};
+  $('tc-head').textContent=tc.head;$('tc-body').innerHTML=tc.body;
+  const cl5=CREW_LOGS[4]; // 第5关船员手记 + 地球来声
+  $('crew-log-body').textContent=cl5.log;$('earth-mail').textContent=cl5.mail;
+  $('btn-next').textContent='查看最终航程';
+  hideAllScreens();show('screen-result');
+  G.state='result';
+}
+
+/* 天体档案：列出本关天体及其物理角色与对应原理（命名体系A） */
+function buildArchive(i){
+  const box=$('brief-archive');box.innerHTML='';
+  const title=document.createElement('div');title.className='ba-title';
+  title.textContent='天体档案 // 命名即原理：从必然王国走向自由王国';
+  box.appendChild(title);
+  for(const b of LEVELS[i].bodies){
+    if(!b.arch)continue;
+    const item=document.createElement('div');item.className='ba-item';
+    const dot=document.createElement('span');dot.className='ba-dot';dot.style.background=b.color;
+    const nm=document.createElement('span');nm.className='ba-name';nm.textContent='「'+b.name+'」';
+    const note=document.createElement('span');note.className='ba-note';note.textContent=b.arch;
+    item.append(dot,nm,note);box.appendChild(item);
+  }
+  // T1：新增对象也“命名即原理”，按本关是否存在补进档案
+  const src=LEVELS[i];
+  const extra=[];
+  if(src.debris&&src.debris.length)extra.push({color:'#8fa3bd',name:'物质',note:'陨石带：物质运动具有客观性，它不会为你让路，只能被你认识、被你绕开。'});
+  if(src.drones&&src.drones.length)extra.push({color:'#ff8a8a',name:'规律',note:'巡逻无人机：人造物的运动同样有客观规律，可认识、可预测。'});
+  if(src.pickups&&src.pickups.length)extra.push({color:'#7be0a8',name:'能动',note:'能量晶体：实践取得的成果可反过来支持实践，体现认识对实践的反作用。'});
+  for(const e of extra){
+    const item=document.createElement('div');item.className='ba-item';
+    const dot=document.createElement('span');dot.className='ba-dot';dot.style.background=e.color;
+    const nm=document.createElement('span');nm.className='ba-name';nm.textContent='「'+e.name+'」';
+    const note=document.createElement('span');note.className='ba-note';note.textContent=e.note;
+    item.append(dot,nm,note);box.appendChild(item);
+  }
+}
+
+/* 简报对话改为 DOM 节点拼装（P1-11） */
+function buildBriefDialog(i){
+  const box=$('brief-dialog');box.innerHTML='';
+  for(const m of BRIEF_DIALOGS[i]){
+    const msg=document.createElement('div');msg.className='msg '+m[0];
+    const av=document.createElement('div');av.className='avatar';av.innerHTML=AVATARS[m[0]];
+    const bub=document.createElement('div');bub.className='bubble';
+    const who=document.createElement('span');who.className='who';who.textContent=m[1];
+    const txt=document.createElement('span');txt.className='txt';txt.textContent=m[2];
+    bub.append(who,txt);msg.append(av,bub);box.appendChild(msg);
+  }
+}
+
+function enterProbe(){
+  hideAllScreens();show('hud');
+  restoreShip(G.startSnapshot);G.fuel=G.maxFuel;G.particles.length=0; // 进入探测即恢复初始状态
+  G.state='probe';setModeTag();Music.scene('probe');
+  $('hud-level').textContent=LEVELS[G.levelIndex].name;
+  $('hud-goal').textContent=LEVELS[G.levelIndex].goal;
+  $('btn-launch').classList.remove('hidden');
+  $('accident').classList.add('hidden');
+  if(!G.legendShown){show('legend');G.legendShown=true;} // 首次图例卡
+  say('阿基米德','探测模式：燃料无限重置，可自由试错。看清自然轨迹，再正式领航。',5);
+  saveGame();G.lastSave=G.time; // 状态切换立即存档
+}
+function resetProbe(){
+  if(G.state!=='probe')return;
+  // T3：保存本次预测快照（含误差），用于叠加历史曲线，体现认识的反复性
+  if(trajCache&&trajCache.pts&&trajCache.pts.length){
+    G.probeHistory.push({pts:trajCache.pts.map(p=>({x:p.x,y:p.y})),err:G.pred.errKm});
+    if(G.probeHistory.length>6)G.probeHistory.shift(); // 最多保留 6 条
+  }
+  restoreShip(G.startSnapshot);G.fuel=G.maxFuel;G.particles.length=0;
+  G.probeResets++; // 试错不再扣认识值（P1-3）：认识只加不减，试错是认识的必经之路
+  AudioSys.ui();
+  say('阿基米德','已重置。试错是认识规律的必经之路，再试一次。',3);
+}
+function togglePause(){
+  G.paused=!G.paused;
+  const panel=$('pause-panel');
+  if(G.paused){panel.classList.remove('hidden');for(const k in G.input)G.input[k]=false;Music.scene('paused');}
+  else{panel.classList.add('hidden');Music.scene(G.state==='probe'?'probe':'pilot');}
+}
+function startPilot(){
+  G.state='pilot';setModeTag();Music.scene('pilot');
+  G.fuel=G.maxFuel;restoreShip(G.startSnapshot);G.particles.length=0;
+  G.levelTime=0;G.bank=0;G.thrustHold=0;G.overburn=false; // 领航计时从零开始，不含探测时间
+  G.camera.x=G.ship.x;G.camera.y=G.ship.y; // 相机直接对齐飞船，消除瞬移时的镜头飞行
+  $('btn-launch').classList.add('hidden');
+  say('阿基米德','正式领航开始。燃料不可重置，运用你在探测中认识的规律。',4);
+  saveGame();G.lastSave=G.time; // 状态切换立即存档
+}
+function setModeTag(){
+  const tag=$('hud-mode');
+  if(G.state==='probe'){tag.textContent='探测模式 PROBE';tag.className='mode-tag mode-probe';}
+  else{tag.textContent='领航模式 PILOT';tag.className='mode-tag mode-pilot';}
+}
+
+/* 评级：S 档按关卡配置，第 1 关不要求引力借力（P0-3） */
+function computeGrade(){
+  const ratio=G.fuel/G.maxFuel,know=G.knowledge;
+  // 第3关（星风走廊）：S 用“星风窗口利用率”替代引力借力，贴合等风窗口主题
+  if(G.levelIndex===2){
+    const util=G.windTotalMs?G.windWindowMs/G.windTotalMs:0;
+    if(ratio>=0.5&&know>=40&&util>=0.6)return 'S';
+    if(ratio>=0.34&&know>=20)return 'A';
+    if(ratio>=0.16)return 'B';
+    return 'C';
+  }
+  const needSling=G.levelIndex>0;
+  if(ratio>=0.5&&know>=40&&(!needSling||G.slingshot>=1))return 'S';
+  if(ratio>=0.34&&know>=20)return 'A';
+  if(ratio>=0.16)return 'B';
+  return 'C';
+}
+/* N1/N3 船员手记 + 地球来声（生活语言，每关一条） */
+const CREW_LOGS=[
+ {log:'今天才明白，恒星那圈引力不是谁故意为难我们，它一直在那儿，按自己的规矩拉东西。我们能做的不是跟它较劲，是先摸清它的脾气，再顺着它的劲儿把船送过去。',
+  mail:'地球来声：孩子，老家的河水也从不等人，可会看水的人，总能在涨水前把船撑过河。'},
+ {log:'这一关差点把我转吐。原来"自由"不是想往哪飞就往哪飞，是你知道每个动作会带来什么后果之后，才敢动手。乱按一通，只会被引力拽着走。',
+  mail:'地球来声：你妈说，风筝线攥太紧会断、太松会掉，松紧全在手上那点分寸——跟你们开飞船一个理。'},
+ {log:'第3关教的是：等风来不如看风表。星风什么时候来、往哪吹，都有准头。守着仪表等那扇"窗口"，比烧着燃料硬扛省太多了。',
+  mail:'地球来声：村里种地也讲节气，清明前后种瓜点豆，不是迷信，是祖祖辈辈试出来的规律。'},
+ {log:'以前以为反思就是事后后悔，现在懂了，是把上一次飞错的地方记下来，下一次换个法子。同一条错路，不认它就会一直走。',
+  mail:'地球来声：你爸修了一辈子机器，常说一句话——同一个毛病犯第二回，就不是机器的问题，是人的问题。'},
+ {log:'物资就那么多，全砸在引擎上，人是到了新曦，可没有种子、没有科研的东西，往后靠什么活？怎么分这堆东西，比怎么飞还考验人。',
+  mail:'地球来声：家里过日子也一样，钱要分成吃饭的、看病的、供读书的，顾头不顾尾，日子就过不长。'}
+];
+function completeLevel(){
+  if(G.state!=='pilot')return; // 探测模式不得结算，只能在正式领航交付
+  G.ship.alive=false;
+  G.morale=clamp(G.morale+10,0,100);
+  Music.scene('result'); // A4：BGM 先切收束场景，让随后 success 琶音与和弦对上
+  G.warp=1;AudioSys.setEngine('off',0);AudioSys.setBrake('off');AudioSys.success();AudioSys.warp();
+  clearSave();
+  const grade=computeGrade();G.grades.push(grade);
+  const rg=$('result-grade');rg.textContent=grade;rg.className='result-grade grade-'+grade+' stamp';
+  $('r-fuel').textContent=Math.round(G.fuel)+' / '+G.maxFuel;
+  // W20 第3关：该格显示星风窗口利用率而非引力借力，贴合“等风窗口”主题
+  if(G.levelIndex===2){
+    const util=G.windTotalMs?G.windWindowMs/G.windTotalMs:0;
+    $('r-slingshot-k').textContent='星风窗口利用率（S 需 ≥60%）';
+    $('r-slingshot').textContent=Math.round(util*100)+'%';
+  }else{
+    $('r-slingshot-k').textContent='引力借力次数';
+    $('r-slingshot').textContent=G.slingshot;
+  }
+  $('r-probe').textContent=G.probeResets;
+  $('r-know').textContent=Math.round(G.knowledge)+' / 100';
+  $('r-probe-time').textContent=Math.round(G.activeProbeMs/1000)+' s';
+  $('r-pilot-time').textContent=Math.round(G.levelTime)+' s';
+  $('r-err').textContent=(G.pred.errKm===null)?'—':Math.round(G.pred.errKm)+' km';
+  const comments={
+    S:'规律了然于胸，能动性发挥得恰到好处——这是从必然走向自由的领航。',
+    A:'很好地尊重并利用了规律，航程稳健，仍有更省燃料的优化空间。',
+    B:'完成了任务，但部分操作偏向蛮干，对规律的利用还可以更充分。',
+    C:'惊险抵达。燃料几乎耗尽，说明对客观规律的认识还需加深。'
+  };
+  let commentText=comments[grade];
+  if(G.knowledge<20)commentText+='（本次规律掌握度仅 '+Math.round(G.knowledge)+'/100：你是“冲过去”的，不是“算准了才过去”的。）';
+  $('result-comment').textContent=commentText;
+  const tc=THEORY_CARDS[G.levelIndex];
+  $('tc-head').textContent=tc.head;$('tc-body').innerHTML=tc.body;
+  const cl=CREW_LOGS[G.levelIndex]||CREW_LOGS[0]; // N1/N3 船员手记 + 地球来声
+  $('crew-log-body').textContent=cl.log;
+  $('earth-mail').textContent=cl.mail;
+  $('btn-next').textContent=G.levelIndex===LEVELS.length-1?'查看最终航程':'前往下一星区';
+  hideAllScreens();hide('hud');show('screen-result');
+  G.state='result';
+}
+
+/* 航行事故报告单（撞星=唯意志论 / 漂失=宿命论） */
+let accidentSeq=0;
+/* 事故三分法：依据行为记录与碰撞对象区分理论错误，而非一律判唯意志论 */
+function classifyAccident(b){
+  const s=G.ship;
+  const sp=Math.hypot(s.vx,s.vy);
+  const sinceBurn=G.time-G.actLog.lastThrustAt;
+  const isDynamic=G.level.debris.includes(b)||G.level.drones.includes(b);
+  if(isDynamic)return 'unrecognized';                 // 撞上可预测物 → 规律未被认识
+  if(sinceBurn<1.5&&sp>150)return 'voluntarism';     // 撞前1.5s内点火且超速硬顶 → 唯意志论
+  if(!G.actLog.everThrust){
+    // 附录B：低速且来不及操作就被引力捕获，属规律未被认识，而非主动放弃的宿命论
+    if(sp<60)return 'unrecognized';
+    return 'fatalism';                               // 有速度却从不点火、放任飞船 → 宿命论
+  }
+  return sinceBurn<1.5?'voluntarism':'unrecognized';
+}
+function handleFail(b){
+  G.impactFx={x:G.ship.x,y:G.ship.y,t:0}; // 冲击波环
+  showAccident(classifyAccident(b),b);
+}
+function failDrift(){
+  AudioSys.tone(180,0.6,'sine',0.12,60);
+  showAccident('fatalism'); // 漂失＝宿命论（放弃主观能动性）
+}
+function showAccident(kind,b){
+  accidentSeq++;Music.scene('crash');
+  const box=$('accident');
+  box.classList.remove('hidden','shake');
+  void box.offsetWidth; // 强制重排以重启动画
+  if(accidentSeq<=2)box.classList.add('shake'); // shake 只抖前两次
+  $('acc-no').textContent='航行事故报告 #'+String(accidentSeq).padStart(3,'0');
+  const tag=$('acc-tag');
+  const kms=Math.round(toKms(Math.hypot(G.ship.vx,G.ship.vy)));
+  const crashName=(b&&b.name)?b.name:'必然';
+  if(kind==='voluntarism'){
+    tag.className='acc-tag';tag.textContent='错误倾向 · 唯意志论';
+    $('acc-what').innerHTML='你以 <b>'+kms.toLocaleString()+' km/s</b> 的相对速度硬顶撞上「'+crashName+'」。爆炸在真空中无声扩散，方舟号的航迹到此终止。';
+    $('acc-law').innerHTML='引力按距离平方衰减，它不读你的决心，也不接受讨价还价。把“我一定要过去”当成“宇宙应该让路”，是<b>夸大主观能动性、无视客观规律的唯意志论</b>。';
+    $('acc-do').textContent='在探测里看清自然轨迹，提前把速度降下来；贴着引力圈绕开，或借它的引力转向——让规律为你所用，而不是迎面撞上去。';
+    $('acc-quote').textContent='“人不能创造规律，只能发现规律、认识规律，然后利用规律。”';
+  }else if(kind==='unrecognized'){
+    tag.className='acc-tag unrec';tag.textContent='错误倾向 · 规律未被认识';
+    $('acc-what').innerHTML='你撞上了「'+crashName+'」——它的运动沿固定轨道/航线周期往复，本可以被提前观测、预测并绕开。';
+    $('acc-law').innerHTML='客观规律不因对象是自然陨石还是人造无人机而改变，且<b>规律可以被认识，但认识需要反复实践</b>。没认出它的航线，是认识尚未到位，而非它不可知。';
+    $('acc-do').textContent='回到探测模式，画出它的周期与相位，等它移开或从其航线间隙穿过；真理与谬误在一定条件下相互转化，这次误判会被下一次实践纠正。';
+    $('acc-quote').textContent='“我们对客观规律的认识，是一个由浅入深、反复实践的过程。”';
+  }else{
+    tag.className='acc-tag drift';tag.textContent='错误倾向 · 宿命论';
+    $('acc-what').textContent='燃料耗尽，最后一点尾焰熄灭。此后飞船只受引力与星风支配，而这条自然轨迹不再指向任何目标——你将随波漂流失联。';
+    $('acc-law').innerHTML='规律只告诉你“这样下去会怎样”，从不替你决定“该怎么做”。把规律当成不可更改的结局、放弃点火，是<b>只讲必然性、否定主观能动性的宿命论</b>。';
+    $('acc-do').textContent='在仍有燃料时主动规划航向，哪怕微调推进也要把轨迹掰向目标；善用引力借力和顺风窗口，用最小的动作改变结局。';
+    $('acc-quote').textContent='“自由不在于摆脱规律，而在于认识规律，从而有计划地让规律为目的服务。”——恩格斯《反杜林论》';
+  }
+  G.state='failed';
+}
+
+/* 燃料耗尽后的三种结局：撞星(crash)/可达(reach)/漂失(lost)，P1-1 归因拆分 */
+function driftOutcome(){
+  const res=predictPath(260,0.08);
+  if(res.danger)return 'crash'; // 自然轨迹会撞星 → 让它撞，归因由 classifyAccident 按行为记录判定
+  const tp=targetPos(G.level.target);
+  for(const p of res.pts){if(dist(p.x,p.y,tp.x,tp.y)<G.level.target.r)return 'reach';}
+  return 'lost';
+}
+
+/* 认识值：实践是检验真理的唯一标准——实际操作 >2s 且预测误差达标才加分，挂机不涨 */
+function evaluateKnowledge(){
+  if(G.actLog.flewMs<2000)return; // 没有足够的点火实践，静置不加分
+  const res=predictPath(220,0.07);
+  const tp=targetPos(G.level.target);
+  let minD=Infinity;
+  for(const p of res.pts)minD=Math.min(minD,dist(p.x,p.y,tp.x,tp.y));
+  if(res.danger)minD=Math.min(minD,dist(res.danger.x,res.danger.y,tp.x,tp.y));
+  const err=toKm(minD);G.pred.errKm=err;
+  let gain=0;
+  if(err<50)gain=8;
+  else if(err<100)gain=4;
+  else if(err<200)gain=2; // 误差 >200 不加分
+  // 单调约束：必须比历史最佳更接近（进步超过 8km）才加分，停在好位置无法刷分
+  if(gain>0&&minD<G.bestApproach-8){
+    G.knowledge=clamp(G.knowledge+gain,0,100);G.bestApproach=minD;
+    say('阿基米德','预测误差 '+Math.round(err)+' km，本次实践检验了你的判断（+'+gain+' 认识值）。',3);
+  }
+}
+/* 逆风硬顶扣士气（P1-4） */
+function updateMoraleWind(dt){
+  if(!G.input.thrust)return;
+  const s=G.ship;windForce(s.x,s.y,G.time,_w);
+  const wm=Math.hypot(_w.ax,_w.ay);if(wm<5)return;
+  const dot=(_w.ax*Math.cos(s.angle)+_w.ay*Math.sin(s.angle))/wm;
+  if(dot<-0.3)G.morale=clamp(G.morale-dt*3,0,100);
+}
+/* W19 低士气干扰：飞船手抖（轻微角速度扰动）+ 周期性静电字幕，不纳入评级 */
+function updateMoraleEffects(dt){
+  if(!G.ship||!G.ship.alive)return;
+  if(G.morale<40){
+    const strength=(40-G.morale)/40; // 士气越低扰动越强（0~1）
+    G.ship.angVel+=rand(-1,1)*0.55*strength;
+    G._jamTimer=(G._jamTimer||0)-dt;
+    if(G.morale<25&&G._jamTimer<=0){G._jamTimer=rand(4,8);say('通信官','滋滋……信…信号不稳定……请保持航向。',2.5);}
+  }
+}
+/* 星风窗口利用率（第3关评级用）：主推进点火的总时长 vs 其中顺风窗口内点火时长 */
+function updateWindWindow(dt){
+  if(!G.input.thrust)return;
+  const s=G.ship;windForce(s.x,s.y,G.time,_w);
+  G.windTotalMs+=dt*1000;
+  const wm=Math.hypot(_w.ax,_w.ay);
+  if(wm>=5){
+    const dot=(_w.ax*Math.cos(s.angle)+_w.ay*Math.sin(s.angle))/wm;
+    if(dot>0.3)G.windWindowMs+=dt*1000; // 顺风窗口内推进
+  }
+}
+
+/* 存档（P1-9） */
+function saveGame(){
+  if(!G.level||G.state!=='probe'&&G.state!=='pilot')return;
+  try{
+    const data={ver:4,levelIndex:G.levelIndex,state:G.state,ship:shipSnap(),fuel:G.fuel,
+      knowledge:G.knowledge,morale:G.morale,slingshot:G.slingshot,
+      probeResets:G.probeResets,grades:G.grades,totalSlingshot:G.totalSlingshot,
+      levelTime:G.levelTime,probeTime:G.probeTime,legendShown:G.legendShown,
+      activeProbeMs:G.activeProbeMs,windWindowMs:G.windWindowMs,windTotalMs:G.windTotalMs,
+      probeHistory:G.probeHistory.slice(-6)}; // S8：历史预测曲线入存档（约1KB）
+    localStorage.setItem('nav-save',JSON.stringify(data));
+  }catch(e){}
+}
+function hasSave(){try{return !!localStorage.getItem('nav-save');}catch(e){return false;}}
+function clearSave(){try{localStorage.removeItem('nav-save');}catch(e){}}
+function continueGame(){
+  let data;
+  try{data=JSON.parse(localStorage.getItem('nav-save'));}catch(e){return;}
+  if(!data){return;}
+  if(data.ver!==4){clearSave();return;} // 版本不符（旧存档）丢弃，避免 undefined 字段
+  buildLevel(data.levelIndex);
+  G.fuel=data.fuel;G.knowledge=data.knowledge;G.morale=data.morale;
+  G.slingshot=data.slingshot;G.probeResets=data.probeResets;
+  G.grades=data.grades||[];G.totalSlingshot=data.totalSlingshot||0;G.levelTime=data.levelTime||0;
+  G.probeTime=data.probeTime||0;G.legendShown=!!data.legendShown;
+  G.activeProbeMs=data.activeProbeMs||0;G.windWindowMs=data.windWindowMs||0;G.windTotalMs=data.windTotalMs||0;
+  G.probeHistory=Array.isArray(data.probeHistory)?data.probeHistory:[]; // S8 恢复历史曲线
+  restoreShip(data.ship);
+  hideAllScreens();show('hud');$('topbar').classList.remove('hidden');
+  $('hud-level').textContent=LEVELS[G.levelIndex].name;
+  $('hud-goal').textContent=LEVELS[G.levelIndex].goal;
+  if(data.state==='probe'){G.state='probe';setModeTag();$('btn-launch').classList.remove('hidden');}
+  else{G.state='pilot';setModeTag();$('btn-launch').classList.add('hidden');}
+  $('accident').classList.add('hidden');
+  say('阿基米德','航程已恢复，继续领航。',3);
+}
+
+function showEnding(){
+  recordBest();
+  Music.scene('ending');
+  const order={S:4,A:3,B:2,C:1};
+  const avg=G.grades.reduce((a,g)=>a+order[g],0)/G.grades.length;
+  const fg=avg>=3.6?'S':(avg>=2.8?'A':(avg>=2?'B':'C'));
+  $('ending-grade').textContent=fg;
+  $('ending-slingshot').textContent=G.totalSlingshot;
+  $('ending-quote').textContent='“自由不在于幻想中摆脱自然规律而独立，而在于认识这些规律，从而能够有计划地使自然规律为一定的目的服务。”——恩格斯《反杜林论》。你没有命令宇宙，却通过认识与实践，让引力、星风都成为抵达新家园的力量。';
+  // T5 三段式：认识必然 → 运用必然 → 改造必然
+  $('stage-1').textContent='你在探测中一次次试错、重置，才摸到引力与星风的脾气——这是从“自在的规律”到“为我的认识”，各星区评级：'+G.grades.join(' · ')+'。';
+  $('stage-2').textContent='在领航中你不是和宇宙较劲，而是借它的力（全航程引力借力 '+G.totalSlingshot+' 次）。尊重客观规律是前提，发挥主观能动性是必要条件。';
+  $('stage-3').textContent='你改变的不是引力，而是航线；改变的不是自然，而是人面对自然的方式——这正是从必然王国走向自由王国。';
+  $('ending-alt').textContent='认识具有反复性与无限性：若当初选了另一条弹弓线，燃料消耗与评级都会不同；真理在新的条件下总要重新检验，这正是认识不断上升的过程。';
+  hideAllScreens();hide('hud');show('screen-ending');
+  G.state='ending';clearSave();
+}
+
+function updateHUD(){
+  const s=G.ship,tp=targetPos(G.level.target);
+  /* 燃料环形甜甜圈量表 */
+  const fpct=clamp(G.fuel/G.maxFuel*100,0,100);
+  const CIRC=150.8;
+  $('gauge-fuel').style.strokeDashoffset=CIRC*(1-fpct/100);
+  $('fuel-pct').textContent=Math.round(fpct);
+  const gw=document.querySelector('.gauge-wrap');
+  gw.classList.toggle('low',fpct<25);
+  $('fuel-state').textContent=fpct>=60?'充足':(fpct>=25?'偏低':'危急');
+  /* 相对速度 6 格梯形（满刻度 180 u/s） */
+  const rel=Math.hypot(s.vx-tp.vx,s.vy-tp.vy);
+  const lit=clamp(Math.ceil(rel/30),0,6);
+  const band=$('speed-band').querySelectorAll('i');
+  band.forEach((el,i)=>{
+    el.className=i<lit?'on':'';
+    if(i<lit){
+      if(i>=4)el.classList.add('high');
+      else if(i>=2)el.classList.add('mid');
+    }
+  });
+  const sw=$('speed-word');
+  if(lit>=5){sw.textContent='高';sw.className='speed-word high';}
+  else if(lit>=3){sw.textContent='中';sw.className='speed-word mid';}
+  else{sw.textContent='低';sw.className='speed-word';}
+  // 红色限速刻度线：满刻度 180，按本关对接速度上限定位
+  $('speed-limit').style.left=clamp(G.level.target.maxSpeed/180*100,0,100)+'%';
+  $('speed-knot').textContent=Math.round(toKms(rel)).toLocaleString()+' km/s';
+  /* 规律掌握度 5 格 */
+  const kCells=$('know-band').querySelectorAll('i');
+  const kLit=clamp(Math.ceil(G.knowledge/20),0,5);
+  kCells.forEach((el,i)=>el.className=i<kLit?'on':'');
+  $('know-band').classList.toggle('empty',kLit===0);
+  $('know-x').textContent=kLit===0?'0/5 · 尚未验证':kLit+'/5';
+  /* 船员信心波形 */
+  const amp=2+G.morale/100*9;
+  let d='';
+  for(let x=0;x<=100;x+=4){
+    const y=13+amp*Math.sin(G.time*4+x*0.32);
+    d+=(x===0?'M':'L')+x+' '+y.toFixed(1)+' ';
+  }
+  $('mw-path').setAttribute('d',d);
+  $('morale-wave').classList.toggle('low',G.morale<35);
+  /* 距目标（km）+ 对接圈状态 + 超速提示 */
+  const dU=dist(s.x,s.y,tp.x,tp.y);
+  $('hud-dist-km').textContent=Math.round(toKm(dU)).toLocaleString()+' km';
+  const inRing=dU<G.level.target.r;
+  const ds=$('dist-state');
+  if(inRing&&rel>G.level.target.maxSpeed){
+    ds.textContent='相对速度过高（上限 '+G.level.target.maxSpeed+' km/s）';ds.className='state-warn';
+    if(!G._overSpoke){G._overSpoke=true;say('阿基米德','速度过快，减速！对接相对速度已超 '+G.level.target.maxSpeed+' km/s。',3);} // W15 播报
+  }else{ds.textContent=inRing?'已进入对接圈':'—';ds.className='';G._overSpoke=false;}
+  // W14 过载：HUD 加 over 类，显示红字并让燃料环闪红
+  $('hud').classList.toggle('over',G.overburn);
+  $('hud').classList.toggle('light',G.state==='pilot'&&G.input.lightBrake);
+  // R2：探测显示预测误差；领航显示实时实际偏差并高亮，全程有认识反馈
+  const errRow=$('hud-err-row');
+  errRow.style.display=(G.state==='probe'||G.state==='pilot')?'block':'none';
+  if(G.state==='pilot'){
+    const tp=targetPos(G.level.target),live=dist(G.ship.x,G.ship.y,tp.x,tp.y);
+    $('hud-err-label').textContent='实际偏差';
+    $('hud-err').textContent=Math.round(live)+' km';
+    $('hud-err').style.color='var(--cyan)';
+  }else{
+    $('hud-err-label').textContent='预测误差';
+    $('hud-err').textContent=(G.pred.errKm===null)?'—':Math.round(G.pred.errKm)+' km';
+    $('hud-err').style.color='var(--cyan)';
+  }
+  // 历史预测曲线图例：仅探测模式且已产生历史时显示
+  $('probe-legend').classList.toggle('show',G.state==='probe'&&G.probeHistory.length>0);
+}
+
+const ICON_SPK_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>';
+const ICON_SPK_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+const ICON_MUS_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+const ICON_MUS_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+function updateAudioIcons(){
+  const sb=$('sfxBtn'),mb=$('musicBtn');
+  sb.innerHTML=AudioSys.sfxOn?ICON_SPK_ON:ICON_SPK_OFF;
+  sb.classList.toggle('off',!AudioSys.sfxOn);
+  mb.innerHTML=AudioSys.musicOn?ICON_MUS_ON:ICON_MUS_OFF;
+  mb.classList.toggle('off',!AudioSys.musicOn);
+}
+updateAudioIcons();
+
+/* 按钮绑定 */
+$('startBtn').addEventListener('click',()=>{
+  AudioSys.init();AudioSys.resume();Music.init();
+  if(hasSave())show('confirm-overlay');else loadLevel(0);
+});
+$('confirm-cancel').addEventListener('click',()=>hide('confirm-overlay'));
+$('legend-close').addEventListener('click',()=>hide('legend'));
+$('confirm-ok').addEventListener('click',()=>{
+  clearSave();hide('confirm-overlay');refreshTitle();loadLevel(0);
+});
+$('continueBtn').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();Music.init();continueGame();});
+// S6：切到后台标签时音乐/音效自动静音，回到前台按开关恢复
+document.addEventListener('visibilitychange',()=>{
+  if(!AudioSys.ac)return;
+  const t=AudioSys.ac.currentTime,off=document.hidden;
+  AudioSys.music.gain.setTargetAtTime(off?0:(AudioSys.musicOn?0.35:0),t,0.25);
+  AudioSys.sfx.gain.setTargetAtTime(off?0:(AudioSys.sfxOn?0.85:0),t,0.15);
+});
+$('brief-enter').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();enterProbe();});
+$('brief-manual').addEventListener('click',()=>show('manual'));
+$('manualBtn').addEventListener('click',()=>show('manual'));
+$('manual-close').addEventListener('click',()=>hide('manual'));
+$('sfxBtn').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();AudioSys.toggleSfx();});
+$('musicBtn').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();if(!Music.bus)Music.init();AudioSys.toggleMusic();});
+$('btn-launch').addEventListener('click',()=>startPilot());
+$('btn-retry').addEventListener('click',()=>{hide('accident');enterProbe();});
+$('btn-brief').addEventListener('click',()=>{ // W17 返回本关简报，保留关卡数据、不清进度
+  hide('accident');hideAllScreens();show('screen-briefing');
+  $('topbar').classList.remove('hidden');G.state='briefing';
+});
+$('btn-review').addEventListener('click',()=>{
+  show('manual');
+  const cards=document.querySelectorAll('#manual .m-card');
+  cards.forEach(c=>c.classList.remove('highlight'));
+  let target=null;
+  cards.forEach(c=>{const h=c.querySelector('h4');if(h&&h.textContent.includes('警惕两种错误倾向'))target=c;});
+  if(!target)target=cards[3];
+  if(target){target.classList.add('highlight');
+    setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}),60);}
+});
+['al-prop','al-life','al-res'].forEach(id=>$(id).addEventListener('input',updateAlloc));
+$('btn-alloc').addEventListener('click',submitAlloc);
+$('btn-resume').addEventListener('click',()=>{if(G.paused)togglePause();});
+$('btn-pause-manual').addEventListener('click',()=>show('manual'));
+$('btn-next').addEventListener('click',()=>{
+  if(G.levelIndex===LEVELS.length-1)showEnding();
+  else loadLevel(G.levelIndex+1);
+});
+$('btn-share').addEventListener('click',()=>{
+  const url=location.href,btn=$('btn-share');
+  const ok=()=>{btn.textContent='✓ 链接已复制';setTimeout(()=>{btn.textContent='复制链接给同学';},2200);};
+  const fallback=()=>{
+    const ta=document.createElement('textarea');ta.value=url;
+    ta.style.position='fixed';ta.style.left='-9999px';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    try{document.execCommand('copy');ok();}catch(e){btn.textContent='请手动复制地址栏链接';}
+    document.body.removeChild(ta);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(ok).catch(fallback);
+  }else fallback();
+});
+$('btn-restart').addEventListener('click',()=>{
+  G.grades=[];G.totalSlingshot=0;clearSave();
+  hideAllScreens();show('screen-title');refreshTitle();G.state='title';Music.scene('title');
+});
+// N2 生成可截图的航行日志卡
+$('btn-make-card').addEventListener('click',()=>{
+  const name=$('lcm-name').value.trim()||'匿名领航员';
+  const msg=$('lcm-msg').value.trim()||'宇宙不会因为你着急就改变规则，但勇敢的人能让规则为自己让路。';
+  const d=new Date();
+  const dateStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  $('lc-date').textContent=dateStr;
+  $('lc-grade').textContent=$('ending-grade').textContent;
+  $('lc-msg').textContent='“'+msg+'”';
+  $('lc-name').textContent=name;
+  $('log-card').classList.remove('hidden');
+  AudioSys.ui();
+});
+
+/* 最佳纪录：跨次游玩保存最高评级与完成次数，制造回访动机 */
+const GRADE_RANK={S:4,A:3,B:2,C:1};
+function loadBest(){try{return JSON.parse(localStorage.getItem('nav-best'))||null;}catch(e){return null;}}
+function saveBest(b){try{localStorage.setItem('nav-best',JSON.stringify(b));}catch(e){}}
+function recordBest(){
+  const b=loadBest()||{rank:0,runs:0};
+  const rank=G.grades.length?Math.max.apply(null,G.grades.map(g=>GRADE_RANK[g]||0)):0;
+  b.runs=(b.runs||0)+1;
+  if(rank>(b.rank||0))b.rank=rank;
+  saveBest(b);return b;
+}
+function showBestOnTitle(){
+  const el=document.getElementById('title-best');if(!el)return;
+  const b=loadBest();
+  if(!b||!b.runs){el.textContent='';return;}
+  const g={4:'S',3:'A',2:'B',1:'C'}[b.rank]||'-';
+  el.textContent='最佳纪录：'+g+' 级　·　已完成 '+b.runs+' 次航程';
+}
+function refreshTitle(){
+  showBestOnTitle();
+  if(hasSave())$('continueBtn').classList.remove('hidden');
+  else $('continueBtn').classList.add('hidden');
+}
+refreshTitle();
+
+/* 主循环 */
+let last=performance.now();
+function loop(now){
+  let dt=(now-last)/1000;last=now;
+  dt=Math.min(dt,0.05);
+  if(G.slowmo>0){G.slowmo-=dt;dt*=0.28;} // 撞击慢动作：时间流速降到 28%
+  G.time+=dt;
+  G._lastDt=dt;
+  const inGame=G.state==='probe'||G.state==='pilot';
+  if(inGame&&!G.paused){
+    stepWorld(dt);     // ① 物理推进、碰撞、动态障碍
+    stepEffects(dt);   // ② 推力/制动粒子
+    stepAudio(dt);     // ③ 引擎/刹车档位、BGM 场景、过载、燃料告警
+    stepProgress(dt);  // ④ 计时、行为记录、认识值、士气、星风、漂失
+    stepUI(dt);        // ⑤ HUD 刷新与存档节流
+  }
+  updateParticles(dt);
+  updateCamera(dt);
+  updateComms(dt);
+  render(dt);
+  requestAnimationFrame(loop);
+}
+
+/* ===== 主循环五步拆分（S1）：顺序与原单函数完全一致，纯搬运 ===== */
+// ① 物理推进、动态障碍、转向、碰撞
+function stepWorld(dt){
+  const s=G.ship;
+  G.levelTime0+=dt;
+  updateDynamicObjects();
+  if(G.input.left)G.bank=clamp(G.bank-3.2*dt,-0.9,0.9);
+  else if(G.input.right)G.bank=clamp(G.bank+3.2*dt,-0.9,0.9);
+  else G.bank*=Math.exp(-dt*5); // 松开自动回正（转向角度已在 subStep 用 angVel 模型处理）
+  physAcc+=dt;
+  let guard=0;
+  while(physAcc>=PHYS_DT&&guard<24){subStep(PHYS_DT,true);physAcc-=PHYS_DT;guard++;}
+  if(guard>=24)physAcc=0;
+  if(s.alive)checkHazards();
+}
+// ② 推力与制动粒子
+function stepEffects(dt){
+  const s=G.ship;
+  const burning=(G.input.thrust||G.input.lowThrust)&&G.fuel>0&&s.alive;
+  const braking=(G.input.brake||G.input.lightBrake)&&!G.input.thrust&&!G.input.lowThrust&&G.fuel>0&&s.alive;
+  if(burning)emitThrust(s);
+  if(braking)emitBrake(s);
+}
+// ③ 引擎/刹车档位、BGM 场景、过载判定、燃料告警
+function stepAudio(dt){
+  const s=G.ship;
+  // 引擎四档：过载 / 微调 / 主推 / 关
+  const engMode=G.overburn?'over':(G.input.lowThrust?'low':(G.input.thrust?'main':'off'));
+  AudioSys.setEngine(engMode,Math.hypot(s.vx,s.vy));
+  // 刹车分档：重刹 / 轻刹 / 关
+  AudioSys.setBrake(G.input.brake?'heavy':(G.input.lightBrake?'light':'off'));
+  // 接近目标 150km 内：BGM 切紧张层，离开则恢复领航律动
+  if(G.state==='pilot'){
+    const tp=targetPos(G.level.target),dT=dist(s.x,s.y,tp.x,tp.y);
+    const wantNear=dT<150;
+    if(wantNear!==G._near){G._near=wantNear;Music.scene(wantNear?'near':'pilot');}
+  }
+  // overburn：领航中按住主推进 2 秒进入白热过载，燃料加倍消耗
+  if(G.state==='pilot'&&G.input.thrust&&G.fuel>0){
+    G.thrustHold+=dt;
+    if(G.thrustHold>=2&&!G.overburn){G.overburn=true;AudioSys.tone(880,0.18,'sawtooth',0.1,1200);}
+  }else{G.thrustHold=0;G.overburn=false;}
+  // 燃料告警：低于 25% 每 1.2s 一声短促滴声
+  if(G.state==='pilot'&&G.maxFuel>0&&G.fuel/G.maxFuel<0.25){
+    if(G.time-(G._lastWarn||-9)>1.2){G._lastWarn=G.time;AudioSys.tone(880,0.09,'square',0.07);}
+  }
+}
+// ④ 计时、行为记录、认识值、士气、星风窗口、漂失判定
+function stepProgress(dt){
+  const s=G.ship;
+  if(G.state==='probe'){ // W18 有效探测：只统计有操作且未撞毁的时长，挂机不计
+    G.probeTime+=dt;
+    const inp=G.input;
+    if(s.alive&&(inp.thrust||inp.lowThrust||inp.brake||inp.lightBrake||inp.sideL||inp.sideR||inp.left||inp.right))G.activeProbeMs+=dt*1000;
+  }else{ // 领航：计时并定期记录实际轨迹（T2 回放用）
+    G.levelTime+=dt;
+    G._pathTick+=dt;
+    if(G._pathTick>=0.12){G._pathTick=0;G.pilotPath.push({x:s.x,y:s.y});}
+  }
+  // 行为记录（事故三分法与认识值用）：点火时间、是否曾点火、累计实际操作时间
+  if(G.input.thrust||G.input.lowThrust||G.input.brake||G.input.lightBrake||G.input.sideL||G.input.sideR){
+    G.actLog.lastThrustAt=G.time;G.actLog.everThrust=true;G.actLog.flewMs+=dt*1000;
+  }
+  if(G.state==='probe'){
+    G.knowEval-=dt;if(G.knowEval<=0){evaluateKnowledge();G.knowEval=1;} // 已删被动增长，只认实践检验
+  }
+  if(G.state==='pilot'){
+    updateMoraleWind(dt);
+    updateWindWindow(dt);
+    updateMoraleEffects(dt);
+    if(G.fuel<=0){
+      if(G.time-(G._driftAt||-9)>0.5){G._driftAt=G.time;G._driftOc=driftOutcome();} // S7 节流
+      const oc=G._driftOc;
+      if(oc==='lost'){G.driftTimer+=dt;if(G.driftTimer>3.2)failDrift();}
+      else G.driftTimer=0; // reach 会自然对接；crash 会自然撞毁走 killShip，均不判漂失
+    }
+  }
+}
+// ⑤ HUD 刷新与存档节流
+function stepUI(dt){
+  const s=G.ship;
+  if(s.alive&&(G.state==='probe'||G.state==='pilot'))updateHUD();
+  if(G.time-G.lastSave>2){saveGame();G.lastSave=G.time;} // 存档节流 P1-5
+}
+requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>
