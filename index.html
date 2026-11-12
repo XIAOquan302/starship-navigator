@@ -2197,6 +2197,7 @@ function hide(id){$(id).classList.add('hidden');}
     if(i===0)d.open=true;
     const s=document.createElement('summary');s.textContent=h.textContent;
     d.appendChild(s);
+    h.remove();   // 原标题已被 summary 取代，移除避免重复显示
     while(c.firstChild)d.appendChild(c.firstChild);
     c.replaceWith(d);
   });
