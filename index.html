@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -444,7 +444,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <button class="sci-btn amber hidden" id="continueBtn">继续航程</button>
         <button class="sci-btn" id="startBtn">启动舰队</button>
       </div>
-      <p class="sound-tip">点击「启动舰队」后开启声音 · 手机建议横屏、佩戴耳机效果更佳</p>
+      <p class="sound-tip">点击「启动舰队」后开启声音 · 建议佩戴耳机 · PC 端按 F11 全屏更佳</p>
       <p class="title-credit">《马克思主义基本原理》课程作业 · 互动式小游戏（E 类）</p>
       <p class="title-best" id="title-best"></p>
       <div class="key-hint">
@@ -751,6 +751,23 @@ const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
 
 const canvas=document.getElementById('space');
 const ctx=canvas.getContext('2d');
+/* 兼容老浏览器：CanvasRenderingContext2D.roundRect 在 Chrome 99 / Safari 16.4 / Firefox 112 之前不存在。
+   缺失时 drawStation / drawFighter 里的两处调用会直接抛错，导致整个渲染循环停摆、画面全黑。
+   这里补一个等价实现，保证 PC 端任何现代浏览器都能跑。 */
+if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    let rr=Array.isArray(r)?r.slice():[r];
+    if(rr.length===1)rr=[rr[0],rr[0],rr[0],rr[0]];
+    const m=Math.min(Math.abs(w),Math.abs(h))/2;
+    const a=Math.min(rr[0],m),b=Math.min(rr[1],m),c=Math.min(rr[2],m),d=Math.min(rr[3],m);
+    this.moveTo(x+a,y);
+    this.lineTo(x+w-b,y);this.quadraticCurveTo(x+w,y,x+w,y+b);
+    this.lineTo(x+w,y+h-c);this.quadraticCurveTo(x+w,y+h,x+w-c,y+h);
+    this.lineTo(x+d,y+h);this.quadraticCurveTo(x,y+h,x,y+h-d);
+    this.lineTo(x,y+a);this.quadraticCurveTo(x,y,x+a,y);
+    return this;
+  };
+}
 let VW=0,VH=0,DPR=1;
 function resize(){
   DPR=Math.min(window.devicePixelRatio||1,2);
