@@ -295,6 +295,50 @@ input,textarea{user-select:text;-webkit-user-select:text}
 @media (max-width:900px){
   .result-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:26px 20px;gap:14px}
 }
+/* 全页面单屏化：简报 / 结局 / 抉择 双栏，手册卡片双列 —— PC 端一屏放下，不出现上下滚动 */
+.brief-layout{width:min(1120px,95vw);display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:22px;align-items:start;padding:26px 30px}
+.brief-layout .brief-head{margin-bottom:2px}
+.brief-layout .brief-goal{margin:12px 0}
+.brief-layout .brief-steps{margin:0 0 14px}
+.brief-layout .brief-archive{margin:0;padding:12px 14px}
+.brief-layout .brief-archive .ba-item{margin-bottom:6px}
+.brief-layout .dialog-list{margin:0;gap:11px}
+.brief-layout .msg{font-size:13px;line-height:1.8}
+.brief-layout .msg .avatar{flex:0 0 32px;height:32px}
+.brief-layout .brief-actions{margin-top:14px}
+.end-layout{width:min(1120px,95vw);display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:22px;align-items:start;padding:26px 30px}
+.end-layout h2{font-size:26px!important;margin:6px 0 10px!important}
+.end-layout .ending-quote{margin:0 0 12px;font-size:13.5px;line-height:1.85}
+.end-layout .three-stage{margin:0 0 12px;gap:10px}
+.end-layout .stage-no{flex:0 0 28px;height:28px;font-size:13px}
+.end-layout .stage-body h4{font-size:13.5px;margin:0 0 3px}
+.end-layout .stage-body p{font-size:12.5px;line-height:1.75}
+.end-layout .ending-log{font-size:12.5px;line-height:1.8;margin:0 0 10px}
+.end-layout .stat-grid{margin:0;gap:8px}
+.end-layout .stat-cell{padding:8px 10px}
+.end-layout .stat-cell .v{font-size:16px}
+.end-layout .log-card-maker{margin:0;padding:13px 15px}
+.end-layout .brief-actions{margin-top:14px}
+.choice-layout{width:min(1000px,95vw);display:grid;grid-template-columns:minmax(280px,400px) 1fr;gap:24px;align-items:start;padding:26px 30px}
+.choice-layout .screen-h{font-size:22px!important;margin:6px 0 10px!important}
+.choice-layout .choice-intro{font-size:13px;line-height:1.9;margin:0 0 12px}
+.choice-layout .key-contradiction{margin:0}
+.choice-layout .alloc{margin:0}
+.choice-layout .brief-actions{margin-top:12px}
+@media (max-width:900px){
+  .brief-layout,.end-layout,.choice-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:24px 20px;gap:14px}
+}
+.manual-box{width:min(1120px,96vw);padding:24px 28px}
+/* 手册改手风琴：默认只展开一条，任何窗口尺寸都一屏装下，不再上下滚动 */
+#manual .m-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px;align-items:start}
+#manual .m-card{margin-bottom:0;padding:10px 13px}
+#manual .m-card summary{cursor:pointer;list-style:none;font-size:13.5px;color:var(--cyan);letter-spacing:1px;padding:2px 0}
+#manual .m-card summary::-webkit-details-marker{display:none}
+#manual .m-card summary::before{content:'▸ ';color:var(--cyan-dim)}
+#manual .m-card[open] summary::before{content:'▾ '}
+#manual .m-card[open] summary{color:var(--cyan-soft)}
+#manual .m-card p{font-size:12.2px;line-height:1.78;margin-top:7px}
+#manual .m-card b{color:var(--amber);font-weight:600}
 /* W4：结算/结局/抉择三屏加半透明遮罩，避免对接圈与天体从卡片后透出 */
 #screen-result,#screen-ending,#screen-choice{background:rgba(3,6,13,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 /* T5 三段式：编号圆 + 标题 + 正文，纵向递进 */
@@ -348,6 +392,19 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .lg-line{flex:0 0 40px;width:40px;height:12px}
 .legend-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .manual-box{width:min(820px,95vw);max-height:90vh;overflow-y:auto;padding:32px 36px}
+.set-box{width:min(480px,94vw)}
+.set-row{margin:18px 0 2px}
+.set-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.set-head label{font-size:13.5px;color:var(--cyan-soft);letter-spacing:1.5px}
+.set-val{font-family:var(--mono);font-size:13px;color:var(--amber)}
+.set-row input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:22px;background:transparent;margin:0;cursor:pointer;font-size:16px}
+.set-row input[type=range]::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,#2f7d92,#1d3557);border:1px solid var(--line)}
+.set-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:20px;margin-top:-9px;border-radius:2px;
+  background:linear-gradient(180deg,#a7e4f0,#2f7d92);border:1px solid var(--cyan);box-shadow:0 0 10px rgba(90,209,232,.45)}
+.set-row input[type=range]::-moz-range-track{height:4px;background:#1d3557;border:1px solid var(--line)}
+.set-row input[type=range]::-moz-range-thumb{width:14px;height:20px;border-radius:2px;background:linear-gradient(180deg,#a7e4f0,#2f7d92);border:1px solid var(--cyan)}
+.set-row input[type=range]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.set-tip{margin:20px 0 4px;font-size:12px;line-height:1.85;color:var(--muted);border-left:2px solid var(--amber);padding-left:12px}
 .manual-box h3{font-size:20px;letter-spacing:2px;margin-bottom:6px}
 .manual-box .m-sub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-bottom:22px}
 .m-card{border:1px solid var(--line);padding:16px 18px;margin-bottom:14px;background:rgba(255,255,255,.02)}
@@ -424,6 +481,9 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <canvas id="space"></canvas>
 
   <div id="topbar" class="hidden">
+    <button class="icon-btn" id="settingsBtn" aria-label="设置" title="设置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v3.2M12 18.2v3.2M21.4 12h-3.2M5.8 12H2.6M18.6 5.4l-2.3 2.3M7.7 16.3l-2.3 2.3M18.6 18.6l-2.3-2.3M7.7 7.7L5.4 5.4"/></svg>
+    </button>
     <button class="icon-btn label-btn" id="manualBtn">航行手册</button>
     <button class="icon-btn" id="sfxBtn" aria-label="音效开关" title="音效开关">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
@@ -455,7 +515,8 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
 
   <!-- 任务简报 -->
   <section id="screen-briefing" class="screen hidden">
-    <div class="inner clip-panel">
+    <div class="inner clip-panel brief-layout">
+      <div class="bl-left">
       <div class="brief-head">
         <div><p class="lv-no" id="brief-no">SECTOR 01</p><h2 id="brief-title"></h2></div>
         <p class="brief-meta" id="brief-meta"></p>
@@ -467,10 +528,13 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <div class="bs"><span class="bs-no">STEP 3</span><b>对接</b><i>进入对接圈，并把相对速度压到上限以内</i></div>
       </div>
       <div class="brief-archive" id="brief-archive"></div>
+      </div>
+      <div class="bl-right">
       <div class="dialog-list" id="brief-dialog"></div>
       <div class="brief-actions">
         <button class="sci-btn ghost" id="brief-manual">查看航行手册</button>
         <button class="sci-btn" id="brief-enter">进入探测模式</button>
+      </div>
       </div>
     </div>
   </section>
@@ -610,11 +674,14 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
 
   <!-- 第5关：物资分配抉择关 -->
   <section id="screen-choice" class="screen hidden">
-    <div class="inner clip-panel">
+    <div class="inner clip-panel choice-layout">
+      <div class="cl-left">
       <p class="eyebrow" style="text-align:center">SECTOR 05 // 社会基本矛盾</p>
       <h2 class="screen-h" style="text-align:center">方舟号 · 物资分配</h2>
       <p class="choice-intro">方舟号的物资总量是既定的<b>生产力</b>水平；如何在各部门间分配，是<b>生产关系</b>。分配方式（经济基础）决定了管理制度（上层建筑）能否运转。请把 <b><span id="ch-quota">100</span> 个单位</b>全部分配到三个部门。</p>
       <div class="key-contradiction">本关主要矛盾：生产力的有限性 ⟷ 生产关系的不适应——资源就这么多，如何分配决定新曦的未来。</div>
+      </div>
+      <div class="cl-right">
       <div class="alloc" id="alloc-list">
         <div class="alloc-row">
           <div class="alloc-head"><label for="al-prop">推进系统</label><span class="alloc-val" id="av-prop">0</span></div>
@@ -634,12 +701,14 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
       </div>
       <div class="alloc-sum">已分配 <b id="ch-sum">0</b> / 100　<span id="ch-flag" class="state-warn"></span></div>
       <div class="brief-actions"><button class="sci-btn" id="btn-alloc" disabled>确认分配方案</button></div>
+      </div>
     </div>
   </section>
 
   <!-- 结局 -->
   <section id="screen-ending" class="screen hidden">
-    <div class="inner clip-panel">
+    <div class="inner clip-panel end-layout">
+      <div class="el-left">
       <p class="eyebrow" style="text-align:center">MISSION COMPLETE</p>
       <h2 style="text-align:center;font-size:30px;letter-spacing:4px;margin:10px 0">抵达新曦</h2>
       <div class="ending-quote" id="ending-quote"></div>
@@ -653,6 +722,8 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <div class="stat-cell"><div class="k">舰队综合评级</div><div class="v" id="ending-grade">—</div></div>
         <div class="stat-cell"><div class="k">总引力借力</div><div class="v" id="ending-slingshot">—</div></div>
       </div>
+      </div>
+      <div class="el-right">
       <!-- N2 给地球留一句话，生成可截图的航行日志卡 -->
       <div class="log-card-maker">
         <div class="lcm-label">给地球留一句话 · 生成你的航行日志卡</div>
@@ -674,6 +745,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <button class="sci-btn" id="btn-restart">再次启航</button>
       </div>
       <p class="share-hint">把链接发给同学：他们不用安装任何东西，打开就能玩。</p>
+      </div>
     </div>
   </section>
 
@@ -709,12 +781,36 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
     </div>
   </div>
 
+  <!-- 设置面板：音量调节 -->
+  <div class="overlay hidden" id="settings">
+    <div class="manual-box clip-panel set-box">
+      <button class="sci-btn ghost manual-close" id="settings-close">关闭</button>
+      <h3>设置</h3>
+      <p class="m-sub">SETTINGS // 音量与飞行</p>
+      <div class="set-row">
+        <div class="set-head"><label for="vol-master">总音量</label><span class="set-val" id="v-master">50</span></div>
+        <input type="range" id="vol-master" min="0" max="100" value="50">
+      </div>
+      <div class="set-row">
+        <div class="set-head"><label for="vol-music">音乐</label><span class="set-val" id="v-music">35</span></div>
+        <input type="range" id="vol-music" min="0" max="100" value="35">
+      </div>
+      <div class="set-row">
+        <div class="set-head"><label for="vol-sfx">音效</label><span class="set-val" id="v-sfx">85</span></div>
+        <input type="range" id="vol-sfx" min="0" max="100" value="85">
+      </div>
+      <p class="set-tip">背景音乐会跟着飞船走：点火时旋律加密、过载时加入失谐与紧迫感、接近对接时压上紧张层、制动时空气声变沉。三条音量互相独立，随时生效并自动记住。</p>
+      <div class="brief-actions"><button class="sci-btn" id="settings-ok">返回航行</button></div>
+    </div>
+  </div>
+
   <!-- 航行手册 -->
   <div class="overlay hidden" id="manual">
     <div class="manual-box clip-panel">
       <button class="sci-btn ghost manual-close" id="manual-close">关闭</button>
       <h3>航行手册</h3>
       <p class="m-sub">FIELD MANUAL // 客观规律性与主观能动性</p>
+      <div class="m-grid">
       <div class="m-card"><h4>一、规律具有客观性</h4>
         <p>规律是事物运动过程中固有的、本质的、必然的、稳定的联系。它的存在和发生作用不以人的意志为转移，既不能被创造，也不能被消灭。游戏中的引力参数、星风周期在探测与领航模式下完全一致——宇宙不会因为你着急就改变规则。</p></div>
       <div class="m-card"><h4>二、人具有主观能动性</h4>
@@ -733,6 +829,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <p>生产力与生产关系、经济基础与上层建筑这一社会基本矛盾的运动，推动着社会形态的更替。认识必然、改造必然，就是不断从必然王国走向自由王国的历程。<b>我们没有创造一条引力定律，只是让引力为我们所用。</b></p></div>
       <div class="m-card"><h4>九、同一套函数算两遍（机制即原理）</h4>
         <p>探测模式画出的预测线，与领航模式飞船实际飞过的轨迹，由<b>同一批函数</b>计算：引力用 <b>gravityAt</b>、星风用 <b>windForce</b>、推进用 <b>subStep</b>、预测用 <b>predictPath</b>。它们不是两套近似的方程，而是同一套物理真源。所以"宇宙不会因为你着急就改变规则"不是一句文案，而是代码事实——你在探测时认识到的规律，领航时必然应验；主观能动性改变的是航向，不是规律本身。</p></div>
+      </div>
     </div>
   </div>
 </div>
@@ -839,14 +936,15 @@ const BRAKE_CFG={
 };
 const AudioSys={
   ac:null,sfxOn:true,musicOn:true,master:null,sfx:null,music:null,eng:null,
+  masterVol:0.5,sfxVol:0.85,musicVol:0.35,
   init(){
     if(this.ac)return;
     const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     this.ac=new AC();
     // 主总线 0.5，下挂音效总线 0.85、音乐总线 0.35
-    const m=this.ac.createGain();m.gain.value=0.5;m.connect(this.ac.destination);this.master=m;
-    const s=this.ac.createGain();s.gain.value=this.sfxOn?0.85:0;s.connect(m);this.sfx=s;
-    const u=this.ac.createGain();u.gain.value=this.musicOn?0.35:0;u.connect(m);this.music=u;
+    const m=this.ac.createGain();m.gain.value=this.masterVol;m.connect(this.ac.destination);this.master=m;
+    const s=this.ac.createGain();s.gain.value=this.sfxOn?this.sfxVol:0;s.connect(m);this.sfx=s;
+    const u=this.ac.createGain();u.gain.value=this.musicOn?this.musicVol:0;u.connect(m);this.music=u;
     this.initEngine();this.initBrake();
   },
   resume(){if(this.ac&&this.ac.state==='suspended')this.ac.resume();},
@@ -942,17 +1040,29 @@ const AudioSys={
   explode(){this.noise(0.6,0.32);this.tone(160,0.5,'sawtooth',0.16,40);},
   success(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>this.tone(f,0.22,'triangle',0.13),i*110));},
   warp(){this.tone(220,0.9,'sawtooth',0.13,1400);this.noise(0.7,0.1);},
+  /* 音量：总音量 / 音乐 / 音效三条总线独立可调，设置面板实时生效并持久化 */
+  applyVolumes(){
+    if(!this.ac)return;
+    const t=this.ac.currentTime;
+    this.master.gain.setTargetAtTime(this.masterVol,t,0.05);
+    this.sfx.gain.setTargetAtTime(this.sfxOn?this.sfxVol:0,t,0.05);
+    this.music.gain.setTargetAtTime(this.musicOn?this.musicVol:0,t,0.05);
+  },
+  setMasterVol(v){this.masterVol=clamp(v,0,1);this._saveVol('nav-vol-master',this.masterVol);this.applyVolumes();},
+  setMusicVol(v){this.musicVol=clamp(v,0,1);this._saveVol('nav-vol-music',this.musicVol);this.applyVolumes();},
+  setSfxVol(v){this.sfxVol=clamp(v,0,1);this._saveVol('nav-vol-sfx',this.sfxVol);this.applyVolumes();},
+  _saveVol(k,v){try{localStorage.setItem(k,String(Math.round(v*100)));}catch(e){}},
   toggleSfx(){
     this.sfxOn=!this.sfxOn;
     try{localStorage.setItem('nav-sfx',this.sfxOn?'1':'0');}catch(e){}
-    if(this.ac)this.sfx.gain.setTargetAtTime(this.sfxOn?0.85:0,this.ac.currentTime,0.05);
+    this.applyVolumes();
     if(!this.sfxOn){this.setEngine('off',0);this.setBrake('off');}
     updateAudioIcons();
   },
   toggleMusic(){
     this.musicOn=!this.musicOn;
     try{localStorage.setItem('nav-music',this.musicOn?'1':'0');}catch(e){}
-    if(this.ac)this.music.gain.setTargetAtTime(this.musicOn?0.35:0,this.ac.currentTime,0.05);
+    this.applyVolumes();
     if(Music.bus)Music.applyOnOff();
     updateAudioIcons();
   }
@@ -961,6 +1071,10 @@ try{
   if(localStorage.getItem('nav-sfx')==='0')AudioSys.sfxOn=false;
   if(localStorage.getItem('nav-music')==='0')AudioSys.musicOn=false;
   if(localStorage.getItem('nav-mute')==='1'){AudioSys.sfxOn=false;AudioSys.musicOn=false;} // 兼容旧版全局静音
+  const _vm=localStorage.getItem('nav-vol-master'),_vmu=localStorage.getItem('nav-vol-music'),_vs=localStorage.getItem('nav-vol-sfx');
+  if(_vm!==null)AudioSys.masterVol=clamp(_vm/100,0,1);
+  if(_vmu!==null)AudioSys.musicVol=clamp(_vmu/100,0,1);
+  if(_vs!==null)AudioSys.sfxVol=clamp(_vs/100,0,1);
 }catch(e){}
 
 /* ===== 程序化背景音乐（零外部依赖，随游戏状态分层） ===== */
@@ -979,10 +1093,11 @@ const Music={
     const lfo=ac.createOscillator();lfo.frequency.value=0.045;
     const lfoG=ac.createGain();lfoG.gain.value=260;
     lfo.connect(lfoG);lfoG.connect(padF.frequency);lfo.start();
+    const padOscs=[];
     [146.83,146.83*1.004,220].forEach((f,i)=>{
       const o=ac.createOscillator();o.type='triangle';o.frequency.value=f;
       const g=ac.createGain();g.gain.value=i===2?0.35:0.5;
-      o.connect(g);g.connect(padF);o.start();
+      o.connect(g);g.connect(padF);o.start();padOscs.push(o);
     });
     padF.connect(padG);padG.connect(bus);
     // L4 紧张层：噪声 → 带通共振峰（平时静音）
@@ -992,14 +1107,17 @@ const Music={
     const tnsF=ac.createBiquadFilter();tnsF.type='bandpass';tnsF.frequency.value=420;tnsF.Q.value=3.2;
     const tnsG=ac.createGain();tnsG.gain.value=0;
     tns.connect(tnsF);tnsF.connect(tnsG);tnsG.connect(bus);tns.start();
-    this.layers={padG,tnsG,tnsF};
+    // L2 琶音总线 / L3 低音脉冲总线：独立增益，便于随飞行状态实时调制
+    const arpG=ac.createGain();arpG.gain.value=0;arpG.connect(bus);
+    const pulseG=ac.createGain();pulseG.gain.value=0;pulseG.connect(bus);
+    this.layers={padG,tnsG,tnsF,padF,padOscs,arpG,pulseG};
     this.start(260);this.scene(this.curScene);
   },
   // S5：步长按场景可变（探测稀疏、领航密集、事故迟缓）
   start(ms){
     if(this.timer)clearInterval(this.timer);
     this.timer=setInterval(()=>this.tick(),ms||260);
-    this.applyOnOff(2.5);
+    if(!this._booted){this.applyOnOff(2.5);this._booted=true;}
   },
   applyOnOff(fade=0.4){
     if(!this.bus)return;const t=AudioSys.ac.currentTime;
@@ -1028,7 +1146,7 @@ const Music={
     g.gain.exponentialRampToValueAtTime(0.055,t+0.02);
     g.gain.exponentialRampToValueAtTime(0.0001,t+0.9);
     const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=220;
-    o.connect(hp);hp.connect(g);g.connect(this.bus);
+    o.connect(hp);hp.connect(g);g.connect(this.layers.arpG);
     o.start(t);o.stop(t+1.0);
   },
   pulse(t){
@@ -1040,7 +1158,7 @@ const Music={
     g.gain.setValueAtTime(0.0001,t);
     g.gain.exponentialRampToValueAtTime(0.16,t+0.03);
     g.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
-    o.connect(g);g.connect(this.bus);
+    o.connect(g);g.connect(this.layers.pulseG);
     o.start(t);o.stop(t+0.6);
   },
   scene(mode){
@@ -1048,21 +1166,43 @@ const Music={
     if(!this.layers||!AudioSys.ac)return;
     const t=AudioSys.ac.currentTime;
     const P={
-      title:{pad:0.10,arp:false,pulse:false,tension:0},
-      probe:{pad:0.10,arp:true, pulse:false,tension:0},
-      pilot:{pad:0.09,arp:true, pulse:true, tension:0},
-      near :{pad:0.08,arp:true, pulse:true, tension:0.10},
-      crash:{pad:0.05,arp:false,pulse:false,tension:0.22},
-      result:{pad:0.07,arp:true, pulse:false,tension:0},
-      choice:{pad:0.13,arp:true, pulse:false,tension:0},
-      ending:{pad:0.12,arp:true, pulse:false,tension:0},
-      paused:{pad:0.03,arp:false,pulse:false,tension:0}
-    }[mode]||{pad:0.1,arp:true,pulse:false,tension:0};
+      title:{pad:0.10,arp:0.000,pulse:0.00,tension:0},
+      probe:{pad:0.10,arp:0.055,pulse:0.00,tension:0},
+      pilot:{pad:0.09,arp:0.045,pulse:0.12,tension:0},
+      near :{pad:0.08,arp:0.035,pulse:0.10,tension:0.10},
+      crash:{pad:0.05,arp:0.000,pulse:0.00,tension:0.22},
+      result:{pad:0.07,arp:0.070,pulse:0.00,tension:0},
+      choice:{pad:0.13,arp:0.025,pulse:0.00,tension:0},
+      ending:{pad:0.12,arp:0.060,pulse:0.00,tension:0},
+      paused:{pad:0.03,arp:0.000,pulse:0.00,tension:0}
+    }[mode]||{pad:0.1,arp:0.04,pulse:0,tension:0};
+    this.baseArp=P.arp;this.basePulse=P.pulse;this.baseTension=P.tension;
     this.layers.padG.gain.setTargetAtTime(P.pad,t,0.6);
-    this.layers.tnsG.gain.setTargetAtTime(P.tension,t,0.5);
-    this.arpOn=P.arp;this.pulseOn=P.pulse;
+    this.arpOn=P.arp>0;this.pulseOn=P.pulse>0;
     this.start(STEP_MS[mode]||260); // S5：按场景重建定时器
-  }
+    this.applyLevels();
+  },
+  /* 音乐随飞船状态自适应：推力越强越密、越快底噪越开、过载失谐、制动加张力、超速加压迫 */
+  applyLevels(){
+    if(!this.layers||!AudioSys.ac)return;
+    const t=AudioSys.ac.currentTime,f=this.flight||{};
+    const thr=f.thrust||0,spd=f.speed||0,brk=f.brake||0,warn=f.warn||0,hot=f.hot?1:0;
+    const arp=(this.arpOn?1:0)*(this.baseArp||0)*(0.5+thr*0.85+hot*0.5);
+    const pul=(this.pulseOn?1:0)*(this.basePulse||0)*(0.4+thr*1.2+hot*0.8);
+    const ten=(this.baseTension||0)+warn*0.16+brk*0.08+hot*0.10;
+    this.layers.arpG.gain.setTargetAtTime(arp,t,0.22);
+    this.layers.pulseG.gain.setTargetAtTime(pul,t,0.28);
+    this.layers.tnsG.gain.setTargetAtTime(ten,t,0.22);
+    this.layers.padF.frequency.setTargetAtTime(560+spd*820+hot*320,t,0.5);
+    const det=1+hot*0.012;                       // 过载：垫底振荡器轻微失谐
+    for(let i=0;i<this.layers.padOscs.length;i++){
+      const base=i===2?220:(i===1?146.83*1.004:146.83);
+      this.layers.padOscs[i].frequency.setTargetAtTime(base*det,t,0.4);
+    }
+    const raw=Math.round((STEP_MS[this.curScene]||260)/(1+thr*0.55+hot*0.45)/10)*10;
+    if(raw!==this.curStep){this.curStep=raw;this.start(raw);}   // 推力越大，琶音步进越快
+  },
+  setFlight(st){this.flight=st;this.applyLevels();}
 };
 
 /* 粒子 */
@@ -2046,6 +2186,21 @@ function render(dt){
 const $=id=>document.getElementById(id);
 function show(id){$(id).classList.remove('hidden');}
 function hide(id){$(id).classList.add('hidden');}
+/* 航行手册：把 9 张卡片转成手风琴（默认展开第一条），保证一屏可见、不滚动 */
+(function buildManualAccordion(){
+  const grid=document.querySelector('#manual .m-grid');
+  if(!grid)return;
+  const cards=Array.prototype.slice.call(grid.querySelectorAll('.m-card'));
+  cards.forEach(function(c,i){
+    const h=c.querySelector('h4');if(!h)return;
+    const d=document.createElement('details');d.className='m-card';
+    if(i===0)d.open=true;
+    const s=document.createElement('summary');s.textContent=h.textContent;
+    d.appendChild(s);
+    while(c.firstChild)d.appendChild(c.firstChild);
+    c.replaceWith(d);
+  });
+})();
 function hideAllScreens(){['screen-title','screen-briefing','screen-result','screen-ending','screen-choice'].forEach(hide);}
 
 const AVATARS={
@@ -2641,6 +2796,18 @@ document.addEventListener('visibilitychange',()=>{
 $('brief-enter').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();enterProbe();});
 $('brief-manual').addEventListener('click',()=>show('manual'));
 $('manualBtn').addEventListener('click',()=>show('manual'));
+$('settingsBtn').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();syncVolUI();show('settings');});
+$('settings-close').addEventListener('click',()=>hide('settings'));
+$('settings-ok').addEventListener('click',()=>hide('settings'));
+function syncVolUI(){
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.value=Math.round(v*100);};
+  const l=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=Math.round(v*100);};
+  s('vol-master',AudioSys.masterVol);s('vol-music',AudioSys.musicVol);s('vol-sfx',AudioSys.sfxVol);
+  l('v-master',AudioSys.masterVol);l('v-music',AudioSys.musicVol);l('v-sfx',AudioSys.sfxVol);
+}
+$('vol-master').addEventListener('input',e=>{const v=e.target.value/100;AudioSys.setMasterVol(v);$('v-master').textContent=e.target.value;});
+$('vol-music').addEventListener('input',e=>{const v=e.target.value/100;AudioSys.setMusicVol(v);$('v-music').textContent=e.target.value;});
+$('vol-sfx').addEventListener('input',e=>{const v=e.target.value/100;AudioSys.setSfxVol(v);$('v-sfx').textContent=e.target.value;});
 $('manual-close').addEventListener('click',()=>hide('manual'));
 $('sfxBtn').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();AudioSys.toggleSfx();});
 $('musicBtn').addEventListener('click',()=>{AudioSys.init();AudioSys.resume();if(!Music.bus)Music.init();AudioSys.toggleMusic();});
@@ -2784,6 +2951,18 @@ function stepAudio(dt){
     const tp=targetPos(G.level.target),dT=dist(s.x,s.y,tp.x,tp.y);
     const wantNear=dT<150;
     if(wantNear!==G._near){G._near=wantNear;Music.scene(wantNear?'near':'pilot');}
+  }
+  // BGM 随飞行状态自适应：推力/速度/过载/制动/超速 实时调制音乐层
+  {
+    const spd=Math.hypot(s.vx,s.vy),tp=targetPos(G.level.target);
+    const rel=Math.hypot(s.vx-tp.vx,s.vy-tp.vy);
+    Music.setFlight({
+      thrust:(G.input.thrust||G.input.lowThrust)?(G.input.lowThrust?0.45:1):0,
+      hot:!!G.overburn,
+      brake:(G.input.brake||G.input.lightBrake)?1:0,
+      speed:clamp(spd/420,0,1),
+      warn:(G._overSpoke||rel>G.level.target.maxSpeed)?1:0
+    });
   }
   // overburn：领航中按住主推进 2 秒进入白热过载，燃料加倍消耗
   if(G.state==='pilot'&&G.input.thrust&&G.fuel>0){
