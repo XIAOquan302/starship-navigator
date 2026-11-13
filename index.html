@@ -28,13 +28,17 @@
   --text:#d7e3ee;--muted:#7d93a8;
   --mono:"Cascadia Code","Consolas","SF Mono",ui-monospace,Menlo,monospace;
   --sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+  --body:"Source Han Serif SC","Noto Serif SC","Songti SC","SimSun",serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);
   overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none}
-body{font-family:var(--sans);color:var(--text);-webkit-font-smoothing:antialiased;
+body{font-family:var(--body);color:var(--text);-webkit-font-smoothing:antialiased;
   user-select:none;-webkit-user-select:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+/* 标题、按钮、HUD 继续用无衬线科技感；叙事正文用衬线，去掉技术文档味 */
+h1,h2,h3,h4,.sci-btn,.eyebrow,.title-sub,.mode-tag,.icon-btn,.label-btn{font-family:var(--sans)}
+#hud{font-family:var(--sans)}
 input,textarea{user-select:text;-webkit-user-select:text}
 .hidden{display:none !important}
 /* 滚动条：深色主题统一，避免系统默认浅色条割裂画面 */
@@ -65,53 +69,65 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .sci-btn.ghost{color:var(--muted);border-color:var(--line);background:rgba(255,255,255,.02)}
 .sci-btn.ghost:hover{color:var(--text);border-color:var(--muted);background:rgba(255,255,255,.06)}
 .sci-btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+/* 出发按钮：专属「发射台」造型 —— 18px 切角 + 内发光 + 悬停外辉光（filter:drop-shadow 配合 clip-path 才有外发光） */
+#startBtn{
+  position:relative;padding:16px 44px;font-size:17px;letter-spacing:6px;font-weight:700;color:#eafcff;
+  background:linear-gradient(150deg,rgba(90,209,232,.28),rgba(90,209,232,.06) 58%,rgba(123,224,168,.12));
+  border:1px solid rgba(90,209,232,.55);
+  clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.5));
+  transition:color .18s,background .18s,border-color .18s,filter .18s,transform .18s;
+}
+#startBtn::before{content:'▶';font-size:11px;letter-spacing:0;margin-right:14px;opacity:.9;vertical-align:1px}
+#startBtn:hover{color:#04121a;background:linear-gradient(150deg,#5ad1e8,#7be0a8);border-color:#d6f7ff;
+  filter:drop-shadow(0 6px 26px rgba(90,209,232,.55));transform:translateY(-2px)}
+#startBtn:active{transform:translateY(0)}
 
 .screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:30;padding:24px}
 .screen .inner{width:min(760px,94vw);max-height:92vh;overflow-y:auto;padding:42px 46px}
 
 #screen-title{flex-direction:column;text-align:center}
-.title-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:17px}
-.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:5px;color:var(--cyan-dim);text-transform:uppercase}
+.title-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px}
+.eyebrow{font-family:var(--mono);font-size:13.5px;letter-spacing:6px;text-indent:3px;color:var(--cyan-dim);text-transform:uppercase}
 #screen-title h1{
-  font-size:clamp(40px,8vw,78px);font-weight:800;letter-spacing:10px;
-  background:linear-gradient(180deg,#ffffff 15%,var(--cyan) 70%,var(--cyan-dim));
-  -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 42px rgba(90,209,232,.25);
+  font-size:clamp(42px,7.6vw,76px);font-weight:800;letter-spacing:10px;text-indent:5px;
+  background:linear-gradient(180deg,#ffffff 12%,#9fe9f5 42%,var(--cyan) 78%,var(--cyan-dim));
+  -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 46px rgba(90,209,232,.22);
 }
-.title-sub{font-family:var(--mono);font-size:13.5px;color:var(--muted);letter-spacing:2px}
-.title-desc{max-width:560px;font-size:14.5px;line-height:2;color:var(--muted)}
-.sound-tip{font-family:var(--mono);font-size:11.5px;letter-spacing:1px;color:var(--cyan);margin-top:12px}
-.title-actions{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;justify-content:center}
-.key-hint{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.title-sub{font-family:var(--sans);font-size:17px;color:var(--cyan-soft);letter-spacing:4px;text-indent:2px}
+.title-desc{max-width:610px;font-size:16.5px;line-height:1.95;color:var(--muted)}
+.sound-tip{font-family:var(--sans);font-size:14px;letter-spacing:1px;color:var(--cyan)}
+.title-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.key-hint{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-family:var(--sans);font-size:14px;color:var(--muted)}
 .key-hint span b{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:4px;color:var(--cyan-soft);margin-right:5px;font-weight:600}
-.title-credit{margin-top:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:2px;color:var(--muted)}
-.title-best{margin-top:7px;font-family:var(--mono);font-size:12.5px;letter-spacing:1.5px;color:var(--amber);min-height:17px}
+.title-best{font-family:var(--sans);font-size:15px;letter-spacing:1.5px;color:var(--amber);min-height:20px}
 
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px;gap:10px;flex-wrap:wrap}
-.brief-head .lv-no{font-family:var(--mono);font-size:13px;color:var(--cyan);letter-spacing:2px}
+.brief-head .lv-no{font-family:var(--mono);font-size:15px;color:var(--cyan);letter-spacing:2px}
 .brief-head h2{font-size:24px;letter-spacing:2px;font-weight:700}
-.brief-meta{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:2}
-.brief-goal{border-left:2px solid var(--amber);padding:6px 0 6px 16px;margin:18px 0;font-size:14.5px;line-height:1.9;color:var(--cyan-soft)}
+.brief-meta{font-family:var(--mono);font-size:14px;color:var(--muted);line-height:2}
+.brief-goal{border-left:2px solid var(--amber);padding:6px 0 6px 16px;margin:18px 0;font-size:16px;line-height:1.9;color:var(--cyan-soft)}
 .brief-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 16px}
 .bs{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:10px 12px;display:flex;flex-direction:column;gap:4px}
-.bs-no{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--cyan-dim)}
-.bs b{font-size:13.5px;color:var(--cyan-soft);letter-spacing:1.5px}
-.bs i{font-style:normal;font-size:12px;line-height:1.7;color:var(--muted)}
+.bs-no{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--cyan-dim)}
+.bs b{font-size:15px;color:var(--cyan-soft);letter-spacing:1.5px}
+.bs i{font-style:normal;font-size:14.5px;line-height:1.7;color:var(--muted)}
 @media (max-width:760px){.brief-steps{grid-template-columns:1fr}}
 .brief-archive{margin:4px 0 18px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 16px}
-.brief-archive .ba-title{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
-.ba-item{display:flex;gap:10px;align-items:baseline;font-size:13px;line-height:1.7;margin-bottom:8px}
+.brief-archive .ba-title{font-family:var(--mono);font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
+.ba-item{display:flex;gap:10px;align-items:baseline;font-size:14.5px;line-height:1.7;margin-bottom:8px}
 .ba-item:last-child{margin-bottom:0}
 .ba-dot{flex:0 0 9px;width:9px;height:9px;border-radius:50%;margin-top:5px}
 .ba-name{flex:0 0 auto;font-weight:700;color:var(--cyan-soft);letter-spacing:1px}
-.ba-note{color:var(--muted);font-size:12.5px}
-.choice-intro{font-size:14px;line-height:1.8;color:var(--text-dim);margin:14px 0 16px}
+.ba-note{color:var(--muted);font-size:14px}
+.choice-intro{font-size:16px;line-height:1.8;color:var(--text);margin:14px 0 16px}
 /* T4 主要矛盾常驻提示：左侧强调条 + 暖色边框 */
 .key-contradiction{border:1px solid rgba(255,159,90,.55);border-left:3px solid var(--amber);
-  background:rgba(255,159,90,.08);padding:10px 14px;font-size:13px;line-height:1.7;color:var(--cyan-soft);margin-bottom:18px}
+  background:rgba(255,159,90,.08);padding:10px 14px;font-size:15.5px;line-height:1.7;color:var(--cyan-soft);margin-bottom:18px}
 .alloc{display:flex;flex-direction:column;gap:18px}
 .alloc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
-.alloc-head label{font-weight:600;color:var(--cyan)}
-.alloc-val{font-family:var(--mono);font-size:18px;color:var(--green)}
+.alloc-head label{font-weight:600;color:var(--cyan);font-size:16px}
+.alloc-val{font-family:var(--mono);font-size:20px;color:var(--green)}
 .alloc input[type=range]{width:100%;accent-color:var(--cyan);-webkit-appearance:none;appearance:none;background:transparent;height:26px;margin:0;font-size:16px}
 .alloc input[type=range]::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,#2f7d92,#1d3557);border:1px solid var(--line)}
 .alloc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:22px;margin-top:-10px;border-radius:2px;
@@ -119,17 +135,17 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .alloc input[type=range]::-moz-range-track{height:4px;background:#1d3557;border:1px solid var(--line)}
 .alloc input[type=range]::-moz-range-thumb{width:14px;height:20px;border-radius:2px;background:linear-gradient(180deg,#a7e4f0,#2f7d92);border:1px solid var(--cyan)}
 .alloc input[type=range]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.alloc-note{font-size:12px;color:var(--text-dim);margin-top:4px}
+.alloc-note{font-size:14px;color:var(--muted);margin-top:4px}
 .alloc-note.ok{color:var(--green)}
-.alloc-sum{margin-top:22px;font-family:var(--mono);font-size:15px;text-align:center}
+.alloc-sum{margin-top:22px;font-family:var(--mono);font-size:17.5px;text-align:center}
 .brief-actions{display:flex;gap:14px;justify-content:flex-end;margin-top:26px;flex-wrap:wrap}
 
 .dialog-list{display:flex;flex-direction:column;gap:14px;margin:8px 0 22px}
-.msg{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.85}
+.msg{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;line-height:1.85}
 .msg .avatar{flex:0 0 38px;height:38px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
 .msg .avatar svg{width:22px;height:22px}
 .msg .bubble{flex:1;background:rgba(29,53,87,.22);border:1px solid var(--line);padding:10px 14px;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);min-width:0}
-.msg .who{font-family:var(--mono);font-size:12px;letter-spacing:1px;display:block;margin-bottom:3px}
+.msg .who{font-family:var(--mono);font-size:13.5px;letter-spacing:1px;display:block;margin-bottom:3px}
 .msg.ai .who{color:var(--cyan)}.msg.eng .who{color:var(--amber)}.msg.crew .who{color:var(--green)}
 .msg .txt{color:var(--text)}
 
@@ -142,7 +158,7 @@ input,textarea{user-select:text;-webkit-user-select:text}
 /* W14 过载标识：顶部居中红字，闪烁；默认隐藏 */
 #overburn-tag{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:22;display:none;
   color:#ff7a7a;border:1px solid rgba(255,107,107,.8);background:rgba(40,10,14,.85);
-  padding:6px 16px;font-size:12px;letter-spacing:2px;animation:overburnBlink .5s infinite alternate}
+  padding:6px 16px;font-size:13.5px;letter-spacing:2px;animation:overburnBlink .5s infinite alternate}
 @keyframes overburnBlink{from{box-shadow:0 0 4px rgba(255,80,80,.4)}to{box-shadow:0 0 16px rgba(255,80,80,.9)}}
 #hud.over #overburn-tag{display:block}
 #hud.over .gauge{animation:fuelFlash .4s infinite alternate}
@@ -150,16 +166,16 @@ input,textarea{user-select:text;-webkit-user-select:text}
 /* 轻刹标识：顶部居中青色，默认隐藏 */
 #brake-tag{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:22;display:none;
   color:var(--cyan);border:1px solid var(--cyan-dim);background:rgba(10,26,34,.85);
-  padding:5px 14px;font-size:11px;letter-spacing:2px}
+  padding:5px 14px;font-size:13px;letter-spacing:2px}
 #hud.light #brake-tag{display:block}
 /* 正式领航按钮：HUD 底部中央通栏，探测/领航同位置，避免窄屏与右上信息重叠 */
 #hud-br{left:50%;bottom:112px;right:auto;transform:translateX(-50%);z-index:21}
 #hud-br #btn-launch{min-width:220px;padding:11px 26px}
-.probe-legend{display:none;margin-top:9px;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);white-space:nowrap;align-items:center;gap:7px}
+.probe-legend{display:none;margin-top:9px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--muted);white-space:nowrap;align-items:center;gap:7px}
 .probe-legend.show{display:flex}
 .probe-legend .pl-dash{width:22px;height:0;border-top:2px dashed rgba(142,160,255,.6)}
-.hud-label{font-size:10.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}
-.hud-value{font-size:15px;color:var(--cyan-soft);letter-spacing:1px;font-variant-numeric:tabular-nums}
+.hud-label{font-size:12.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}
+.hud-value{font-size:16.5px;color:var(--cyan-soft);letter-spacing:1px;font-variant-numeric:tabular-nums}
 .hud-row{margin-bottom:9px}.hud-row:last-child{margin-bottom:0}
 .bar{height:7px;background:rgba(255,255,255,.07);border:1px solid var(--line);margin-top:5px;position:relative;overflow:hidden}
 .bar i{position:absolute;left:0;top:0;bottom:0;display:block;transition:width .12s linear}
@@ -168,7 +184,7 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .bar.know i{background:linear-gradient(90deg,#6a5fb0,var(--violet))}
 .hud-inline{color:var(--cyan);font-style:normal}
 .state-warn{color:#ff6b6b!important;font-weight:600}
-.hud-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.hud-sub{font-size:12.5px;color:var(--muted);margin-top:4px}
 
 /* 燃料环形甜甜圈量表 */
 .bl-top{display:flex;gap:14px;align-items:center;margin-bottom:13px}
@@ -178,12 +194,12 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .gauge-fg{fill:none;stroke:var(--cyan);stroke-width:6;stroke-linecap:round;
   stroke-dasharray:150.8;stroke-dashoffset:0;transition:stroke-dashoffset .2s linear,stroke .2s}
 .gauge-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:700;color:var(--cyan-soft)}
-.gauge-txt i{font-size:9px;font-style:normal;margin-left:1px}
+  font-size:16.5px;font-weight:700;color:var(--cyan-soft)}
+.gauge-txt i{font-size:11px;font-style:normal;margin-left:1px}
 .gauge-wrap.low .gauge-fg{stroke:var(--red);animation:warn .8s infinite}
 .gauge-wrap.low .gauge-txt{color:var(--red)}
 .bl-info .hud-label{margin-bottom:3px}
-#fuel-state{color:var(--cyan);font-size:12px}
+#fuel-state{color:var(--cyan);font-size:13.5px}
 .gauge-wrap.low~.bl-info #fuel-state{color:var(--red)}
 
 /* 相对速度 6 格梯形色块 */
@@ -210,14 +226,14 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .morale-wave{width:100%;height:24px;margin-top:5px;display:block}
 .mw-bg{fill:none;stroke:var(--green);stroke-width:1.6;stroke-linejoin:round}
 .morale-wave.low .mw-bg{stroke:var(--amber)}
-.mode-tag{display:inline-block;font-size:11px;padding:3px 10px;letter-spacing:2px;border:1px solid currentColor;margin-bottom:8px}
+.mode-tag{display:inline-block;font-size:13px;padding:3px 10px;letter-spacing:2px;border:1px solid currentColor;margin-bottom:8px}
 .mode-probe{color:var(--violet)}.mode-pilot{color:var(--amber)}
-#hud-goal{font-size:11.5px;color:var(--cyan-soft);line-height:1.7;max-width:230px}
+#hud-goal{font-size:13.5px;color:var(--cyan-soft);line-height:1.7;max-width:230px}
 
 #comms{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,60vw);pointer-events:auto;
   background:linear-gradient(160deg,rgba(11,18,32,.88),rgba(7,12,24,.85));border:1px solid var(--line);padding:12px 18px}
-#comms .cwho{font-family:var(--mono);font-size:11.5px;letter-spacing:2px;margin-bottom:4px}
-#comms .ctxt{font-size:13.5px;line-height:1.7;color:var(--text)}
+#comms .cwho{font-family:var(--mono);font-size:13px;letter-spacing:2px;margin-bottom:4px}
+#comms .ctxt{font-size:15px;line-height:1.7;color:var(--text)}
 #comms.fade{opacity:.55}
 
 #pause-panel{position:absolute;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;
@@ -243,15 +259,15 @@ input,textarea{user-select:text;-webkit-user-select:text}
 @keyframes acc-scan{0%{top:0;opacity:1}100%{top:100%;opacity:.2}}
 .acc-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;
   border-bottom:1px solid rgba(224,82,82,.4);padding-bottom:12px;margin-bottom:16px;}
-.acc-no{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;color:var(--cyan-soft)}
-.acc-tag{font-family:var(--mono);font-size:12px;letter-spacing:2px;padding:3px 10px;border:1px solid rgba(224,82,82,.8);color:#ff8a8a}
+.acc-no{font-family:var(--mono);font-size:14.5px;letter-spacing:1.5px;color:var(--cyan-soft)}
+.acc-tag{font-family:var(--mono);font-size:13.5px;letter-spacing:2px;padding:3px 10px;border:1px solid rgba(224,82,82,.8);color:#ff8a8a}
 .acc-tag.drift{border-color:rgba(255,159,90,.85);color:var(--amber)}
 .acc-tag.unrec{border-color:rgba(142,160,255,.85);color:var(--violet)}
 .acc-sec{margin-bottom:13px}
-.acc-k{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.acc-v{font-size:13.5px;line-height:1.85;color:var(--text)}
+.acc-k{font-family:var(--mono);font-size:12.5px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.acc-v{font-size:15px;line-height:1.85;color:var(--text)}
 .acc-v b{color:#ff8a8a}
-.acc-quote{font-size:13px;line-height:1.8;color:var(--cyan-soft);border-left:2px solid var(--cyan);
+.acc-quote{font-size:14.5px;line-height:1.8;color:var(--cyan-soft);border-left:2px solid var(--cyan);
   padding-left:13px;margin:16px 0;font-style:italic}
 .acc-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap}
 
@@ -276,68 +292,67 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .grade-S{color:var(--cyan);text-shadow:0 0 30px rgba(90,209,232,.5)}.grade-A{color:var(--green)}.grade-B{color:#8fc0a8}.grade-C{color:var(--violet)}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
 .stat-cell{border:1px solid var(--line);padding:12px 14px;background:rgba(255,255,255,.02)}
-.stat-cell .k{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:5px}
+.stat-cell .k{font-size:12.5px;color:var(--muted);letter-spacing:1px;margin-bottom:5px}
 .stat-cell .v{font-family:var(--mono);font-size:18px;color:var(--cyan-soft);font-variant-numeric:tabular-nums}
 #screen-result .inner,#screen-ending .inner{padding:38px 44px}
 /* 结算页双栏单屏：左＝评级与数据，右＝理论卡与船员手记，PC 端一屏放下不滚动 */
-.result-layout{width:min(1080px,95vw);display:grid;grid-template-columns:minmax(300px,352px) 1fr;gap:24px;align-items:start;padding:28px 32px}
+.screen .result-layout{width:min(1080px,95vw);display:grid;grid-template-columns:minmax(300px,352px) 1fr;gap:24px;align-items:start;padding:28px 32px}
 .result-layout .result-grade{font-size:52px;margin:2px 0 10px}
 .result-layout .stat-grid{gap:8px;margin:0 0 13px}
 .result-layout .stat-cell{padding:8px 10px}
-.result-layout .stat-cell .k{font-size:10.5px;margin-bottom:3px}
-.result-layout .stat-cell .v{font-size:16px}
-.result-layout .ending-log{font-size:12.8px;line-height:1.8;margin:0 0 14px}
+.result-layout .stat-cell .k{font-size:12px;margin-bottom:3px}
+.result-layout .stat-cell .v{font-size:16.5px}
+.result-layout .ending-log{font-size:14px;line-height:1.8;margin:0 0 14px}
 .result-layout .theory-card{margin:0 0 12px;padding:12px 14px}
-.result-layout .theory-card .tc-body{font-size:13px;line-height:1.75}
+.result-layout .theory-card .tc-body{font-size:14.5px;line-height:1.75}
 .result-layout .crew-log{margin:0;padding:11px 14px}
-.result-layout .crew-log p{font-size:12.8px;line-height:1.8}
+.result-layout .crew-log p{font-size:14px;line-height:1.8}
 .result-layout .brief-actions{justify-content:center;margin-top:2px}
 @media (max-width:900px){
-  .result-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:26px 20px;gap:14px}
+  .screen .result-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:26px 20px;gap:14px}
 }
 /* 全页面单屏化：简报 / 结局 / 抉择 双栏，手册卡片双列 —— PC 端一屏放下，不出现上下滚动 */
-.brief-layout{width:min(1120px,95vw);display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:22px;align-items:start;padding:26px 30px}
+.screen .brief-layout{width:min(1120px,95vw);display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:22px;align-items:start;padding:26px 30px}
 .brief-layout .brief-head{margin-bottom:2px}
 .brief-layout .brief-goal{margin:12px 0}
 .brief-layout .brief-steps{margin:0 0 14px}
 .brief-layout .brief-archive{margin:0;padding:12px 14px}
 .brief-layout .brief-archive .ba-item{margin-bottom:6px}
 .brief-layout .dialog-list{margin:0;gap:11px}
-.brief-layout .msg{font-size:13px;line-height:1.8}
+.brief-layout .msg{font-size:14.5px;line-height:1.8}
 .brief-layout .msg .avatar{flex:0 0 32px;height:32px}
 .brief-layout .brief-actions{margin-top:14px}
-.end-layout{width:min(1120px,95vw);display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:22px;align-items:start;padding:26px 30px}
+.screen .end-layout{width:min(1120px,95vw);display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:22px;align-items:start;padding:26px 30px}
 .end-layout h2{font-size:26px!important;margin:6px 0 10px!important}
-.end-layout .ending-quote{margin:0 0 12px;font-size:13.5px;line-height:1.85}
+.end-layout .ending-quote{margin:0 0 12px;font-size:15px;line-height:1.85}
 .end-layout .three-stage{margin:0 0 12px;gap:10px}
 .end-layout .stage-no{flex:0 0 28px;height:28px;font-size:13px}
-.end-layout .stage-body h4{font-size:13.5px;margin:0 0 3px}
-.end-layout .stage-body p{font-size:12.5px;line-height:1.75}
-.end-layout .ending-log{font-size:12.5px;line-height:1.8;margin:0 0 10px}
+.end-layout .stage-body h4{font-size:15px;margin:0 0 3px}
+.end-layout .stage-body p{font-size:14px;line-height:1.75}
+.end-layout .ending-log{font-size:14px;line-height:1.8;margin:0 0 10px}
 .end-layout .stat-grid{margin:0;gap:8px}
 .end-layout .stat-cell{padding:8px 10px}
-.end-layout .stat-cell .v{font-size:16px}
+.end-layout .stat-cell .v{font-size:16.5px}
 .end-layout .log-card-maker{margin:0;padding:13px 15px}
 .end-layout .brief-actions{margin-top:14px}
-.choice-layout{width:min(1000px,95vw);display:grid;grid-template-columns:minmax(280px,400px) 1fr;gap:24px;align-items:start;padding:26px 30px}
+.screen .choice-layout{width:min(1000px,95vw);display:grid;grid-template-columns:minmax(280px,400px) 1fr;gap:24px;align-items:start;padding:26px 30px}
 .choice-layout .screen-h{font-size:22px!important;margin:6px 0 10px!important}
-.choice-layout .choice-intro{font-size:13px;line-height:1.9;margin:0 0 12px}
+.choice-layout .choice-intro{font-size:14.5px;line-height:1.9;margin:0 0 12px}
 .choice-layout .key-contradiction{margin:0}
 .choice-layout .alloc{margin:0}
 .choice-layout .brief-actions{margin-top:12px}
 @media (max-width:900px){
-  .brief-layout,.end-layout,.choice-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:24px 20px;gap:14px}
+  .screen .brief-layout,.screen .end-layout,.screen .choice-layout{grid-template-columns:1fr;width:min(760px,94vw);padding:24px 20px;gap:14px}
 }
-.manual-box{width:min(1120px,96vw);padding:24px 28px}
 /* 手册改手风琴：默认只展开一条，任何窗口尺寸都一屏装下，不再上下滚动 */
 #manual .m-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px;align-items:start}
 #manual .m-card{margin-bottom:0;padding:10px 13px}
-#manual .m-card summary{cursor:pointer;list-style:none;font-size:13.5px;color:var(--cyan);letter-spacing:1px;padding:2px 0}
+#manual .m-card summary{cursor:pointer;list-style:none;font-size:15px;color:var(--cyan);letter-spacing:1px;padding:2px 0}
 #manual .m-card summary::-webkit-details-marker{display:none}
 #manual .m-card summary::before{content:'▸ ';color:var(--cyan-dim)}
 #manual .m-card[open] summary::before{content:'▾ '}
 #manual .m-card[open] summary{color:var(--cyan-soft)}
-#manual .m-card p{font-size:12.2px;line-height:1.78;margin-top:7px}
+#manual .m-card p{font-size:14px;line-height:1.78;margin-top:7px}
 #manual .m-card b{color:var(--amber);font-weight:600}
 /* W4：结算/结局/抉择三屏加半透明遮罩，避免对接圈与天体从卡片后透出 */
 #screen-result,#screen-ending,#screen-choice{background:rgba(3,6,13,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -346,48 +361,53 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .stage{display:flex;gap:14px;align-items:flex-start}
 .stage-no{flex:0 0 34px;height:34px;border-radius:50%;border:1px solid var(--cyan);color:var(--cyan);
   display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(90,209,232,.08)}
-.stage-body h4{margin:2px 0 4px;font-size:14.5px;color:var(--cyan-soft);letter-spacing:1px}
-.stage-body p{margin:0;font-size:13px;line-height:1.85;color:var(--text-dim)}
-.ending-quote{font-size:15px;line-height:2.1;color:var(--cyan-soft);border-left:2px var(--cyan) solid;padding-left:18px;margin:20px 0}
-.share-hint{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);text-align:right;margin-top:12px}
-.ending-log{font-size:13.5px;line-height:2;color:var(--muted)}
+.stage-body h4{margin:2px 0 4px;font-size:15.5px;color:var(--cyan-soft);letter-spacing:1px}
+.stage-body p{margin:0;font-size:14.5px;line-height:1.85;color:var(--text)}
+.ending-quote{font-size:16.5px;line-height:2.1;color:var(--cyan-soft);border-left:2px var(--cyan) solid;padding-left:18px;margin:20px 0}
+.share-hint{font-family:var(--sans);font-size:13px;letter-spacing:1px;color:var(--muted);text-align:right;margin-top:12px}
+.ending-log{font-size:15px;line-height:2;color:var(--muted)}
 .theory-card{border:1px solid var(--violet);border-left:3px solid var(--violet);
   background:linear-gradient(160deg,rgba(110,95,176,.16),rgba(20,24,48,.4));padding:14px 16px;margin:16px 0 4px}
-.theory-card .tc-head{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;color:var(--violet);margin-bottom:6px}
-.theory-card .tc-body{font-size:13.5px;line-height:1.8;color:var(--text)}
+.theory-card .tc-head{font-family:var(--mono);font-size:13.5px;letter-spacing:1.5px;color:var(--violet);margin-bottom:6px}
+.theory-card .tc-body{font-size:15px;line-height:1.8;color:var(--text)}
 .theory-card .tc-body b{color:var(--cyan)}
 /* N1 船员手记：手账感，区别于理论卡 */
 .crew-log{border:1px dashed var(--line);background:rgba(14,20,34,.55);padding:13px 16px;margin:14px 0 4px;border-radius:4px}
-.crew-log-head{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--amber);margin-bottom:7px}
-.crew-log p{font-size:13.5px;line-height:1.85;color:var(--text)}
-.crew-log .earth-mail{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--cyan-soft);font-style:italic}
+.crew-log-head{font-family:var(--mono);font-size:12.5px;letter-spacing:1.5px;color:var(--amber);margin-bottom:7px}
+.crew-log p{font-size:15px;line-height:1.85;color:var(--text)}
+.crew-log .earth-mail{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:14px;color:var(--cyan-soft);font-style:italic}
 /* N2 航行日志卡生成器 */
 .log-card-maker{border:1px solid var(--line);background:rgba(14,20,34,.55);padding:15px 16px;margin:16px 0 4px;border-radius:4px}
-.lcm-label{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:10px}
-.lcm-inputs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:11px}
-.lcm-inputs input{flex:1;min-width:140px;background:rgba(8,14,26,.9);border:1px solid var(--line);color:var(--text);
-  padding:9px 11px;font-size:16px;border-radius:3px;font-family:var(--mono)}
-.lcm-inputs input:focus{outline:none;border-color:var(--cyan-dim)}
+.lcm-label{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:10px}
+.lcm-inputs{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+.lcm-field{display:flex;align-items:center;gap:11px;background:rgba(8,14,26,.9);border:1px solid var(--line);
+  border-radius:4px;padding:0 12px;transition:border-color .18s,box-shadow .18s}
+.lcm-field:focus-within{border-color:var(--cyan-dim);box-shadow:0 0 0 2px rgba(90,209,232,.12)}
+.lcm-tag{flex:0 0 auto;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--cyan-dim);white-space:nowrap}
+.lcm-inputs input{flex:1;min-width:0;width:100%;background:transparent;border:0;color:var(--text);
+  padding:11px 0;font-size:15.5px;font-family:var(--sans);letter-spacing:.5px}
+.lcm-inputs input::placeholder{color:rgba(255,255,255,.30)}
+.lcm-inputs input:focus{outline:none}
 .log-card{margin-top:14px;border:1.5px solid var(--cyan);border-radius:6px;padding:18px 20px;
   background:linear-gradient(165deg,rgba(16,32,46,.96),rgba(8,12,24,.96));text-align:left}
 .log-card.hidden{display:none}
-.lc-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;color:var(--cyan-soft);margin-bottom:14px}
-.lc-grade{font-size:14px;color:var(--text);margin-bottom:12px}
+.lc-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--cyan-soft);margin-bottom:14px}
+.lc-grade{font-size:15px;color:var(--text);margin-bottom:12px}
 .lc-grade b{font-size:22px;color:var(--amber);margin-left:6px}
-.lc-msg{font-size:15px;line-height:1.7;color:var(--text);min-height:26px;margin-bottom:14px}
-.lc-sign{font-size:12.5px;color:var(--cyan-soft);text-align:right;margin-bottom:10px}
-.lc-hint{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center}
+.lc-msg{font-size:16px;line-height:1.7;color:var(--text);min-height:26px;margin-bottom:14px}
+.lc-sign{font-size:14px;color:var(--cyan-soft);text-align:right;margin-bottom:10px}
+.lc-hint{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--muted);text-align:center}
 
 .overlay{position:absolute;inset:0;z-index:60;background:rgba(3,6,13,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px}
 .confirm-box{width:min(440px,94vw);padding:30px 32px}
 .confirm-title{font-size:19px;letter-spacing:2px;margin-bottom:12px;color:var(--amber)}
-.confirm-text{font-size:13.5px;line-height:1.9;color:var(--muted);margin-bottom:22px}
+.confirm-text{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:22px}
 .confirm-actions{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
 #legend{position:absolute;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;
   background:rgba(3,6,13,.6);padding:24px;pointer-events:auto}
 .legend-box{width:min(470px,94vw);padding:24px 26px}
-.legend-title{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:16px}
-.legend-item{display:flex;gap:12px;align-items:center;font-size:13px;line-height:1.6;margin-bottom:13px}
+.legend-title{font-family:var(--mono);font-size:13.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:16px}
+.legend-item{display:flex;gap:12px;align-items:center;font-size:14.5px;line-height:1.6;margin-bottom:13px}
 .legend-item b{color:var(--cyan-soft)}
 .lg-line{flex:0 0 40px;width:40px;height:12px}
 .legend-actions{display:flex;justify-content:flex-end;margin-top:6px}
@@ -404,12 +424,17 @@ input,textarea{user-select:text;-webkit-user-select:text}
 .set-row input[type=range]::-moz-range-track{height:4px;background:#1d3557;border:1px solid var(--line)}
 .set-row input[type=range]::-moz-range-thumb{width:14px;height:20px;border-radius:2px;background:linear-gradient(180deg,#a7e4f0,#2f7d92);border:1px solid var(--cyan)}
 .set-row input[type=range]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.set-tip{margin:20px 0 4px;font-size:12px;line-height:1.85;color:var(--muted);border-left:2px solid var(--amber);padding-left:12px}
+.set-tip{margin:20px 0 4px;font-size:14px;line-height:1.85;color:var(--muted);border-left:2px solid var(--amber);padding-left:12px}
+.key-list-box{margin-top:22px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 16px}
+.key-list-title{font-size:15px;color:var(--cyan);letter-spacing:1px;margin-bottom:12px}
+.key-list{display:grid;grid-template-columns:repeat(2,1fr);gap:9px 14px;font-family:var(--sans);font-size:14px;color:var(--text)}
+.key-list b{display:inline-block;min-width:62px;padding:2px 8px;border:1px solid var(--line);border-radius:4px;color:var(--cyan-soft);margin-right:7px;font-weight:600}
+@media (max-width:560px){.key-list{grid-template-columns:1fr}}
 .manual-box h3{font-size:20px;letter-spacing:2px;margin-bottom:6px}
-.manual-box .m-sub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-bottom:22px}
+.manual-box .m-sub{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:22px}
 .m-card{border:1px solid var(--line);padding:16px 18px;margin-bottom:14px;background:rgba(255,255,255,.02)}
 .m-card h4{font-size:15px;color:var(--cyan);margin-bottom:8px;letter-spacing:1px}
-.m-card p{font-size:13.5px;line-height:1.95;color:var(--text)}
+.m-card p{font-size:14.5px;line-height:1.95;color:var(--text)}
 .m-card p b{color:var(--amber);font-weight:600}
 .m-card.highlight{border-color:var(--red);background:rgba(224,82,82,.12);
   box-shadow:0 0 24px rgba(224,82,82,.25);animation:warn 1.4s 2;}
@@ -431,7 +456,7 @@ input,textarea{user-select:text;-webkit-user-select:text}
   #hud-bl{min-width:150px;padding:9px 10px}
   #hud-br{bottom:calc(104px + env(safe-area-inset-bottom));padding:0}
   #hud-br #btn-launch{min-width:200px;padding:10px 18px;font-size:12px}
-  .hud-value{font-size:12.5px}.hud-label{font-size:9.5px}
+  .hud-value{font-size:13.5px}.hud-label{font-size:11px}
   #comms{width:min(560px,72vw);bottom:calc(200px + env(safe-area-inset-bottom))}
   .stat-grid{grid-template-columns:1fr 1fr}
   .stat-grid .stat-wide{grid-column:span 2}
@@ -496,20 +521,17 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <!-- 标题屏 -->
   <section id="screen-title" class="screen">
     <div class="title-wrap">
-      <p class="eyebrow">星际纪元 2147 · 方舟号远航舰队</p>
+      <p class="eyebrow">方舟号 · 第 2147 次远航</p>
       <h1>星舰领航员</h1>
-      <p class="title-sub">STARSHIP NAVIGATOR // 客观规律与主观能动性</p>
-      <p class="title-desc">太阳系资源渐枯，方舟号载着最后的希望驶向类地行星「新曦」。你是舰队领航员——无法命令宇宙，却可以认识它、驾驭它。先在探测中认识规律，再在领航中运用规律：从被规律支配的<b>必然王国</b>，驶向认识规律、驾驭规律的<b>自由王国</b>。</p>
+      <p class="title-sub">认识规律，再去驾驭它</p>
+      <p class="title-desc">宇宙不讲道理，你得自己摸清它的脾气。<br>先飞几遍看看，再正式出发——别一上来就死踩油门。</p>
       <div class="title-actions">
         <button class="sci-btn amber hidden" id="continueBtn">继续航程</button>
-        <button class="sci-btn" id="startBtn">启动舰队</button>
+        <button class="sci-btn" id="startBtn">出发</button>
       </div>
-      <p class="sound-tip">点击「启动舰队」后开启声音 · 建议佩戴耳机 · PC 端按 F11 全屏更佳</p>
-      <p class="title-credit">《马克思主义基本原理》课程作业 · 互动式小游戏（E 类）</p>
+      <p class="sound-tip">建议戴耳机玩</p>
       <p class="title-best" id="title-best"></p>
-      <div class="key-hint">
-        <span><b>W/↑</b>主推进</span><span><b>Shift</b>微调推进</span><span><b>A D</b>转向</span><span><b>Q E</b>侧向推进</span><span><b>S</b>重刹</span><span><b>Shift+S</b>轻刹</span><span><b>R</b>探测模式重置</span><span><b>P/Esc</b>暂停</span>
-      </div>
+      <p class="key-hint">按键说明？点右上角那个齿轮，里面都有。</p>
     </div>
   </section>
 
@@ -518,14 +540,14 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
     <div class="inner clip-panel brief-layout">
       <div class="bl-left">
       <div class="brief-head">
-        <div><p class="lv-no" id="brief-no">SECTOR 01</p><h2 id="brief-title"></h2></div>
+        <div><p class="lv-no" id="brief-no">第 1 星区</p><h2 id="brief-title"></h2></div>
         <p class="brief-meta" id="brief-meta"></p>
       </div>
       <div class="brief-goal" id="brief-goal"></div>
       <div class="brief-steps">
-        <div class="bs"><span class="bs-no">STEP 1</span><b>探测</b><i>燃料无限，随便试错——看清自然轨迹，摸清引力的脾气</i></div>
-        <div class="bs"><span class="bs-no">STEP 2</span><b>领航</b><i>燃料不可重置，用你在探测里认出的规律去飞</i></div>
-        <div class="bs"><span class="bs-no">STEP 3</span><b>对接</b><i>进入对接圈，并把相对速度压到上限以内</i></div>
+        <div class="bs"><span class="bs-no">第一步</span><b>探测</b><i>燃料管够，随便试，先看清飞船自己会怎么走</i></div>
+        <div class="bs"><span class="bs-no">第二步</span><b>领航</b><i>燃料就这么多，用你摸出的规律去飞</i></div>
+        <div class="bs"><span class="bs-no">第三步</span><b>停泊</b><i>开进停泊圈，把速度压到红线以内</i></div>
       </div>
       <div class="brief-archive" id="brief-archive"></div>
       </div>
@@ -541,14 +563,14 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
 
   <!-- 游戏 HUD -->
   <div id="hud" class="hidden">
-    <div id="overburn-tag">过载 OVERBURN · 推力+45% · 燃料加倍</div>
-    <div id="brake-tag">轻刹 LIGHT BRAKE · 精细减速</div>
+    <div id="overburn-tag">过载！推力 +45%，但燃料翻倍烧</div>
+    <div id="brake-tag">轻刹 · 慢慢收速</div>
     <div class="hud-block" id="hud-tl">
       <div class="hud-row"><div class="hud-label">当前星区</div><div class="hud-value" id="hud-level">—</div></div>
       <div class="hud-row"><div class="hud-label">任务目标</div><div id="hud-goal">—</div></div>
     </div>
     <div class="hud-block" id="hud-tr">
-      <span class="mode-tag mode-probe" id="hud-mode">探测模式 PROBE</span>
+      <span class="mode-tag mode-probe" id="hud-mode">探测</span>
       <div class="hud-row">
         <div class="hud-label">规律掌握度 <span id="know-x" class="hud-inline">0/5</span></div>
         <div class="cell-band" id="know-band"><i></i><i></i><i></i><i></i><i></i></div>
@@ -630,7 +652,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <!-- 暂停面板 -->
   <div id="pause-panel" class="hidden">
     <div class="pause-card clip-panel">
-      <p class="eyebrow" style="text-align:center">PAUSED</p>
+      <p class="eyebrow" style="text-align:center">暂停</p>
       <h2 class="screen-h" style="text-align:center">航行已暂停</h2>
       <div class="brief-actions" style="justify-content:center">
         <button class="sci-btn" id="btn-resume">继续航行</button>
@@ -643,7 +665,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <section id="screen-result" class="screen hidden">
     <div class="inner clip-panel result-layout">
       <div class="rl-left">
-      <p class="eyebrow" style="text-align:center">SECTOR CLEARED</p>
+      <p class="eyebrow" style="text-align:center">这一关过了</p>
       <div class="result-grade" id="result-grade">A</div>
       <div class="stat-grid">
         <div class="stat-cell"><div class="k">剩余燃料</div><div class="v" id="r-fuel">—</div></div>
@@ -655,7 +677,10 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <div class="stat-cell stat-wide"><div class="k">预测误差（实测落点偏差）</div><div class="v" id="r-err">—</div></div>
       </div>
       <p class="ending-log" id="result-comment"></p>
-      <div class="brief-actions"><button class="sci-btn" id="btn-next">前往下一星区</button></div>
+      <div class="brief-actions">
+        <button class="sci-btn" id="btn-next">前往下一星区</button>
+        <button class="sci-btn amber" id="btn-quick-next">直接开飞下一关</button>
+      </div>
       </div>
       <div class="rl-right">
       <div class="theory-card">
@@ -676,10 +701,10 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <section id="screen-choice" class="screen hidden">
     <div class="inner clip-panel choice-layout">
       <div class="cl-left">
-      <p class="eyebrow" style="text-align:center">SECTOR 05 // 社会基本矛盾</p>
+      <p class="eyebrow" style="text-align:center">第 5 星区 · 抉择</p>
       <h2 class="screen-h" style="text-align:center">方舟号 · 物资分配</h2>
-      <p class="choice-intro">方舟号的物资总量是既定的<b>生产力</b>水平；如何在各部门间分配，是<b>生产关系</b>。分配方式（经济基础）决定了管理制度（上层建筑）能否运转。请把 <b><span id="ch-quota">100</span> 个单位</b>全部分配到三个部门。</p>
-      <div class="key-contradiction">本关主要矛盾：生产力的有限性 ⟷ 生产关系的不适应——资源就这么多，如何分配决定新曦的未来。</div>
+      <p class="choice-intro">手里东西就这么多，这是<b>生产力</b>；怎么分给各个部门，是<b>生产关系</b>。分法合不合理，决定船上的规矩能不能转得动。这一趟舱段有损耗，能分的只有 <b><span id="ch-quota">100</span></b> 个单位，请把它们<b>正好分完</b>。</p>
+      <div class="key-contradiction">本关主要矛盾：东西不够分，分法又得让人活下去——怎么取舍，决定新曦的未来。</div>
       </div>
       <div class="cl-right">
       <div class="alloc" id="alloc-list">
@@ -699,7 +724,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
           <p class="alloc-note" id="nt-res">投入越多，新曦定居点的起步越稳</p>
         </div>
       </div>
-      <div class="alloc-sum">已分配 <b id="ch-sum">0</b> / 100　<span id="ch-flag" class="state-warn"></span></div>
+      <div class="alloc-sum">已分配 <b id="ch-sum">0</b> / <span id="ch-total">100</span>　<span id="ch-flag" class="state-warn"></span></div>
       <div class="brief-actions"><button class="sci-btn" id="btn-alloc" disabled>确认分配方案</button></div>
       </div>
     </div>
@@ -709,7 +734,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <section id="screen-ending" class="screen hidden">
     <div class="inner clip-panel end-layout">
       <div class="el-left">
-      <p class="eyebrow" style="text-align:center">MISSION COMPLETE</p>
+      <p class="eyebrow" style="text-align:center">航程结束</p>
       <h2 style="text-align:center;font-size:30px;letter-spacing:4px;margin:10px 0">抵达新曦</h2>
       <div class="ending-quote" id="ending-quote"></div>
       <div class="three-stage">
@@ -728,8 +753,8 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
       <div class="log-card-maker">
         <div class="lcm-label">给地球留一句话 · 生成你的航行日志卡</div>
         <div class="lcm-inputs">
-          <input type="text" id="lcm-name" maxlength="12" placeholder="领航员名字">
-          <input type="text" id="lcm-msg" maxlength="40" placeholder="想对地球说的话（40字内）">
+          <label class="lcm-field"><span class="lcm-tag">领航员</span><input type="text" id="lcm-name" maxlength="12" placeholder="写上你的名字"></label>
+          <label class="lcm-field"><span class="lcm-tag">留给地球</span><input type="text" id="lcm-msg" maxlength="40" placeholder="想对地球说的话"></label>
         </div>
         <button class="sci-btn" id="btn-make-card">生成航行日志卡</button>
         <div id="log-card" class="log-card hidden">
@@ -744,7 +769,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <button class="sci-btn ghost" id="btn-share">复制链接给同学</button>
         <button class="sci-btn" id="btn-restart">再次启航</button>
       </div>
-      <p class="share-hint">把链接发给同学：他们不用安装任何东西，打开就能玩。</p>
+      <p class="share-hint">把链接发给同学，他们点开就能玩。</p>
       </div>
     </div>
   </section>
@@ -752,7 +777,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
   <!-- 圈线图例卡（首次进入游戏显示） -->
   <div id="legend" class="hidden">
     <div class="legend-box clip-panel">
-      <div class="legend-title">图例 // 识别你看到的圈线</div>
+      <div class="legend-title">图例 · 教你看懂这些圈线</div>
       <div class="legend-item">
         <svg class="lg-line" viewBox="0 0 40 12"><circle cx="20" cy="6" r="5" fill="none" stroke="#5ad1e8" stroke-width="1.4"/></svg>
         <span><b>引力环（青）</b>：引力作用范围，越靠近天体引力越强。</span>
@@ -763,7 +788,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
       </div>
       <div class="legend-item">
         <svg class="lg-line" viewBox="0 0 40 12"><circle cx="20" cy="6" r="5" fill="none" stroke="#7be0a8" stroke-width="1.4" stroke-dasharray="6 4"/></svg>
-        <span><b>对接圈（绿·点线）</b>：进入其中且相对速度达标，即完成交付。</span>
+        <span><b>停泊圈（绿·点线）</b>：开进里面，速度也达标，就算成功。</span>
       </div>
       <div class="legend-actions"><button class="sci-btn" id="legend-close" style="padding:10px 24px;font-size:13px">明白了</button></div>
     </div>
@@ -786,7 +811,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
     <div class="manual-box clip-panel set-box">
       <button class="sci-btn ghost manual-close" id="settings-close">关闭</button>
       <h3>设置</h3>
-      <p class="m-sub">SETTINGS // 音量与飞行</p>
+      <p class="m-sub">音量与飞行设置</p>
       <div class="set-row">
         <div class="set-head"><label for="vol-master">总音量</label><span class="set-val" id="v-master">50</span></div>
         <input type="range" id="vol-master" min="0" max="100" value="50">
@@ -799,7 +824,20 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
         <div class="set-head"><label for="vol-sfx">音效</label><span class="set-val" id="v-sfx">85</span></div>
         <input type="range" id="vol-sfx" min="0" max="100" value="85">
       </div>
-      <p class="set-tip">背景音乐会跟着飞船走：点火时旋律加密、过载时加入失谐与紧迫感、接近对接时压上紧张层、制动时空气声变沉。三条音量互相独立，随时生效并自动记住。</p>
+      <p class="set-tip">背景音乐会跟着飞船走：点火时旋律加密、过载时加入失谐、接近对接时压上紧张层、制动时声音变沉。三条音量互相独立，随时生效并自动记住。</p>
+      <div class="key-list-box">
+        <p class="key-list-title">按键说明</p>
+        <div class="key-list">
+          <span><b>W / ↑</b>主推进</span>
+          <span><b>Shift</b>微调推进</span>
+          <span><b>A / D</b>转向</span>
+          <span><b>Q / E</b>侧向推进</span>
+          <span><b>S</b>重刹</span>
+          <span><b>Shift+S</b>轻刹</span>
+          <span><b>R</b>探测重置</span>
+          <span><b>P / Esc</b>暂停</span>
+        </div>
+      </div>
       <div class="brief-actions"><button class="sci-btn" id="settings-ok">返回航行</button></div>
     </div>
   </div>
@@ -809,7 +847,7 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
     <div class="manual-box clip-panel">
       <button class="sci-btn ghost manual-close" id="manual-close">关闭</button>
       <h3>航行手册</h3>
-      <p class="m-sub">FIELD MANUAL // 客观规律性与主观能动性</p>
+      <p class="m-sub">客观规律与主观能动性</p>
       <div class="m-grid">
       <div class="m-card"><h4>一、规律具有客观性</h4>
         <p>规律是事物运动过程中固有的、本质的、必然的、稳定的联系。它的存在和发生作用不以人的意志为转移，既不能被创造，也不能被消灭。游戏中的引力参数、星风周期在探测与领航模式下完全一致——宇宙不会因为你着急就改变规则。</p></div>
@@ -838,6 +876,8 @@ button:focus-visible,.sci-btn:focus-visible{outline:2px solid var(--cyan);outlin
 /* ============================================================
    星舰领航员 —— 游戏逻辑（修订版）
    ============================================================ */
+/* 分享用固定线上地址：本地打开时复制它，朋友点开就能玩；换域名只改这一处 */
+const SHARE_URL='https://xiaoquan302.github.io/starship-navigator/';
 const TAU=Math.PI*2;
 const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -882,14 +922,15 @@ const G={
   input:{left:false,right:false,thrust:false,lowThrust:false,brake:false,lightBrake:false,sideL:false,sideR:false},
   fuel:0,maxFuel:0,knowledge:0,morale:80,
   slingshot:0,probeResets:0,levelTime:0,probeTime:0,
-  totalSlingshot:0,grades:[],
+  totalSlingshot:0,totalProbeResets:0,grades:[],
   bestApproach:Infinity,driftTimer:0,knowEval:0,
   commTimer:0,warp:0,time:0,lastSave:0,
   levelTime0:0,activeProbeMs:0,windWindowMs:0,windTotalMs:0,
   bank:0,thrustHold:0,overburn:false,
   slowmo:0,impactFx:null,lockOn:false,legendShown:false,
   actLog:{lastThrustAt:-99,flewMs:0,everThrust:false,lastBurn:0},
-  pred:{errKm:null},paused:false
+  pred:{errKm:null},paused:false,
+  choiceCfg:null // 第5关随机配额配置，每局重新生成
 };
 
 /* 输入 */
@@ -900,6 +941,9 @@ const keyMap={
   KeyQ:'sideL',KeyE:'sideR'
 };
 window.addEventListener('keydown',e=>{
+  const t=e.target;
+  // 焦点在输入框里时，游戏完全不接管键盘，否则字母被 preventDefault 吞掉、中文组字被打断
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
   const k=keyMap[e.code];
   if(k){G.input[k]=true;e.preventDefault();}
   // W12 两档刹车：Shift+S 走轻刹（60 加速度 / 2 燃料），S 走重刹
@@ -907,7 +951,10 @@ window.addEventListener('keydown',e=>{
   if(e.code==='KeyR'&&G.state==='probe')resetProbe();
   if((e.code==='Escape'||e.code==='KeyP')&&(G.state==='probe'||G.state==='pilot'))togglePause();
 });
-window.addEventListener('keyup',e=>{const k=keyMap[e.code];if(k){G.input[k]=false;e.preventDefault();}
+window.addEventListener('keyup',e=>{
+  const t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  const k=keyMap[e.code];if(k){G.input[k]=false;e.preventDefault();}
   if(e.code==='KeyS')G.input.lightBrake=false;});
 window.addEventListener('blur',()=>{for(const k in G.input)G.input[k]=false;});
 function bindHold(el,p){
@@ -1470,9 +1517,9 @@ function checkHazards(){
       if(b.type==='blackhole'||b.type==='star'||b.type==='planet'||b.type==='gas'){
         if(G.state==='probe'){probeCollision(b);return;}killShip(b);return;}
     }
-    // 引力借力：仅 pilot 计数，判定区收紧到 r*1.6，每颗天体每关只计一次（防刷）
+    // 引力借力：仅 pilot 计数，判定区放宽到 r*2.6（擦身而过也算），每颗天体每关只计一次
     if(G.state==='pilot'&&(b.type==='planet'||b.type==='gas')&&b.mass){
-      const d=dist(s.x,s.y,b.x,b.y),zone=b.r*1.6;
+      const d=dist(s.x,s.y,b.x,b.y),zone=b.r*2.6;
       if(!b._counted&&d<zone){b._counted=true;G.slingshot++;G.totalSlingshot++;
         G.knowledge=clamp(G.knowledge+8,0,100);G.morale=clamp(G.morale+6,0,100);
         AudioSys.tone(300,0.18,'sine',0.1,520);}
@@ -1489,7 +1536,7 @@ function checkHazards(){
     if(pd<p.r+s.r*0.5){
       p.taken=true;G.fuel=Math.min(G.maxFuel,G.fuel+12);
       AudioSys.tone(740,0.12,'triangle',0.1,980);
-      say('阿基米德','拾取能量晶体，燃料 +12（已设上限）。认识规律是为了更好地实践。',3);
+      say('阿基米德','捡到能量晶体，燃料 +12！省着点用。',3);
     }
   }
   const t=G.level.target,tp=targetPos(t);
@@ -1515,13 +1562,13 @@ function killShip(b){
 /* 探测模式撞星：不失败、不弹面板，轻提示并重置，符合"可无限试错" */
 function probeCollision(b){
   AudioSys.ui();G.probeResets++; // 自动复位也计入试错次数（修复统计口径漏记）
-  say('阿基米德','试飞轨迹撞上了天体（第 '+G.probeResets+' 次试错）。换个角度，或者早点减速——再推演一条。',3);
+  say('阿基米德','又撞上了（第 '+G.probeResets+' 次）。换个角度，或者早点减速，再来。',3);
   restoreShip(G.startSnapshot);G.fuel=G.maxFuel;G.particles.length=0;
 }
 /* 探测中进入目标圈：不计成绩，提示并拉回（P0-2） */
 function probeTarget(){
   AudioSys.ui();G.probeResets++;
-  say('阿基米德','探测到目标区不算交付，正式领航才算。已把船拉回，继续推演。',3);
+  say('阿基米德','现在是探测，开进圈不算数。把你拉回来了，接着试。',3);
   restoreShip(G.startSnapshot);G.fuel=G.maxFuel;
 }
 
@@ -1530,8 +1577,8 @@ function probeTarget(){
    ============================================================ */
 const LEVELS=[
 {
-  no:'SECTOR 01',name:'启航 · 近地轨道',meta:'单恒星系统 // 燃料配额 100',driftLimit:950,
-  goal:'与空间站「灯塔号」对接：进入对接圈，且相对速度足够低。',fuel:100,
+  no:'第 1 星区',name:'启航 · 近地轨道',meta:'单恒星 · 燃料 100',driftLimit:950,
+  goal:'与空间站「灯塔号」对接：开进停泊圈，速度还得够低。',fuel:100,
   bodies:[
     {id:'sun',type:'star',name:'必然',x:0,y:0,r:48,mass:900,fixed:true,color:'#ffd166',color2:'#ff7a3c',spin:0,
       arch:'质量最大，决定全图一切轨道。规律是客观的，不以人的意志为转移。'},
@@ -1547,7 +1594,7 @@ const LEVELS=[
   target:{body:'station',r:44,maxSpeed:120}
 },
 {
-  no:'SECTOR 02',name:'引力弹弓',meta:'气态巨行星 // 燃料配额 60',driftLimit:1350,
+  no:'第 2 星区',name:'引力弹弓',meta:'气态巨行星 · 燃料 60',driftLimit:1350,
   goal:'燃料不足以直抵跃迁门。借气态巨行星「自由」的引力甩向右侧目标，同时避开沿轨道公转的陨石带。',fuel:60,
   bodies:[
     {id:'sun',type:'star',name:'必然',x:-620,y:-340,r:40,mass:700,fixed:true,color:'#ffd166',color2:'#ff7a3c',
@@ -1568,7 +1615,7 @@ const LEVELS=[
   target:{body:'gate',r:46,maxSpeed:140}
 },
 {
-  no:'SECTOR 03',name:'星风走廊',meta:'周期星风场 // 燃料配额 68',driftLimit:1200,
+  no:'第 3 星区',name:'星风走廊',meta:'周期星风 · 燃料 68',driftLimit:1200,
   goal:'穿越周期性星风。顺风窗口滑行，避免在阵风时硬顶消耗燃料。',fuel:68,
   bodies:[
     {id:'sun',type:'star',name:'必然',x:0,y:-420,r:44,mass:850,fixed:true,color:'#ffd166',color2:'#ff7a3c',
@@ -1587,7 +1634,7 @@ const LEVELS=[
   target:{x:480,y:140,r:46,maxSpeed:140}
 },
 {
-  no:'SECTOR 04',name:'新家园',meta:'多体系统 // 燃料配额 85',driftLimit:1250,
+  no:'第 4 星区',name:'新家园',meta:'多体系统 · 燃料 85',driftLimit:1250,
   goal:'抵达公转中的类地行星「新曦」，把相对速度降到上限以内进入其轨道。',fuel:85,
   bodies:[
     {id:'sun',type:'star',name:'必然',x:0,y:0,r:50,mass:1000,fixed:true,color:'#ffd166',color2:'#ff7a3c',
@@ -1608,7 +1655,7 @@ const LEVELS=[
   target:{body:'xinxi',r:90,maxSpeed:115}
 },
 {
-  no:'SECTOR 05',name:'方舟号 · 物资分配',kind:'choice',driftLimit:0,
+  no:'第 5 星区',name:'方舟号 · 物资分配',kind:'choice',driftLimit:0,
   goal:'抵达新曦前的最后抉择：把有限物资在「推进」「生命维持」「科研储备」三个部门间分配。',
   quota:100,minPropulsion:40,minLife:35,
   bodies:[],winds:[],ship:{x:0,y:0},target:{x:0,y:0,r:0,maxSpeed:0}
@@ -1710,7 +1757,7 @@ function drawPickup(p){
   const all=G.level.pickups,left=all.filter(x=>!x.taken).length;
   const label='剩余 '+left+'/'+all.length;
   ctx.save();ctx.translate(p.x,p.y);
-  ctx.font='10px '+getComputedStyle(document.body).getPropertyValue('--mono');
+  ctx.font='12px '+getComputedStyle(document.body).getPropertyValue('--sans');
   ctx.textAlign='center';ctx.textBaseline='middle';
   const tw=ctx.measureText(label).width,cy=-p.r-16,padX=7,padY=4;
   ctx.fillStyle='rgba(8,18,26,.82)';ctx.strokeStyle='rgba(123,224,168,.55)';ctx.lineWidth=1;
@@ -1912,9 +1959,9 @@ function drawTarget(t,time){
   ctx.setLineDash([]);ctx.globalAlpha=0.5;
   ctx.strokeStyle=overSpeed?'#ff6b6b':'#7be0a8';
   ctx.beginPath();ctx.arc(0,0,t.r*0.55,0,TAU);ctx.stroke();
-  // 标签：超速时红色警示，否则只留"对接圈"
-  ctx.globalAlpha=1;ctx.fillStyle=overSpeed?'#ff8a8a':'#7be0a8';ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';
-  ctx.fillText(overSpeed?'速度过快，减速！':(inRing?'已进入对接圈':'对接圈'),0,-t.r-10);
+  // 标签：超速时红色警示，否则只留"停泊圈"
+  ctx.globalAlpha=1;ctx.fillStyle=overSpeed?'#ff8a8a':'#7be0a8';ctx.font='12.5px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='center';
+  ctx.fillText(overSpeed?'太快了，减速！':(inRing?'已进停泊圈':'停泊圈'),0,-t.r-11);
   if(near)drawLockMark(t);
   ctx.restore();ctx.globalAlpha=1;
 }
@@ -1926,8 +1973,8 @@ function drawLockMark(t){
     ctx.beginPath();
     ctx.moveTo(sx*rr,sy*rr-sy*cl);ctx.lineTo(sx*rr,sy*rr);ctx.lineTo(sx*rr-sx*cl,sy*rr);
     ctx.stroke();}
-  ctx.globalAlpha=1;ctx.fillStyle='#ffd166';ctx.font='bold 10px Cascadia Code,Consolas,monospace';
-  ctx.textAlign='center';ctx.fillText('LOCK',0,rr+11);
+  ctx.globalAlpha=1;ctx.fillStyle='#ffd166';ctx.font='bold 12px '+getComputedStyle(document.body).getPropertyValue('--sans');
+  ctx.textAlign='center';ctx.fillText('已锁定',0,rr+12);
 }
 function drawGravityRings(b){
   if(!b.mass)return;
@@ -1968,15 +2015,15 @@ function drawTrajectory(res){
       ctx.globalAlpha=0.95;ctx.strokeStyle='#ff6b6b';ctx.lineWidth=2;
       ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(res.danger.x,res.danger.y);ctx.stroke();
       ctx.fillStyle='#ff6b6b';ctx.beginPath();ctx.arc(res.danger.x,res.danger.y,5,0,TAU);ctx.fill();
-      ctx.globalAlpha=1;ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#ff8a8a';
-      ctx.fillText('轨迹在此撞毁',res.danger.x,res.danger.y-10);}
+      ctx.globalAlpha=1;ctx.font='12.5px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='center';ctx.fillStyle='#ff8a8a';
+      ctx.fillText('轨迹在这儿撞毁',res.danger.x,res.danger.y-11);}
   }
   // 软目标可对接标记：绿色圆环 + 提示，让“可安全接近”在预测层可见
   if(res.dock){
     ctx.globalAlpha=0.95;ctx.strokeStyle='#5be0a0';ctx.lineWidth=1.8;ctx.setLineDash([2,4]);
     ctx.beginPath();ctx.arc(res.dock.x,res.dock.y,9,0,TAU);ctx.stroke();ctx.setLineDash([]);
-    ctx.globalAlpha=1;ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#7df0b8';
-    ctx.fillText('可安全对接',res.dock.x,res.dock.y-15);
+    ctx.globalAlpha=1;ctx.font='12.5px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='center';ctx.fillStyle='#7df0b8';
+    ctx.fillText('可以安全靠近',res.dock.x,res.dock.y-16);
   }
   ctx.restore();ctx.globalAlpha=1;
 }
@@ -2048,9 +2095,9 @@ function drawEngineering(){
     ctx.moveTo(bx,by2-cor);ctx.lineTo(bx,by2);ctx.lineTo(bx+cor,by2);
     ctx.moveTo(bx2-cor,by2);ctx.lineTo(bx2,by2);ctx.lineTo(bx2,by2-cor);
     ctx.stroke();
-    // D1 标签移到框下沿 +8px，避免与上方“对接圈”标签重叠
-    ctx.fillStyle='#7be0a8';ctx.font='10px Cascadia Code,Consolas,monospace';ctx.textAlign='left';
-    ctx.fillText('TARGET LOCK',tp.x-pad,tp.y+pad+12);
+    // 标签移到框下沿，避免与上方“停泊圈”标签重叠
+    ctx.fillStyle='#7be0a8';ctx.font='12px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='left';
+    ctx.fillText('目标已锁定',tp.x-pad,tp.y+pad+13);
   }else{
     ctx.strokeStyle='rgba(255,159,90,.06)';ctx.lineWidth=1;ctx.beginPath();
     for(let x=Math.floor(left/grid)*grid;x<=right;x+=grid){ctx.moveTo(x,top);ctx.lineTo(x,bottom);}
@@ -2081,7 +2128,7 @@ function drawOffscreenTarget(){
   ctx.beginPath();ctx.moveTo(13,0);ctx.lineTo(-7,-7);ctx.lineTo(-7,7);ctx.closePath();ctx.fill();
   ctx.restore();
   // 距离数字移到箭头外侧（沿方向再外推），不再压在箭头上
-  ctx.fillStyle='#9fe8c4';ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='center';
+  ctx.fillStyle='#9fe8c4';ctx.font='12.5px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='center';
   const nx=px+Math.cos(a)*26,ny=py+Math.sin(a)*26+4;
   ctx.fillText(Math.round(toKm(dist(s.x,s.y,tp.x,tp.y)))+' km',nx,ny);
 }
@@ -2104,8 +2151,8 @@ function drawCompass(){
   // 目标方位：绿色三角指针
   ctx.fillStyle='#7be0a8';ctx.save();ctx.rotate(goalA);
   ctx.beginPath();ctx.moveTo(R-6,0);ctx.lineTo(R-13,-5);ctx.lineTo(R-13,5);ctx.closePath();ctx.fill();ctx.restore();
-  ctx.fillStyle='rgba(167,228,240,.9)';ctx.font='9px Cascadia Code,Consolas,monospace';ctx.textAlign='center';
-  ctx.fillText('罗盘',0,R+12);
+  ctx.fillStyle='rgba(167,228,240,.9)';ctx.font='11.5px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='center';
+  ctx.fillText('罗盘',0,R+13);
   ctx.restore();
 }
 
@@ -2126,9 +2173,9 @@ function drawReplay(){
     ctx.stroke();ctx.setLineDash([]);
   }
   ctx.globalAlpha=1;
-  ctx.fillStyle='#ffd166';ctx.font='11px Cascadia Code,Consolas,monospace';ctx.textAlign='left';
+  ctx.fillStyle='#ffd166';ctx.font='12.5px '+getComputedStyle(document.body).getPropertyValue('--sans');ctx.textAlign='left';
   const s0=G.startSnapshot;
-  if(s0)ctx.fillText('实线＝实际领航轨迹　虚线＝探测预测线（实践检验认识）',s0.x,s0.y-40);
+  if(s0)ctx.fillText('实线＝实际飞的，虚线＝探测时猜的',s0.x,s0.y-42);
 }
 /* T3 历史预测曲线：探测中按试错次序叠加，越早越淡，直观呈现认识的反复性 */
 function drawProbeHistory(){
@@ -2145,7 +2192,8 @@ function render(dt){
   ctx.fillStyle='#05070f';ctx.fillRect(0,0,VW,VH);
   drawStarfield();
   if(!G.level)return;
-  if(G.state==='choice')return; // 抉择关：只保留背景星空，世界对象由分配界面覆盖
+  // 抉择/标题态只留背景星空：上一局的飞船、停泊圈和 LOCK 标记不再印在文字上
+  if(G.state==='choice'||G.state==='title')return;
   const shx=G.camera.shake?rand(-G.camera.shake,G.camera.shake):0,shy=G.camera.shake?rand(-G.camera.shake,G.camera.shake):0;
   // 领航镜头轻微推近（C）；overburn 过载再推近；制动额外推近 0.04，探测保持标准
   let tz=G.state==='pilot'?1.08:1;
@@ -2211,18 +2259,18 @@ const AVATARS={
 };
 
 const BRIEF_DIALOGS=[
-[['ai','阿基米德','领航员，欢迎登舰。这是近地轨道基础训练，先认识单恒星引力。'],
- ['eng','总工程师','引力是客观的，不会因为你着急就改变。先在探测里看清自然轨迹，再决定何时点火。'],
- ['crew','大副','灯塔号在轨道上等着。对接时速度一定要降下来，否则会被弹开。']],
-[['ai','阿基米德','本关燃料配额只有 52，直抵跃迁门是不可能的——这是物理规律给出的硬约束。'],
- ['eng','总工程师','但规律不是死路。「自由」的引力可以成为你的引擎：靠近它，让引力把你甩向目标。'],
- ['crew','大副','这就是引力弹弓。我们没有改变引力，只是改变了航线，让规律为我所用。']],
-[['ai','阿基米德','前方是周期性星风走廊。风的方向随时间规律变化，参数已在探测模式开放。'],
- ['eng','总工程师','等顺风窗口再行动，能省大量燃料；逆风硬顶是唯意志论，只会烧光燃料。'],
- ['crew','大副','认识风的周期，就是把自在的规律变成我们手里的主动权。']],
-[['ai','阿基米德','最终星区：新曦是一颗正在公转的行星，它在运动，我们要追上它、与它同速。'],
- ['eng','总工程师','注意相对速度。「自由」可以借力，星风可以滑行，但对接必须把相对速度降到上限内。'],
- ['crew','大副','这是最后一程。尊重规律，又主动驾驭——我们一起把方舟号带回家。']]
+[['ai','阿基米德','来了？这关就一颗恒星，别的啥也没有。先把它摸熟。'],
+ ['eng','总工程师','引力不认人，你急它也不让路。先看轨迹，再点推进。'],
+ ['crew','大副','停泊窗口就那么大，飞太快会被弹飞。慢点，时间够。']],
+[['ai','阿基米德','燃料只够 60，直飞肯定到不了。这不是为难你，是物理。'],
+ ['eng','总工程师','但也有活路：贴近那颗巨行星，让它把你甩过去。'],
+ ['crew','大副','这就是引力弹弓。咱没改引力，只是借它的劲儿拐了个弯。']],
+[['ai','阿基米德','前面是星风走廊，风往哪吹有准头，探测里都能看到。'],
+ ['eng','总工程师','等顺风再走，能省一大笔燃料；逆风硬顶，烧光也过不去。'],
+ ['crew','大副','等风来不如看风表。']],
+[['ai','阿基米德','最后一程。新曦一直在动，咱得追上它、跟它同速。'],
+ ['eng','总工程师','盯紧相对速度，能借力就借力，但停泊前必须把速度压下来。'],
+ ['crew','大副','就这一关了，咱们一起把方舟号开回家。']]
 ];
 
 /* 每关理论归位卡（F + 知识点） */
@@ -2256,6 +2304,7 @@ function buildLevel(i){
   G.maxFuel=src.fuel;G.fuel=src.fuel;
   G.slingshot=0;G.probeResets=0;G.levelTime=0;G.probeTime=0;
   G.knowledge=0;G.morale=80;G.knowEval=0;
+  G.actLog={lastThrustAt:-99,flewMs:0,everThrust:false,lastBurn:0}; // 行为记录按关卡重置：事故归因不跨关串味
   G.bestApproach=Infinity;G.driftTimer=0;G.lastSave=0;
   G.levelTime0=0;G.activeProbeMs=0;G.windWindowMs=0;G.windTotalMs=0;
   G.pilotPath=[];G.probeHistory=[];G._pathTick=0;
@@ -2295,40 +2344,69 @@ function loadLevel(i){
   $('topbar').classList.remove('hidden');
   G.state='briefing';
 }
-/* 第5关抉择：物资分配 */
+/* 老手快捷通道：跳过简报和探测，直接正式领航下一关（燃料不会变多，难度自己担） */
+function quickStartNext(){
+  const next=G.levelIndex+1;
+  if(next>=LEVELS.length){showEnding();return;}
+  if(LEVELS[next].kind==='choice'){loadLevel(next);return;}
+  buildLevel(next);
+  const src=LEVELS[next];
+  hideAllScreens();show('hud');$('topbar').classList.remove('hidden');
+  $('hud-level').textContent=src.name;$('hud-goal').textContent=src.goal;
+  $('accident').classList.add('hidden');
+  startPilot();
+  say('阿基米德','老手了是吧？探测都省了，直接开飞。燃料自己盯紧。',4);
+}
+/* 第5关抉择：物资分配。每局随机生成配额，背固定答案没用，得自己算 */
+function makeChoiceCfg(){
+  let cfg;
+  do{
+    const quota=100+Math.floor(Math.random()*37); // 100~136
+    const minP=38+Math.floor(Math.random()*8);    // 38~45
+    const minL=30+Math.floor(Math.random()*9);    // 30~38
+    cfg={quota,minP,minL};
+  }while(cfg.minP+cfg.minL>cfg.quota-8); // 防御：保证至少留得出科研的余量
+  return cfg;
+}
 function enterChoice(src){
-  $('ch-quota').textContent=src.quota;
-  ['al-prop','al-life','al-res'].forEach(id=>{const el=$(id);el.value=0;});
+  G.choiceCfg=makeChoiceCfg();
+  const cfg=G.choiceCfg;
+  $('ch-quota').textContent=cfg.quota;
+  $('ch-total').textContent=cfg.quota;
+  ['al-prop','al-life','al-res'].forEach(id=>{const el=$(id);el.value=0;el.max=cfg.quota;});
   G.choiceData=null;
   updateAlloc();
   hideAllScreens();show('screen-choice');
   G.state='choice';Music.scene('choice');
 }
 function updateAlloc(){
+  const cfg=G.choiceCfg;
   const prop=+$('al-prop').value,life=+$('al-life').value,res=+$('al-res').value;
   $('av-prop').textContent=prop;$('av-life').textContent=life;$('av-res').textContent=res;
-  const sum=prop+life+res,src=LEVELS[G.levelIndex];
+  const sum=prop+life+res;
   $('ch-sum').textContent=sum;
-  const propOk=prop>=src.minPropulsion,lifeOk=life>=src.minLife;
+  const propOk=prop>=cfg.minP,lifeOk=life>=cfg.minL;
   $('nt-prop').className='alloc-note'+(propOk?' ok':'');
-  $('nt-prop').textContent=propOk?'已达标（可推进至新曦）':'最低需求 '+src.minPropulsion+'，否则无法抵达';
+  $('nt-prop').textContent=propOk?'够了，能飞到新曦':'至少得 '+cfg.minP+'，不然飞不到';
   $('nt-life').className='alloc-note'+(lifeOk?' ok':'');
-  $('nt-life').textContent=lifeOk?'已达标（船员可存活）':'最低需求 '+src.minLife+'，否则无法存活';
+  $('nt-life').textContent=lifeOk?'够了，船员能撑到':'至少得 '+cfg.minL+'，不然人没了';
   const flag=$('ch-flag');
   let ok=false;
-  if(sum!==src.quota){flag.textContent='需正好分配 '+src.quota+' 个单位';}
-  else if(!propOk||!lifeOk){flag.textContent='推进或生命维持未达最低需求';}
+  if(sum!==cfg.quota){flag.textContent=sum<cfg.quota?'还剩 '+(cfg.quota-sum)+' 个没分':'分超了，多了 '+(sum-cfg.quota)+' 个';}
+  else if(!propOk||!lifeOk){flag.textContent='推进或生命维持没到最低线';}
   else{flag.textContent='';ok=true;}
   $('btn-alloc').disabled=!ok;
 }
 function submitAlloc(){
+  const cfg=G.choiceCfg;
   const prop=+$('al-prop').value,life=+$('al-life').value,res=+$('al-res').value;
   G.choiceData={prop,life,res};
-  // 评级：满足最低需求后，科研储备越均衡越高
+  // 评级按科研储备占总量的比例，随机配额下也公平
+  const ratio=res/cfg.quota;
   let grade='C';
-  if(res>=20&&prop>=40&&life>=35)grade='S';
-  else if(res>=15)grade='A';
-  else if(res>=8)grade='B';
+  if(ratio>=0.20)grade='S';
+  else if(ratio>=0.13)grade='A';
+  else if(ratio>=0.07)grade='B';
   G.grades.push(grade);
   AudioSys.success();
   showChoiceResult(grade,{prop,life,res});
@@ -2346,17 +2424,20 @@ function showChoiceResult(grade,d){
     B:'基本满足航行需要，但科研储备偏薄，新曦起步会更艰难。',
     C:'勉强抵达，部门间失衡，生产关系制约了生产力的发挥。'
   };
-  // T4：科研储备直接改写评语，把“分配”与“后果”绑死
+  // 科研储备直接改写评语，把“分配”与“后果”绑死；阈值按本局配额比例算
+  const cfg=G.choiceCfg;
+  const thin=Math.round(cfg.quota*0.07),rich=Math.round(cfg.quota*0.20);
   let ctext=map[grade];
   if(d.res===0)ctext+='你把全部资源押在抵达上，新曦将没有一颗种子、一台仪器能落地——定居点没有未来。';
-  else if(d.res<8)ctext+='科研储备仅 '+d.res+'，新曦只能勉强落脚，下一轮发展会被资源卡住。';
-  else if(d.res>=20)ctext+='充足的科研储备（'+d.res+'）让新曦定居点一开始就站得稳、走得远。';
+  else if(d.res<thin)ctext+='科研储备只有 '+d.res+'，新曦只能勉强落脚，下一轮发展会被资源卡住。';
+  else if(d.res>=rich)ctext+='充足的科研储备（'+d.res+'）让新曦定居点一开始就站得稳、走得远。';
   $('result-comment').textContent=ctext;
   const tc=THEORY_CARDS[G.levelIndex]||{head:'理论卡 · 社会基本矛盾',body:'<b>生产力决定生产关系，经济基础决定上层建筑</b>；物资分配方式是否适应生产力，决定了方舟号能否完成航程。合理的分配不是平均，而是抓住主要矛盾、协调各部门。'};
   $('tc-head').textContent=tc.head;$('tc-body').innerHTML=tc.body;
   const cl5=CREW_LOGS[4]; // 第5关船员手记 + 地球来声
   $('crew-log-body').textContent=cl5.log;$('earth-mail').textContent=cl5.mail;
   $('btn-next').textContent='查看最终航程';
+  $('btn-quick-next').classList.add('hidden'); // 抉择结算后是结局，没有下一关可飞
   hideAllScreens();show('screen-result');
   G.state='result';
 }
@@ -2365,7 +2446,7 @@ function showChoiceResult(grade,d){
 function buildArchive(i){
   const box=$('brief-archive');box.innerHTML='';
   const title=document.createElement('div');title.className='ba-title';
-  title.textContent='天体档案 // 命名即原理：从必然王国走向自由王国';
+  title.textContent='天体档案 · 命名即原理：从必然王国走向自由王国';
   box.appendChild(title);
   for(const b of LEVELS[i].bodies){
     if(!b.arch)continue;
@@ -2412,7 +2493,7 @@ function enterProbe(){
   $('btn-launch').classList.remove('hidden');
   $('accident').classList.add('hidden');
   if(!G.legendShown){show('legend');G.legendShown=true;} // 首次图例卡
-  say('阿基米德','探测模式：燃料无限重置，可自由试错。看清自然轨迹，再正式领航。',5);
+  say('阿基米德','探测模式，燃料管够，随便试。先摸清路怎么走，再正式开飞。',5);
   saveGame();G.lastSave=G.time; // 状态切换立即存档
 }
 function resetProbe(){
@@ -2425,7 +2506,7 @@ function resetProbe(){
   restoreShip(G.startSnapshot);G.fuel=G.maxFuel;G.particles.length=0;
   G.probeResets++; // 试错不再扣认识值（P1-3）：认识只加不减，试错是认识的必经之路
   AudioSys.ui();
-  say('阿基米德','已重置。试错是认识规律的必经之路，再试一次。',3);
+  say('阿基米德','重置好了，再来一次，多摔几回就会了。',3);
 }
 function togglePause(){
   G.paused=!G.paused;
@@ -2439,13 +2520,13 @@ function startPilot(){
   G.levelTime=0;G.bank=0;G.thrustHold=0;G.overburn=false; // 领航计时从零开始，不含探测时间
   G.camera.x=G.ship.x;G.camera.y=G.ship.y; // 相机直接对齐飞船，消除瞬移时的镜头飞行
   $('btn-launch').classList.add('hidden');
-  say('阿基米德','正式领航开始。燃料不可重置，运用你在探测中认识的规律。',4);
+  say('阿基米德','正式开飞！燃料就这一份，用你刚摸出的规律。',4);
   saveGame();G.lastSave=G.time; // 状态切换立即存档
 }
 function setModeTag(){
   const tag=$('hud-mode');
-  if(G.state==='probe'){tag.textContent='探测模式 PROBE';tag.className='mode-tag mode-probe';}
-  else{tag.textContent='领航模式 PILOT';tag.className='mode-tag mode-pilot';}
+  if(G.state==='probe'){tag.textContent='探测';tag.className='mode-tag mode-probe';}
+  else{tag.textContent='正式领航';tag.className='mode-tag mode-pilot';}
 }
 
 /* 评级：S 档按关卡配置，第 1 关不要求引力借力（P0-3） */
@@ -2486,6 +2567,7 @@ function completeLevel(){
   G.warp=1;AudioSys.setEngine('off',0);AudioSys.setBrake('off');AudioSys.success();AudioSys.warp();
   clearSave();
   const grade=computeGrade();G.grades.push(grade);
+  G.totalProbeResets+=G.probeResets; // 累计各关试错次数，结局页用
   const rg=$('result-grade');rg.textContent=grade;rg.className='result-grade grade-'+grade+' stamp';
   $('r-fuel').textContent=Math.round(G.fuel)+' / '+G.maxFuel;
   // W20 第3关：该格显示星风窗口利用率而非引力借力，贴合“等风窗口”主题
@@ -2517,6 +2599,9 @@ function completeLevel(){
   $('crew-log-body').textContent=cl.log;
   $('earth-mail').textContent=cl.mail;
   $('btn-next').textContent=G.levelIndex===LEVELS.length-1?'查看最终航程':'前往下一星区';
+  // 下一关是飞行关才显示“直接开飞”；下一关是抉择（第4关后）则隐藏
+  const nextLv=LEVELS[G.levelIndex+1];
+  $('btn-quick-next').classList.toggle('hidden',!nextLv||nextLv.kind==='choice');
   hideAllScreens();hide('hud');show('screen-result');
   G.state='result';
 }
@@ -2564,13 +2649,16 @@ function showAccident(kind,b){
     $('acc-quote').textContent='“人不能创造规律，只能发现规律、认识规律，然后利用规律。”';
   }else if(kind==='unrecognized'){
     tag.className='acc-tag unrec';tag.textContent='错误倾向 · 规律未被认识';
-    $('acc-what').innerHTML='你撞上了「'+crashName+'」——它的运动沿固定轨道/航线周期往复，本可以被提前观测、预测并绕开。';
+    $('acc-what').innerHTML=(b&&(b.type==='star'||b.type==='blackhole'))?'你撞上了「'+crashName+'」——它一直就在那儿，质量最大、引力按距离平方衰减。你没把它的引力范围算进去，就直接撞了上去。':'你撞上了「'+crashName+'」——它的运动沿固定轨道/航线周期往复，本可以被提前观测、预测并绕开。';
     $('acc-law').innerHTML='客观规律不因对象是自然陨石还是人造无人机而改变，且<b>规律可以被认识，但认识需要反复实践</b>。没认出它的航线，是认识尚未到位，而非它不可知。';
     $('acc-do').textContent='回到探测模式，画出它的周期与相位，等它移开或从其航线间隙穿过；真理与谬误在一定条件下相互转化，这次误判会被下一次实践纠正。';
     $('acc-quote').textContent='“我们对客观规律的认识，是一个由浅入深、反复实践的过程。”';
   }else{
     tag.className='acc-tag drift';tag.textContent='错误倾向 · 宿命论';
-    $('acc-what').textContent='燃料耗尽，最后一点尾焰熄灭。此后飞船只受引力与星风支配，而这条自然轨迹不再指向任何目标——你将随波漂流失联。';
+    // 区分两种触发：燃料满却从不点火撞星 vs 真的燃料耗尽漂失，避免文案与实际不符
+    $('acc-what').textContent=G.fuel>0
+      ?'你一直没点火，飞船只受引力摆布，就这么栽了进去——燃料还满着，你却什么都没做。'
+      :'燃料耗尽，最后一点尾焰熄灭。此后飞船只受引力与星风支配，而这条自然轨迹不再指向任何目标——你将随波漂流失联。';
     $('acc-law').innerHTML='规律只告诉你“这样下去会怎样”，从不替你决定“该怎么做”。把规律当成不可更改的结局、放弃点火，是<b>只讲必然性、否定主观能动性的宿命论</b>。';
     $('acc-do').textContent='在仍有燃料时主动规划航向，哪怕微调推进也要把轨迹掰向目标；善用引力借力和顺风窗口，用最小的动作改变结局。';
     $('acc-quote').textContent='“自由不在于摆脱规律，而在于认识规律，从而有计划地让规律为目的服务。”——恩格斯《反杜林论》';
@@ -2603,7 +2691,7 @@ function evaluateKnowledge(){
   // 单调约束：必须比历史最佳更接近（进步超过 8km）才加分，停在好位置无法刷分
   if(gain>0&&minD<G.bestApproach-8){
     G.knowledge=clamp(G.knowledge+gain,0,100);G.bestApproach=minD;
-    say('阿基米德','预测误差 '+Math.round(err)+' km，本次实践检验了你的判断（+'+gain+' 认识值）。',3);
+    say('阿基米德','误差 '+Math.round(err)+' km，判断得不错（认识 +'+gain+'）。',3);
   }
 }
 /* 逆风硬顶扣士气（P1-4） */
@@ -2640,12 +2728,17 @@ function updateWindWindow(dt){
 function saveGame(){
   if(!G.level||G.state!=='probe'&&G.state!=='pilot')return;
   try{
-    const data={ver:4,levelIndex:G.levelIndex,state:G.state,ship:shipSnap(),fuel:G.fuel,
+    const data={ver:6,levelIndex:G.levelIndex,state:G.state,ship:shipSnap(),fuel:G.fuel,
       knowledge:G.knowledge,morale:G.morale,slingshot:G.slingshot,
       probeResets:G.probeResets,grades:G.grades,totalSlingshot:G.totalSlingshot,
+      totalProbeResets:G.totalProbeResets,
       levelTime:G.levelTime,probeTime:G.probeTime,legendShown:G.legendShown,
+      levelTime0:G.levelTime0,
+      bestApproach:Number.isFinite(G.bestApproach)?G.bestApproach:null,
+      actLog:{lastThrustAt:G.actLog.lastThrustAt,everThrust:G.actLog.everThrust,flewMs:G.actLog.flewMs},
+      pilotPath:G.pilotPath.slice(-600),
       activeProbeMs:G.activeProbeMs,windWindowMs:G.windWindowMs,windTotalMs:G.windTotalMs,
-      probeHistory:G.probeHistory.slice(-6)}; // S8：历史预测曲线入存档（约1KB）
+      probeHistory:G.probeHistory.slice(-6)}; // 存档：含关卡时钟/行为记录/回放路径 → 续档后探测=领航仍然同源
     localStorage.setItem('nav-save',JSON.stringify(data));
   }catch(e){}
 }
@@ -2655,12 +2748,17 @@ function continueGame(){
   let data;
   try{data=JSON.parse(localStorage.getItem('nav-save'));}catch(e){return;}
   if(!data){return;}
-  if(data.ver!==4){clearSave();return;} // 版本不符（旧存档）丢弃，避免 undefined 字段
+  if(data.ver!==6){clearSave();return;} // 版本不符（旧存档）丢弃，避免 undefined 字段
   buildLevel(data.levelIndex);
   G.fuel=data.fuel;G.knowledge=data.knowledge;G.morale=data.morale;
   G.slingshot=data.slingshot;G.probeResets=data.probeResets;
   G.grades=data.grades||[];G.totalSlingshot=data.totalSlingshot||0;G.levelTime=data.levelTime||0;
   G.probeTime=data.probeTime||0;G.legendShown=!!data.legendShown;
+  G.totalProbeResets=data.totalProbeResets||0;
+  G.levelTime0=data.levelTime0||0;                       // 恢复关卡时钟：星风相位/陨石无人机/预测轨迹同源
+  G.bestApproach=(data.bestApproach==null)?Infinity:data.bestApproach;
+  if(data.actLog){G.actLog.lastThrustAt=data.actLog.lastThrustAt;G.actLog.everThrust=!!data.actLog.everThrust;G.actLog.flewMs=data.actLog.flewMs||0;}
+  G.pilotPath=Array.isArray(data.pilotPath)?data.pilotPath:[];
   G.activeProbeMs=data.activeProbeMs||0;G.windWindowMs=data.windWindowMs||0;G.windTotalMs=data.windTotalMs||0;
   G.probeHistory=Array.isArray(data.probeHistory)?data.probeHistory:[]; // S8 恢复历史曲线
   restoreShip(data.ship);
@@ -2670,7 +2768,7 @@ function continueGame(){
   if(data.state==='probe'){G.state='probe';setModeTag();$('btn-launch').classList.remove('hidden');}
   else{G.state='pilot';setModeTag();$('btn-launch').classList.add('hidden');}
   $('accident').classList.add('hidden');
-  say('阿基米德','航程已恢复，继续领航。',3);
+  say('阿基米德','航程恢复了，接着飞。',3);
 }
 
 function showEnding(){
@@ -2681,12 +2779,12 @@ function showEnding(){
   const fg=avg>=3.6?'S':(avg>=2.8?'A':(avg>=2?'B':'C'));
   $('ending-grade').textContent=fg;
   $('ending-slingshot').textContent=G.totalSlingshot;
-  $('ending-quote').textContent='“自由不在于幻想中摆脱自然规律而独立，而在于认识这些规律，从而能够有计划地使自然规律为一定的目的服务。”——恩格斯《反杜林论》。你没有命令宇宙，却通过认识与实践，让引力、星风都成为抵达新家园的力量。';
-  // T5 三段式：认识必然 → 运用必然 → 改造必然
-  $('stage-1').textContent='你在探测中一次次试错、重置，才摸到引力与星风的脾气——这是从“自在的规律”到“为我的认识”，各星区评级：'+G.grades.join(' · ')+'。';
-  $('stage-2').textContent='在领航中你不是和宇宙较劲，而是借它的力（全航程引力借力 '+G.totalSlingshot+' 次）。尊重客观规律是前提，发挥主观能动性是必要条件。';
-  $('stage-3').textContent='你改变的不是引力，而是航线；改变的不是自然，而是人面对自然的方式——这正是从必然王国走向自由王国。';
-  $('ending-alt').textContent='认识具有反复性与无限性：若当初选了另一条弹弓线，燃料消耗与评级都会不同；真理在新的条件下总要重新检验，这正是认识不断上升的过程。';
+  $('ending-quote').textContent='“自由不在于幻想中摆脱自然规律而独立，而在于认识这些规律，从而能够有计划地使自然规律为一定的目的服务。”——恩格斯《反杜林论》。说白了：宇宙不听你的，但你可以听它的。';
+  // T5 三段式：标题保留课程骨架，正文说人话
+  $('stage-1').textContent='先摸熟，再出发。你摔了 '+G.totalProbeResets+' 次才摸清引力和星风的脾气——规律本来就在那儿，只是得自己撞见它。（各星区评级：'+G.grades.join(' · ')+'）';
+  $('stage-2').textContent='借力，而不是较劲。你没跟宇宙讲道理，你借了它的力——全航程引力借力 '+G.totalSlingshot+' 次。规律你改不了，但你可以用。';
+  $('stage-3').textContent='你能改的是航线。你改不了引力，但你能改去哪儿。从必然王国到自由王国，差的就是这一步。';
+  $('ending-alt').textContent='换条路走，结果就不一样。认识没有终点，这就是它一直往上走的原因。';
   hideAllScreens();hide('hud');show('screen-ending');
   G.state='ending';clearSave();
 }
@@ -2740,9 +2838,9 @@ function updateHUD(){
   const inRing=dU<G.level.target.r;
   const ds=$('dist-state');
   if(inRing&&rel>G.level.target.maxSpeed){
-    ds.textContent='相对速度过高（上限 '+G.level.target.maxSpeed+' km/s）';ds.className='state-warn';
-    if(!G._overSpoke){G._overSpoke=true;say('阿基米德','速度过快，减速！对接相对速度已超 '+G.level.target.maxSpeed+' km/s。',3);} // W15 播报
-  }else{ds.textContent=inRing?'已进入对接圈':'—';ds.className='';G._overSpoke=false;}
+    ds.textContent='相对速度太高（上限 '+G.level.target.maxSpeed+'）';ds.className='state-warn';
+    if(!G._overSpoke){G._overSpoke=true;say('阿基米德','太快了，减速！相对速度已经超过 '+G.level.target.maxSpeed+'。',3);}
+  }else{ds.textContent=inRing?'已进停泊圈':'—';ds.className='';G._overSpoke=false;}
   // W14 过载：HUD 加 over 类，显示红字并让燃料环闪红
   $('hud').classList.toggle('over',G.overburn);
   $('hud').classList.toggle('light',G.state==='pilot'&&G.input.lightBrake);
@@ -2836,23 +2934,33 @@ $('btn-next').addEventListener('click',()=>{
   if(G.levelIndex===LEVELS.length-1)showEnding();
   else loadLevel(G.levelIndex+1);
 });
+$('btn-quick-next').addEventListener('click',quickStartNext);
 $('btn-share').addEventListener('click',()=>{
-  const url=location.href,btn=$('btn-share');
-  const ok=()=>{btn.textContent='✓ 链接已复制';setTimeout(()=>{btn.textContent='复制链接给同学';},2200);};
+  // 本地打开就发固定线上地址；线上打开就发当前地址（去掉参数和锚点）
+  const url=(location.protocol==='file:')?SHARE_URL:location.href.split('#')[0].split('?')[0];
+  const btn=$('btn-share');
+  const ok=()=>{btn.textContent='✓ 链接已复制，发给同学吧';setTimeout(()=>{btn.textContent='复制链接给同学';},2200);};
   const fallback=()=>{
-    const ta=document.createElement('textarea');ta.value=url;
-    ta.style.position='fixed';ta.style.left='-9999px';ta.style.opacity='0';
-    document.body.appendChild(ta);ta.focus();ta.select();
-    try{document.execCommand('copy');ok();}catch(e){btn.textContent='请手动复制地址栏链接';}
+    const ta=document.createElement('textarea');
+    ta.value=url;
+    ta.setAttribute('readonly','');
+    // user-select:text 否则继承 body 的 user-select:none，select() 选不中
+    ta.style.cssText='position:fixed;left:-9999px;top:0;opacity:0;user-select:text;-webkit-user-select:text';
+    document.body.appendChild(ta);
+    ta.focus();ta.select();ta.setSelectionRange(0,url.length);
+    let done=false;
+    try{done=document.execCommand('copy');}catch(e){done=false;}
     document.body.removeChild(ta);
+    if(done)ok();else btn.textContent='复制失败，请手动复制：'+url;
   };
-  if(navigator.clipboard&&navigator.clipboard.writeText){
+  if(navigator.clipboard&&navigator.clipboard.writeText&&location.protocol!=='file:'){
     navigator.clipboard.writeText(url).then(ok).catch(fallback);
   }else fallback();
 });
 $('btn-restart').addEventListener('click',()=>{
-  G.grades=[];G.totalSlingshot=0;clearSave();
-  hideAllScreens();show('screen-title');refreshTitle();G.state='title';Music.scene('title');
+  G.grades=[];G.totalSlingshot=0;G.totalProbeResets=0;clearSave();
+  if(G.ship)G.ship.alive=false; // 双保险：回到标题时把上一局飞船关掉
+  hideAllScreens();show('screen-title');$('topbar').classList.remove('hidden');refreshTitle();G.state='title';Music.scene('title');
 });
 // N2 生成可截图的航行日志卡
 $('btn-make-card').addEventListener('click',()=>{
@@ -2884,14 +2992,20 @@ function showBestOnTitle(){
   const b=loadBest();
   if(!b||!b.runs){el.textContent='';return;}
   const g={4:'S',3:'A',2:'B',1:'C'}[b.rank]||'-';
-  el.textContent='最佳纪录：'+g+' 级　·　已完成 '+b.runs+' 次航程';
+  el.textContent='最好成绩：'+g+' 级　·　已经飞过 '+b.runs+' 趟';
+}
+/* 存档存在且版本号匹配才算可继续，旧版存档不显示“继续航程” */
+function validSave(){
+  try{const d=JSON.parse(localStorage.getItem('nav-save'));return !!d&&d.ver===6;}
+  catch(e){return false;}
 }
 function refreshTitle(){
   showBestOnTitle();
-  if(hasSave())$('continueBtn').classList.remove('hidden');
+  if(validSave())$('continueBtn').classList.remove('hidden');
   else $('continueBtn').classList.add('hidden');
 }
 refreshTitle();
+$('topbar').classList.remove('hidden'); // 标题页就能调音量、看手册与按键说明
 
 /* 主循环 */
 let last=performance.now();
